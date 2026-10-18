@@ -8,7 +8,7 @@ Update-StudyPrep $root
 $lastCheck = Get-Date
 $types = @{ '.html'='text/html; charset=utf-8'; '.js'='text/javascript; charset=utf-8'; '.css'='text/css; charset=utf-8';
   '.json'='application/json'; '.webmanifest'='application/manifest+json'; '.png'='image/png'; '.svg'='image/svg+xml';
-  '.bin'='application/octet-stream'; '.mp3'='audio/mpeg' }
+  '.txt'='text/plain'; '.mp3'='audio/mpeg' }
 $l = New-Object System.Net.HttpListener
 $l.Prefixes.Add("http://localhost:$Port/")
 $l.Start()
