@@ -1,12 +1,22 @@
-// Offline cache. Bump VERSION whenever any file changes so phones pick up the update.
-const VERSION='studyprep-v4';
-const FILES=['./','index.html','style.css','app.js','manifest.webmanifest','packs/secplus.js','packs/secplus-m7-m8.js','packs/secplus-study.js','glossary.js','dict.js','fx.js',
+// Offline cache. App files are fetched fresh when online (so an update shows up the next
+// time the app is opened) and come from the cache when offline. Audio stays cache-first.
+const VERSION='studyprep-v5';
+const FILES=['./','index.html','style.css','app.js','manifest.webmanifest','packs/secplus.js','packs/secplus-m7-m8.js','packs/secplus-study.js','glossary.js','dict.js','fx.js','themes.js',
   'icons/icon-192.png','icons/icon-512.png','icons/maskable-512.png','icons/apple-touch-icon.png'];
-self.addEventListener('install',e=>{e.waitUntil(caches.open(VERSION).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting()))});
-self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==VERSION&&k!=='sp-audio').map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
+self.addEventListener('install',e=>{e.waitUntil(caches.open(VERSION).then(c=>c.addAll(FILES.map(f=>new Request(f,{cache:'reload'})))).then(()=>self.skipWaiting()))});
+self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==VERSION&&k!=='sp-audio').map(k=>caches.delete(k))))
+  .then(()=>self.clients.claim())
+  // reload windows still showing the old version, so one open is enough to see the update
+  .then(()=>self.clients.matchAll({type:'window'})).then(cs=>cs.forEach(c=>{try{c.navigate(c.url)}catch(_){}})))});
 self.addEventListener('fetch',e=>{
   if(e.request.method!=='GET')return;
-  e.respondWith(caches.match(e.request).then(hit=>hit||fetch(e.request).then(r=>{
-    if(r&&r.ok&&new URL(e.request.url).origin===location.origin){const cp=r.clone();caches.open(/\/audio\//.test(e.request.url)?'sp-audio':VERSION).then(c=>c.put(e.request,cp))}
-    return r}).catch(()=>caches.match('index.html'))));
+  const url=new URL(e.request.url);
+  if(url.origin!==location.origin)return;
+  if(/\/audio\//.test(url.pathname)){
+    e.respondWith(caches.match(e.request).then(hit=>hit||fetch(e.request).then(r=>{if(r&&r.ok){const cp=r.clone();caches.open('sp-audio').then(c=>c.put(e.request,cp))}return r})));
+    return;
+  }
+  e.respondWith(fetch(e.request,{cache:'no-cache'}).then(r=>{
+    if(r&&r.ok){const cp=r.clone();caches.open(VERSION).then(c=>c.put(e.request,cp))}
+    return r}).catch(()=>caches.match(e.request).then(hit=>hit||caches.match('index.html'))));
 });

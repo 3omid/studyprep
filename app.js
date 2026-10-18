@@ -128,7 +128,7 @@ function whatsWhat(q,it,fa){
 }
 
 /* ================= packs ================= */
-let SET=Object.assign({rl:'both',fa:'tap',faExp:'tap',examFa:false,theme:'auto',size:1,snd:true,mus:false,vib:true,vol:0.6,cues:true,auto:true,off:{packs:[],secs:[]}},st.get('set',{}));
+let SET=Object.assign({rl:'both',fa:'tap',faExp:'tap',examFa:false,theme:'auto',pal:'classic',size:1,examDate:'',goal:30,snd:true,mus:false,vib:true,vol:0.6,cues:true,auto:true,off:{packs:[],secs:[]}},st.get('set',{}));
 SET.off=SET.off||{packs:[],secs:[]};
 let P=st.get('prog',{}),PACKS=[],Q={};
 function normPack(p,user){
@@ -209,7 +209,11 @@ function startSession(c){
   const s=build(c);
   if(!s){toast('No questions in the selected sections. Turn a course or section on in Courses.');return}
   S=s;st.set('sess',S);runTimer();renderQuiz();
+  const sn=(c.secs&&c.secs.length===1)?(()=>{const[pid,sec]=c.secs[0].split(':');const p=PACKS.find(x=>x.id===pid);return p&&p.sections[sec]?' · '+p.short+' · '+p.sections[sec].en:''})():'';
+  lastAct({mode:{practice:'Practice',exam:'Exam',review:'Smart review'}[S.mode]||S.mode,what:sn});
 }
+const lastAct=o=>st.set('lastact',Object.assign({t:now()},o));
+const ago=t=>{const d=Math.floor((now()-t)/DAY);return d<=0?'today':d===1?'yesterday':d+' days ago'};
 function runTimer(){
   clearInterval(timerId);if(!S||S.done)return;
   let n=0;
@@ -282,17 +286,45 @@ function confetti(){const d=document.createElement('div');d.className='confetti'
   document.body.appendChild(d);setTimeout(()=>d.remove(),3600)}
 function modal(html){closeModal();const o=document.createElement('div');o.className='ov';o.id='ov';o.innerHTML='<div class="sheet">'+html+'</div>';o.addEventListener('click',e=>{if(e.target===o)closeModal()});document.body.appendChild(o)}
 function closeModal(){const o=$('#ov');if(o)o.remove()}
-function page(html,bar,keep){const y=window.scrollY;$('#main').innerHTML=html;$('#tabs').style.display=bar===false?'none':'flex';window.scrollTo(0,keep?y:0)}
+function page(html,bar,keep){const y=window.scrollY;$('#main').innerHTML=html;window.scrollTo(0,keep?y:0)}
 function renderTabs(){
   const T=[['home','🏠','Home'],['learn','📖','Learn'],['courses','📚','Courses'],['stats','📈','Stats'],['settings','⚙️','Settings']];
   $('#tabs').innerHTML=T.map(t=>`<button data-act="tab" data-v="${t[0]}" class="${tab===t[0]?'on':''}"><span class="i">${t[1]}</span>${t[2]}</button>`).join('');
+  tabH();
 }
+/* the menu bar is on every page; bars at the bottom of a page sit just above it */
+function tabH(){const t=$('#tabs');if(t)document.documentElement.style.setProperty('--tabh',t.offsetHeight+'px')}
+window.addEventListener('resize',tabH);
 function go(t){ACT=null;vStop();tab=t;renderTabs();({home:renderHome,learn:renderLearn,courses:renderCourses,stats:renderStats,settings:renderSettings,setup:renderSetup})[t]()}
-function applyLook(){
-  const r=document.documentElement;
-  SET.theme==='auto'?r.removeAttribute('data-theme'):r.setAttribute('data-theme',SET.theme);
-  r.style.setProperty('--fs',SET.size);
+/* ---- colour themes (themes.js, copied from Shift Priority) ---- */
+const hexN=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
+const mixC=(a,b,t)=>'#'+hexN(a).map((v,i)=>Math.round(v*(1-t)+hexN(b)[i]*t).toString(16).padStart(2,'0')).join('');
+const lum=h=>{const c=hexN(h).map(v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)});return .2126*c[0]+.7152*c[1]+.0722*c[2]};
+const contrast=(a,b)=>{const x=lum(a),y=lum(b);return(Math.max(x,y)+.05)/(Math.min(x,y)+.05)};
+const rgba=(h,a)=>`rgba(${hexN(h).join(',')},${a})`;
+const THEMES=window.THEMES||[];
+const CLASSIC={light:['#0f9b8e','#5b6df0'],dark:['#6ee7d4','#8b9bff'],bg:{light:'#f3f5ff',dark:'#0a0f1f'}};
+const darkMQ=window.matchMedia?matchMedia('(prefers-color-scheme: dark)'):null;
+const isDark=()=>SET.theme==='dark'||(SET.theme!=='light'&&!(darkMQ&&!darkMQ.matches));
+function palVars(c,dark){
+  const[bg,card,line,ink,mut,ac0,ac2]=c;
+  // keep the accent readable on the page (it is also used for text)
+  let ac=ac0;for(let i=0;i<8&&contrast(ac,bg)<3.2;i++)ac=mixC(ac,dark?'#ffffff':'#000000',.14);
+  const acink=contrast(ac,'#ffffff')>=contrast(ac,'#0b0b0b')?'#ffffff':'#0b0b0b';
+  return `--bg:${bg};--sf:${card};--sf2:${mixC(card,line,.45)};--ink:${ink};--mut:${mut};--line:${line};--ac:${ac};--ac2:${ac2};--acink:${acink};`+
+    `--sel:${mixC(card,ac,dark?.2:.12)};--grad:linear-gradient(135deg,${ac},${mixC(ac,dark?'#ffffff':'#000000',.16)});--glow1:${rgba(ac,.12)};--glow2:${rgba(ac2,.1)};color-scheme:${dark?'dark':'light'}`;
 }
+function applyLook(){
+  const r=document.documentElement,dark=isDark();
+  r.setAttribute('data-theme',dark?'dark':'light');
+  r.style.setProperty('--fs',SET.size);
+  const th=THEMES.find(t=>t[0]===SET.pal);
+  let css=$('#palcss');if(!css){css=document.createElement('style');css.id='palcss';document.head.appendChild(css)}
+  css.textContent=th?`:root[data-theme]{${palVars(th[dark?5:4],dark)}}`:'';
+  const m=document.querySelector('meta[name=theme-color]');if(m)m.content=th?th[dark?5:4][0]:CLASSIC.bg[dark?'dark':'light'];
+  tabH();
+}
+if(darkMQ&&darkMQ.addEventListener)darkMQ.addEventListener('change',()=>{if(SET.theme==='auto'){applyLook();if(tab==='settings')renderSettings()}});
 
 /* ================= Home ================= */
 function renderHome(){
@@ -308,6 +340,8 @@ function renderHome(){
   ${res?`<div class="card" style="border-color:var(--ac)"><div class="spread"><div><b>Continue where you stopped</b><div class="mut">${esc(S.mode)} · question ${Math.min(S.i+1,S.items.length)} of ${S.items.length}${S.left!=null?' · '+fmt(S.left)+' left':''}</div></div></div>
   <div class="row" style="margin-top:10px"><button data-act="resume">Resume</button><button class="plain" data-act="discard">Discard</button></div></div>`:''}
   ${(!res&&st.get('rlast')&&PACKS.some(p=>p.study&&p.study[(st.get('rlast')||'').split(':')[1]]))?`<div class="card"><div class="spread"><div><b>Continue reading</b><div class="mut">Pick up your notes where you left off</div></div><button class="sm" data-act="rdresume">Open</button></div></div>`:''}
+  ${pool.length?coachCard(pool,ids,weak,due,seen):''}
+  ${bkDue()?`<div class="card"><div class="spread"><div><b>💾 Back up your progress</b><div class="mut">${st.get('bkat')?'Last backup '+ago(st.get('bkat')):'You have not saved a backup yet'} · keeps your progress safe</div></div><button class="sm" data-act="export">Save</button></div></div>`:''}
   ${pool.length?`<div class="tiles">
    <button class="tile plain" data-act="tab" data-v="learn"><span class="ic">📖</span><span><b>Learn</b><span class="d">Read the key points of a section first</span></span></button>
    <button class="tile plain" data-act="setup" data-v="practice"><span class="ic">🎓</span><span><b>Practice</b><span class="d">Answer, see why, retry what you miss</span></span></button>
@@ -320,6 +354,53 @@ function renderHome(){
    <div class="stat"><b>${mas}</b><span>mastered</span></div></div>
    <p class="mut" style="margin:10px 0 0">${weak?weak+' question'+(weak>1?'s':'')+' need work. ':''}Mastered = answered correctly 3 times in a row.</p></div>`
   :`<div class="card empty">No sections are on. Open <b>Courses</b> and turn a course on.</div>`}`);
+}
+
+/* ================= Exam coach ================= */
+/* remembers where you are weak and what you did last, and suggests the next step */
+function weakSecs(){
+  const out=[];
+  PACKS.filter(packOn).forEach(p=>Object.keys(p.sections).forEach(s=>{
+    if(!secOn(p,s))return;const k=secKey(p,s),ids=qsIn([k]).map(q=>q.id);
+    const a=ids.reduce((x,i)=>x+(P[i]?P[i].c+P[i].w:0),0),c=ids.reduce((x,i)=>x+(P[i]?P[i].c:0),0);
+    if(a>=3)out.push({k,n:p.short+' · '+p.sections[s].en,acc:pct(c,a),w:ids.filter(isWeak).length});
+  }));
+  return out.sort((x,y)=>x.acc-y.acc);
+}
+function readiness(pool){let s=0;pool.forEach(q=>{const p=P[q.id];s+=!p?.3:p.b>=3?.95:p.l===1?.75:.35});return Math.round(100+800*s/pool.length)}
+function nextRead(){const rd=readSt();for(const p of PACKS.filter(packOn))for(const k of Object.keys(p.sections))if(secOn(p,k)&&p.study&&p.study[k]&&!rd[secKey(p,k)])return{sk:secKey(p,k),t:(p.study[k].t||[p.sections[k].en])[0]};return null}
+const bkDue=()=>Object.keys(P).length>=20&&(!st.get('bkat')||now()-st.get('bkat')>7*DAY);
+function coachCard(pool,ids,weak,due,seen){
+  const sc=readiness(pool),ws=weakSecs().filter(w=>w.acc<80).slice(0,3),la=st.get('lastact'),today=dayRow().a,goal=SET.goal||30;
+  let left=null;if(SET.examDate){const d=new Date(SET.examDate+'T00:00:00');left=Math.ceil((d-new Date(new Date().toDateString()))/DAY)}
+  const unseen=pool.length-seen;
+  const nr=nextRead();
+  let step;
+  if(weak+due)step=`<button class="sm" data-act="setup" data-v="review">Smart review · ${weak+due}</button><span class="mut">Fix your weak and due questions first</span>`;
+  else if(nr)step=`<button class="sm" data-act="read" data-v="${esc(nr.sk)}">Read</button><span class="mut">${esc(nr.t)}</span>`;
+  else if(unseen)step=`<button class="sm" data-act="setup" data-v="practice">Practice</button><span class="mut">${unseen} questions you have not seen yet</span>`;
+  else step=`<button class="sm" data-act="setup" data-v="exam">Take an exam</button><span class="mut">Test yourself under time pressure</span>`;
+  return `<div class="card coach"><div class="spread"><h2 style="margin:0">🎯 Exam coach</h2>${left!=null?`<span class="badge" style="margin:0">${left>0?left+' days to exam':left===0?'Exam today!':'Exam date passed'}</span>`:`<button class="plain sm" data-act="tab" data-v="settings">Set exam date</button>`}</div>
+   <div class="stats" style="margin-top:10px"><div class="stat"><b class="${sc>=750?'ok':''}">${sc}</b><span>readiness / 900</span></div><div class="stat"><b>${today}/${goal}</b><span>answered today</span></div><div class="stat"><b>${weak}</b><span>weak questions</span></div></div>
+   <div class="pbar" style="margin-top:10px"><i style="width:${Math.min(100,pct(today,goal))}%"></i></div>
+   ${left>0&&unseen?`<p class="mut" style="margin:8px 0 0">To see every question before the exam: about <b>${Math.ceil(unseen/left)}</b> new questions a day.</p>`:''}
+   <div class="lbl">Next step</div><div class="row">${step}</div>
+   ${ws.length?`<div class="lbl">Your weakest sections</div>${ws.map(w=>`<div class="spread" style="margin:6px 0"><div><div>${esc(w.n)}</div><div class="mut">${w.acc}% correct${w.w?' · '+w.w+' weak questions':''}</div></div><button class="plain sm" data-act="drillsec" data-v="${esc(w.k)}">Drill</button></div>`).join('')}`:''}
+   ${la?`<p class="mut" style="margin:10px 0 0">Last studied: ${esc(la.mode+(la.what||''))} · ${ago(la.t)}</p>`:''}</div>`;
+}
+
+/* ================= Backup ================= */
+const BK=['prog','hist','day','read','rpos','rlast','sess','last','set','cfg','userpacks','lastact'];
+function backupData(){const d={app:'StudyPrep',v:5,at:new Date().toISOString()};BK.forEach(k=>{const v=st.get(k,undefined);if(v!==undefined)d[k]=v});d.prog=P;d.set=SET;d.day=DAYS;if(S&&!S.done)d.sess=S;return d}
+function saveBackup(){
+  const b=new Blob([JSON.stringify(backupData())],{type:'application/json'}),a=document.createElement('a');
+  a.href=URL.createObjectURL(b);a.download='studyprep-backup-'+dkey()+'.json';document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500);st.set('bkat',now());toast('Backup saved to your Downloads folder');
+}
+function restoreBackup(txt){
+  const d=JSON.parse(txt);if(!d||typeof d.prog!=='object')throw 0;
+  BK.forEach(k=>{if(d[k]!==undefined)st.set(k,d[k])});st.set('bkat',now());
+  toast('Backup restored');setTimeout(()=>location.reload(),600);
 }
 
 /* ================= Setup ================= */
@@ -482,7 +563,7 @@ function renderReader(sk,keep){
   TX=[];
   const [pid,sec]=sk.split(':');const p=PACKS.find(x=>x.id===pid);if(!p||!p.study||!p.study[sec]){go('learn');return}
   const d=p.study[sec],t=d.t||[p.sections[sec].en,p.sections[sec].fa],rd=readSt(),lang=SET.rl||'both';
-  window._rk=sk;ACT='read';{const rp=st.get('rpos',{});st.set('rlast',sk);if(!keep&&rp[sk]>40)setTimeout(()=>window.scrollTo(0,rp[sk]),60)}
+  window._rk=sk;ACT='read';lastAct({mode:'Reading',what:' · '+p.short+' · '+(t[0]||'')});{const rp=st.get('rpos',{});st.set('rlast',sk);if(!keep&&rp[sk]>40)setTimeout(()=>window.scrollTo(0,rp[sk]),60)}
   const lg=[['en','English'],['both','English + فارسی'],['fa','فارسی']];
   page(`<div class="spread"><button class="plain sm" data-act="tab" data-v="learn">← Learn</button><span class="mut">${esc(p.short)}</span></div>
    <h1 style="margin-top:10px">${lang==='fa'?esc(t[1]):esc(t[0])}</h1>${lang==='both'?`<div class="fa" style="margin:-2px 0 8px;font-size:1.05rem">${esc(t[1])}</div>`:''}
@@ -573,6 +654,11 @@ function renderStats(){
 
 /* ================= Settings ================= */
 let deferred=null;
+function palGrid(){
+  const dark=isDark(),sw=(id,name,a,b)=>`<button class="pal ${SET.pal===id?'on':''}" data-act="pal" data-v="${esc(id)}"><i style="background:linear-gradient(135deg,${a},${b})"></i><span>${esc(name)}</span></button>`;
+  const grp=g=>THEMES.filter(t=>t[3]===g).map(t=>{const c=t[dark?5:4];return sw(t[0],t[1],c[5],c[6])}).join('');
+  return `<div class="pals">${sw('classic','StudyPrep',...CLASSIC[dark?'dark':'light'])}${grp('car')}</div><div class="lbl">More colours</div><div class="pals">${grp('color')}</div>`;
+}
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;if(tab==='settings')renderSettings()});
 function renderSettings(){
   const sel=(k,opts)=>`<select data-act="set" data-k="${k}">${opts.map(o=>`<option value="${o[0]}" ${String(SET[k])===String(o[0])?'selected':''}>${o[1]}</option>`).join('')}</select>`;
@@ -590,14 +676,20 @@ function renderSettings(){
    <div class="sw"><span>Spoken feedback<div class="mut">“Correct!”, “Well done!”, “Congratulations!”</div></span><input type="checkbox" data-act="tog" data-k="cues" ${SET.cues?'checked':''}></div>
    <div class="row" style="margin-top:10px"><button class="plain sm" data-act="speak" data-v="Hello! This is the study voice. Let us get started.">▶ Test voice</button><button class="plain sm" data-act="dlaudio">⬇ Download voice for offline</button></div>
    <p class="mut" id="dlst" style="margin:8px 0 0">Tap any word and press 🔊 to hear it. About 20 MB, downloaded once.</p></div>
-  <div class="card"><h3>Look</h3><div class="lbl" style="margin-top:0">Theme</div>${sel('theme',[['auto','Match device'],['dark','Dark'],['light','Light']])}
-   <div class="lbl">Text size</div>${sel('size',[[0.9,'Small'],[1,'Normal'],[1.12,'Large'],[1.25,'Extra large']])}</div>
+  <div class="card"><h3>Exam</h3><div class="lbl" style="margin-top:0">Exam date</div><input type="date" class="inp" data-act="examdate" value="${esc(SET.examDate||'')}">
+   <div class="lbl">Daily goal (answers)</div>${sel('goal',[[10,'10'],[20,'20'],[30,'30'],[50,'50'],[80,'80'],[120,'120']])}</div>
+  <div class="card"><h3>Look</h3><div class="lbl" style="margin-top:0">Background</div>
+   <div class="chips">${[['auto','Match device'],['dark','🌙 Dark'],['light','☀️ Light']].map(o=>`<button class="chip ${SET.theme===o[0]?'on':''}" data-act="mode" data-v="${o[0]}">${o[1]}</button>`).join('')}</div>
+   <div class="lbl">Text size</div>${sel('size',[[0.9,'Small'],[1,'Normal'],[1.12,'Large'],[1.25,'Extra large'],[1.4,'Huge']])}
+   <div class="lbl">Colour theme</div>${palGrid()}</div>
   <div class="card"><h3>Install on this device</h3>
    ${deferred?`<button data-act="install">Install app</button>`:''}
    <p class="mut"><b>iPhone / iPad (Safari):</b> Share → Add to Home Screen.<br><b>Android (Chrome):</b> menu → Install app.<br><b>Windows / Linux (Chrome, Edge):</b> install icon in the address bar.<br><b>Mac:</b> Chrome install icon, or Safari File → Add to Dock.<br>It works offline once opened one time. Progress is stored on each device separately; use backup to move it.</p></div>
-  <div class="card"><h3>Backup</h3><div class="row"><button class="plain" data-act="export">Export progress</button><button class="plain" data-act="importui">Import progress</button></div></div>
+  <div class="card"><h3>Backup</h3><p class="mut" style="margin-top:0">Saves everything: progress, weak questions, reading position, stats, settings and added courses. ${st.get('bkat')?'Last backup: '+ago(st.get('bkat'))+'.':'No backup yet.'}</p>
+   <div class="row"><button data-act="export">💾 Save backup file</button><button class="plain" data-act="importfile">📂 Restore from file</button><input type="file" id="bkf" accept=".json,application/json" hidden></div>
+   <div class="row" style="margin-top:8px"><button class="plain sm" data-act="exporttxt">Copy as text</button><button class="plain sm" data-act="importui">Paste text</button></div></div>
   <div class="card"><h3>Reset</h3><button class="danger" data-act="reset">Erase all progress</button></div>
-  <p class="mut">StudyPrep v4 · scores are practice estimates.</p>`);
+  <p class="mut">StudyPrep v5 · scores are practice estimates.</p>`);
 }
 
 /* ================= events ================= */
@@ -607,7 +699,10 @@ document.addEventListener('click',e=>{
   const b=e.target.closest('[data-act]');if(!b||b.tagName==='SELECT'||b.tagName==='INPUT')return;
   const a=b.dataset.act,v=b.dataset.v;
   switch(a){
-    case 'tab':closeModal();clearInterval(timerId);if(S&&S.done)S=null;go(v);break;
+    case 'tab':closeModal();clearInterval(timerId);if(S&&S.done)S=null;if(S)st.set('sess',S);go(v);break;
+    case 'mode':SET.theme=v;st.set('set',SET);applyLook();renderSettings();break;
+    case 'pal':SET.pal=v;st.set('set',SET);applyLook();renderSettings();break;
+    case 'drillsec':startSession({mode:'review',secs:[v],n:15,timer:'off'});break;
     case 'setup':cfg.mode=v;go('setup');break;
     case 'cfgmode':cfg.mode=v;st.set('cfg',cfg);renderSetup();break;
     case 'cfgn':cfg.n=+v;st.set('cfg',cfg);renderSetup();break;
@@ -648,10 +743,12 @@ document.addEventListener('click',e=>{
     case 'delpack':{if(!confirm('Remove this course? Your progress on it is kept.'))break;st.set('userpacks',st.get('userpacks',[]).filter(p=>p.id!==v));loadPacks();renderCourses();break}
     case 'drilltopic':{const w=window._weak[+v];const ids=w.ids.slice().sort((x,y)=>(P[x].b-P[y].b)).slice(0,15);startSession({mode:'review',ids,timer:'off',n:ids.length});break}
     case 'install':if(deferred){deferred.prompt();deferred=null}break;
-    case 'export':modal(`<h3>Your progress</h3><textarea id="ex" readonly>${esc(JSON.stringify({prog:P,hist:st.get('hist',[]),set:SET,userpacks:st.get('userpacks',[])}))}</textarea><button data-act="copy">Copy</button><button class="plain" data-act="close">Close</button>`);break;
+    case 'export':saveBackup();if(tab==='settings')renderSettings();else if(tab==='home'&&ACT!=='quiz')renderHome();break;
+    case 'importfile':{const f=$('#bkf');f.onchange=()=>{const x=f.files[0];if(x)x.text().then(t=>{try{restoreBackup(t)}catch(_){toast('That is not a StudyPrep backup file')}})};f.click();break}
+    case 'exporttxt':modal(`<h3>Your progress</h3><textarea id="ex" readonly>${esc(JSON.stringify(backupData()))}</textarea><button data-act="copy">Copy</button><button class="plain" data-act="close">Close</button>`);break;
     case 'copy':{const t=$('#ex');t.select();try{navigator.clipboard.writeText(t.value).then(()=>toast('Copied'),()=>document.execCommand('copy'))}catch(_){document.execCommand('copy')}break}
     case 'importui':modal(`<h3>Import progress</h3><textarea id="im" placeholder="Paste exported progress here"></textarea><button data-act="doimport">Import</button><button class="plain" data-act="close">Cancel</button>`);break;
-    case 'doimport':try{const d=JSON.parse($('#im').value);if(!d.prog)throw 0;P=d.prog;savP();if(d.hist)st.set('hist',d.hist);if(d.userpacks)st.set('userpacks',d.userpacks);if(d.set){SET=Object.assign(SET,d.set);st.set('set',SET)}loadPacks();applyLook();closeModal();toast('Imported');renderSettings()}catch(_){toast('That is not valid progress data')}break;
+    case 'doimport':try{restoreBackup($('#im').value);closeModal()}catch(_){toast('That is not valid progress data')}break;
     case 'reset':if(confirm('Erase ALL progress and history on this device?')){P={};['prog','hist','sess','last'].forEach(st.del);S=null;toast('Progress erased');go('home')}break;
   }
 });
@@ -660,9 +757,10 @@ document.addEventListener('change',e=>{
   if(a==='ans'){const it=cur();if(it.ck)return;t.value===''?delete it.ans[t.dataset.v]:it.ans[t.dataset.v]=+t.value;st.set('sess',S);if(S.mode!=='exam'){const b=$('.bot button');if(b)b.disabled=!Object.keys(it.ans).length}}
   else if(a==='packtog'){const id=t.dataset.v;SET.off.packs=SET.off.packs.filter(x=>x!==id);if(!t.checked)SET.off.packs.push(id);st.set('set',SET);cfg.secs=null;renderCourses()}
   else if(a==='sectog'){const k=t.dataset.v;SET.off.secs=SET.off.secs.filter(x=>x!==k);if(!t.checked)SET.off.secs.push(k);st.set('set',SET);cfg.secs=null;renderCourses()}
-  else if(a==='set'){const k=t.dataset.k;SET[k]=(k==='size'||k==='vol')?+t.value:t.value;st.set('set',SET);applyLook();if(k==='vol'){FX.set({vol:SET.vol});FX.ok()}}
+  else if(a==='set'){const k=t.dataset.k;SET[k]=(k==='size'||k==='vol'||k==='goal')?+t.value:t.value;st.set('set',SET);applyLook();if(k==='vol'){FX.set({vol:SET.vol});FX.ok()}}
   else if(a==='tog'){const k=t.dataset.k;SET[k]=t.checked;st.set('set',SET);FX.set({[k]:SET[k]});if(k==='mus')FX.music(SET.mus);if((k==='auto'||k==='cues')&&!t.checked)vStop();if(k==='snd'&&t.checked)FX.ok()}
   else if(a==='examfa'){SET.examFa=t.checked;st.set('set',SET)}
+  else if(a==='examdate'){SET.examDate=t.value;st.set('set',SET)}
 });
 
 /* ================= boot ================= */
