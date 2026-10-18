@@ -25,4 +25,4 @@ Or paste/upload a pack JSON in the app under Courses > Add a course (no code nee
 - Dark / light background and 38 colour themes copied from Shift Priority (`themes.js`).
 - Exam coach on Home: exam date countdown, readiness estimate, daily goal, weakest sections, next step, last studied.
 - Backup to a file and restore from a file (all progress, stats, reading position, settings, courses).
-- Windows: double-click `StudyPrep-Windows.bat` (gets updates with git, starts a local server, opens the app).
+- Windows: double-click `StudyPrep-Windows.bat` once. It starts a small local server (also at every Windows start) and opens the app. The server downloads the newest version from GitHub by itself when the app is opened, so closing and reopening the app is enough to get updates.
