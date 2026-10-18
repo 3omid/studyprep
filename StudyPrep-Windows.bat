@@ -16,4 +16,4 @@ if errorlevel 1 (
 )
 
 rem 3) Open the app in its own window (Microsoft Edge comes with Windows)
-start "" msedge --app=http://localhost:8765/ || start "" http://localhost:8765/
+start "" msedge --app=http://localhost:8765/ --start-maximized || start "" http://localhost:8765/

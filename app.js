@@ -286,7 +286,7 @@ function confetti(){const d=document.createElement('div');d.className='confetti'
   document.body.appendChild(d);setTimeout(()=>d.remove(),3600)}
 function modal(html){closeModal();const o=document.createElement('div');o.className='ov';o.id='ov';o.innerHTML='<div class="sheet">'+html+'</div>';o.addEventListener('click',e=>{if(e.target===o)closeModal()});document.body.appendChild(o)}
 function closeModal(){const o=$('#ov');if(o)o.remove()}
-function page(html,bar,keep){const y=window.scrollY;$('#main').innerHTML=html;window.scrollTo(0,keep?y:0)}
+function page(html,bar,keep){const y=window.scrollY,m=$('#main');m.classList.toggle('narrow',ACT==='quiz'||ACT==='read');m.innerHTML=html;window.scrollTo(0,keep?y:0)}
 function renderTabs(){
   const T=[['home','🏠','Home'],['learn','📖','Learn'],['courses','📚','Courses'],['stats','📈','Stats'],['settings','⚙️','Settings']];
   $('#tabs').innerHTML=T.map(t=>`<button data-act="tab" data-v="${t[0]}" class="${tab===t[0]?'on':''}"><span class="i">${t[1]}</span>${t[2]}</button>`).join('');
@@ -539,8 +539,8 @@ function renderLearn(){
   const cards=PACKS.filter(packOn).map(p=>{
     const ks=Object.keys(p.sections).filter(k=>p.study&&p.study[k]);
     if(!ks.length)return '';
-    return `<div class="card"><h2>${esc(p.name)}</h2>${ks.map(k=>{const sk=secKey(p,k);const t=p.study[k].t||[p.sections[k].en,p.sections[k].fa];
-      return `<button class="tile plain" style="margin-bottom:8px;box-shadow:none" data-act="read" data-v="${esc(sk)}"><span class="ic">${rd[sk]?'✅':'📘'}</span><span><b>${esc(k.length<3?k+' · ':'')}${esc(t[0])}</b><span class="d">${esc(t[1]||'')}</span></span></button>`}).join('')}</div>`}).join('');
+    return `<div class="card"><h2>${esc(p.name)}</h2><div class="lgrid">${ks.map(k=>{const sk=secKey(p,k);const t=p.study[k].t||[p.sections[k].en,p.sections[k].fa];
+      return `<button class="tile plain ltile" data-act="read" data-v="${esc(sk)}"><span class="ic">${rd[sk]?'✅':'📘'}</span><span><b>${esc(k.length<3?k+' · ':'')}${esc(t[0])}</b><span class="d">${esc(t[1]||'')}</span></span></button>`}).join('')}</div></div>`}).join('');
   const rl=st.get('rlast'),rlp=rl&&PACKS.find(x=>x.id===rl.split(':')[0]),rlt=rlp&&rlp.study&&rlp.study[rl.split(':')[1]];
   const cont=rlt?`<div class="card" style="border-color:var(--ac)"><b>Continue reading</b><div class="mut">${esc((rlt.t||[''])[0])}</div><div class="row" style="margin-top:10px"><button data-act="rdresume">Continue</button></div></div>`:'';
   page(`<h1>Learn</h1>${cont}<p class="sub">Read the key points first, then practice the questions. Notes are in English and Persian.</p>${cards||'<div class="card empty">No study notes for the courses that are on.</div>'}`);
@@ -576,7 +576,7 @@ function renderReader(sk,keep){
 /* ================= Courses ================= */
 function renderCourses(){
   page(`<h1>Courses</h1><p class="sub">Turn whole courses or single sections on and off. Practice, exams and review only use what is on.</p>
-  ${PACKS.map(p=>{
+  <div class="cols">${PACKS.map(p=>{
     const ids=Object.keys(Q).filter(i=>Q[i].pack===p);const seen=ids.filter(i=>P[i]).length;
     return `<div class="card"><div class="sw"><div><b>${esc(p.name)}</b><div class="mut">${ids.length} questions · ${pct(seen,ids.length)}% seen${p.user?' · imported':''}</div></div>
       <input type="checkbox" data-act="packtog" data-v="${esc(p.id)}" ${packOn(p)?'checked':''} aria-label="Enable ${esc(p.name)}"></div>
@@ -587,7 +587,7 @@ function renderCourses(){
       ${p.user?`<button class="danger sm" data-act="delpack" data-v="${esc(p.id)}" style="margin-top:8px">Remove this course</button>`:''}</div>`}).join('')}
   <div class="card"><h2>Add a course</h2><p class="mut">Paste a course pack (JSON), or pick a .json file. Ask Claude to turn your class slides into a pack in this format.</p>
    <textarea id="packtxt" placeholder='{"id":"netplus","name":"CompTIA Network+","short":"Network+","sections":{"1":"Networking concepts"},"mcq":[{"id":"1","sec":"1","q":"Question?","o":["Correct answer","Wrong","Wrong","Wrong"],"en":"Why it is correct"}]}'></textarea>
-   <div class="row" style="margin-top:8px"><button data-act="addpack">Add pack</button><button class="plain" data-act="pickfile">Choose file…</button><input type="file" id="pf" accept=".json,application/json" hidden></div></div>`);
+   <div class="row" style="margin-top:8px"><button data-act="addpack">Add pack</button><button class="plain" data-act="pickfile">Choose file…</button><input type="file" id="pf" accept=".json,application/json" hidden></div></div></div>`);
   const pf=$('#pf');if(pf)pf.onchange=()=>{const f=pf.files[0];if(!f)return;f.text().then(t=>{$('#packtxt').value=t;addPack()})};
 }
 function addPack(){
@@ -632,7 +632,7 @@ function renderStats(){
   const delta=(a,b,u)=>{const d=a-b;return `<span class="${d>=0?'ok':'no'}">${d>=0?'▲ +':'▼ '}${d}${u}</span>`};
   const histAll=st.get('hist',[]).slice(-12);
   const scoreLine=histAll.length?(()=>{const n=histAll.length,pts=histAll.map((h,i)=>[n>1?10+i*(W_-20)/(n-1):W_/2,H_-14-(h.score-100)/800*(H_-26)]);return `<line x1="0" x2="${W_}" y1="${H_-14-(650/800)*(H_-26)}" y2="${H_-14-(650/800)*(H_-26)}" stroke="var(--warn)" stroke-dasharray="4 4"/><polyline points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="var(--ac)" stroke-width="2.5"/>`+pts.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="3.5" fill="var(--ac)"/><text x="${p[0]}" y="${p[1]-7}" text-anchor="middle" font-size="9" fill="var(--mut)">${histAll[i].score}</text>`).join('')})():'';
-  page(`<h1>Stats</h1>
+  page(`<h1>Stats</h1><div class="cols">
   <div class="card"><h2>Your effort</h2><div class="stats">
    <div class="stat"><b>${fmtM(totS)}</b><span>total study time</span></div>
    <div class="stat"><b>${fmtM((DAYS[dk(0)]||{s:0}).s)}</b><span>today</span></div>
@@ -648,7 +648,7 @@ function renderStats(){
   ${histAll.length?`<div class="card"><h2>Practice / exam scores</h2><svg viewBox="0 0 ${W_} ${H_}" width="100%" role="img" aria-label="Scores over time">${scoreLine}</svg><p class="mut" style="margin:6px 0 0">Dashed line = 750 pass mark</p></div>`:''}
   <div class="card"><h2>Coverage and accuracy</h2>${rows.length?rows.map(r=>`<div class="bar2"><span>${esc(r.n)}</span><div class="t"><i class="${r.acc==null?'':cls(r.acc)}" style="width:${r.acc==null?0:r.acc}%"></i></div><span>${r.acc==null?'–':r.acc+'%'}</span></div><div class="mut" style="margin:-4px 0 6px">${r.seen}/${r.t} seen</div>`).join(''):'<div class="empty">Nothing active.</div>'}</div>
   <div class="card"><h2>Work on these next</h2>${weak.length?weak.map((w,i)=>`<div class="spread" style="margin:8px 0"><div><div>${esc(w.k)}</div><div class="mut">${w.acc}% over ${w.a} answers</div></div><button class="sm" data-act="drilltopic" data-v="${i}">Drill</button></div>`).join(''):'<div class="mut">Answer a few questions and your weak topics will show up here.</div>'}</div>
-  <div class="card"><h2>Recent sessions</h2>${hist.length?hist.map(h=>`<div class="spread mut" style="margin:6px 0"><span>${new Date(h.t).toLocaleDateString()} · ${esc(h.mode)}</span><span><b style="color:var(--ink)">${h.score}</b> /900 · ${h.right}/${h.total}</span></div>`).join(''):'<div class="mut">No sessions yet.</div>'}</div>`);
+  <div class="card"><h2>Recent sessions</h2>${hist.length?hist.map(h=>`<div class="spread mut" style="margin:6px 0"><span>${new Date(h.t).toLocaleDateString()} · ${esc(h.mode)}</span><span><b style="color:var(--ink)">${h.score}</b> /900 · ${h.right}/${h.total}</span></div>`).join(''):'<div class="mut">No sessions yet.</div>'}</div></div>`);
   window._weak=weak;
 }
 
@@ -662,7 +662,7 @@ function palGrid(){
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;if(tab==='settings')renderSettings()});
 function renderSettings(){
   const sel=(k,opts)=>`<select data-act="set" data-k="${k}">${opts.map(o=>`<option value="${o[0]}" ${String(SET[k])===String(o[0])?'selected':''}>${o[1]}</option>`).join('')}</select>`;
-  page(`<h1>Settings</h1>
+  page(`<h1>Settings</h1><div class="cols">
   <div class="card"><h3>Persian help (practice and review)</h3>${sel('fa',[['off','Off — English only'],['tap','Tap to show per question'],['always','Always show']])}
    <div class="sw" style="margin-top:6px"><span>Allow Persian help in Exam mode<div class="mut">Off = like the real English exam</div></span><input type="checkbox" data-act="examfa" ${SET.examFa?'checked':''}></div></div>
   <div class="card"><h3>Persian explanation after answering</h3>${sel('faExp',[['tap','Tap a button to show it'],['auto','Show automatically']])}</div>
@@ -689,7 +689,7 @@ function renderSettings(){
    <div class="row"><button data-act="export">💾 Save backup file</button><button class="plain" data-act="importfile">📂 Restore from file</button><input type="file" id="bkf" accept=".json,application/json" hidden></div>
    <div class="row" style="margin-top:8px"><button class="plain sm" data-act="exporttxt">Copy as text</button><button class="plain sm" data-act="importui">Paste text</button></div></div>
   <div class="card"><h3>Reset</h3><button class="danger" data-act="reset">Erase all progress</button></div>
-  <p class="mut">StudyPrep v5 · scores are practice estimates.</p>`);
+  </div><p class="mut">StudyPrep v5 · scores are practice estimates.</p>`);
 }
 
 /* ================= events ================= */
