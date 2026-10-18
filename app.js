@@ -286,7 +286,9 @@ function confetti(){const d=document.createElement('div');d.className='confetti'
   document.body.appendChild(d);setTimeout(()=>d.remove(),3600)}
 function modal(html){closeModal();const o=document.createElement('div');o.className='ov';o.id='ov';o.innerHTML='<div class="sheet">'+html+'</div>';o.addEventListener('click',e=>{if(e.target===o)closeModal()});document.body.appendChild(o)}
 function closeModal(){const o=$('#ov');if(o)o.remove()}
-function page(html,bar,keep){const y=window.scrollY,m=$('#main');m.classList.toggle('narrow',ACT==='quiz'||ACT==='read');m.innerHTML=html;window.scrollTo(0,keep?y:0)}
+function page(html,bar,keep){const y=window.scrollY,m=$('#main');m.innerHTML=html;
+  // the action bar must sit outside #main: its animation would make the bar scroll with the page
+  document.querySelectorAll('body>.bot').forEach(b=>b.remove());const bb=m.querySelector('.bot');if(bb)document.body.appendChild(bb);window.scrollTo(0,keep?y:0)}
 function renderTabs(){
   const T=[['home','🏠','Home'],['learn','📖','Learn'],['courses','📚','Courses'],['stats','📈','Stats'],['settings','⚙️','Settings']];
   $('#tabs').innerHTML=T.map(t=>`<button data-act="tab" data-v="${t[0]}" class="${tab===t[0]?'on':''}"><span class="i">${t[1]}</span>${t[2]}</button>`).join('');
@@ -462,20 +464,20 @@ function renderQuiz(keep){
     body=`<div class="tag spread"><span>${esc(secName(q))}${it.re?' · ↻ retry':''}</span><button class="plain sm spk" data-act="speakq" aria-label="Read the question aloud">🔊</button></div><p class="q">${W(q.q)}</p>
     ${sf&&q.qf?`<div class="fabox">${esc(q.qf)}${it.hint&&q.hf&&!it.ck?`<hr style="border:0;border-top:1px dashed var(--line)"><b>💡 ${esc(q.hf)}</b>`:''}</div>`:''}
     ${it.ck?'':`<p class="hint">Tap the circle to choose · tap any word to see its meaning</p>`}
-    ${it.ord.map((oi,d)=>{
+    <div class="opts">${it.ord.map((oi,d)=>{
       let c='opt2';if(it.ck){if(oi===0)c+=' right';else if(it.pick===d)c+=' wrong'}else if(it.pick===d)c+=' sel';
-      return `<div class="${c}"><button class="rc" data-act="pick" data-v="${d}" aria-label="Choose option ${'ABCDEFGH'[d]}" aria-pressed="${it.pick===d}">${'ABCDEFGH'[d]}</button><div class="t">${W(q.o[oi])}${sf&&q.of[oi]?`<div class="fa">${esc(q.of[oi])}</div>`:''}</div></div>`}).join('')}
+      return `<div class="${c}"><button class="rc" data-act="pick" data-v="${d}" aria-label="Choose option ${'ABCDEFGH'[d]}" aria-pressed="${it.pick===d}">${'ABCDEFGH'[d]}</button><div class="t">${W(q.o[oi])}${sf&&q.of[oi]?`<div class="fa">${esc(q.of[oi])}</div>`:''}</div></div>`}).join('')}</div>
     ${it.ck?fbBlock(it,q):''}`;
   }else{
     const sf=sf0;
     const zs=sf&&q.zf.length?q.zf:q.zones;
     body=`<div class="tag spread"><span>${esc(secName(q))} · scenario${it.re?' · ↻ retry':''}</span><button class="plain sm spk" data-act="speakq" aria-label="Read the question aloud">🔊</button></div><p class="q">${W(q.title)}</p>
     ${sf&&q.tf?`<div class="fabox">${esc(q.tf)}</div>`:''}
-    ${it.ord.map(ii=>{const x=q.items[ii];const a=it.ans[ii];
+    <div class="opts">${it.ord.map(ii=>{const x=q.items[ii];const a=it.ans[ii];
       const rc=it.ck?(a===x[1]?' rk':' rn'):'';
       return `<div class="pbq${rc}"><div>${W(x[0])}</div>${sf&&x[2]?`<div class="fa">${esc(x[2])}</div>`:''}
       <select data-act="ans" data-v="${ii}" ${it.ck?'disabled':''}><option value="">Choose…</option>${zs.map((z,zi)=>`<option value="${zi}" ${a===zi?'selected':''}>${esc(z)}</option>`).join('')}</select>
-      ${it.ck&&a!==x[1]?`<div class="mut" style="margin-top:4px">Correct: <b>${esc(q.zones[x[1]])}</b></div>`:''}</div>`}).join('')}
+      ${it.ck&&a!==x[1]?`<div class="mut" style="margin-top:4px">Correct: <b>${esc(q.zones[x[1]])}</b></div>`:''}</div>`}).join('')}</div>
     ${it.ck?fbBlock(it,q):''}`;
   }
   const ready=q.k==='m'?it.pick!=null:Object.keys(it.ans).length>0;
@@ -548,7 +550,7 @@ function renderLearn(){
 function blockHTML(b,lang){
   const both=lang==='both',en=lang!=='fa',fa=lang!=='en';
   const E=t=>en?W(t):'',F=t=>fa?`<span class="fa${both?'':' only'}">${esc(t)}</span>`:'';
-  const pair=(e,f)=>(en?`<div>${E(e)}</div>`:'')+(fa?`<div class="fa${both?'':' only'}">${esc(f)}</div>`:'');
+  const pair=(e,f)=>{const h=(en?`<div>${E(e)}</div>`:'')+(fa?`<div class="fa${both?'':' only'}">${esc(f)}</div>`:'');return both?`<div class="pair">${h}</div>`:h};
   if(b.k==='h')return `<h3 class="rh">${en?esc(b.en):''}${both?' <span class="fa">· '+esc(b.fa)+'</span>':fa?esc(b.fa):''}</h3>`;
   if(b.k==='p')return `<div class="rp">${pair(b.en,b.fa)}</div>`;
   if(b.k==='tip')return `<div class="rtip"><b>${fa&&!en?'نکته‌ی امتحان':'Exam tip'}</b>${pair(b.en,b.fa)}</div>`;
