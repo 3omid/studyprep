@@ -754,7 +754,7 @@ function renderSettings(){
    <div class="sw"><span>Read each new question aloud<div class="mut">Also plays when you tap Next</div></span><input type="checkbox" data-act="tog" data-k="auto" ${SET.auto?'checked':''}></div>
    <div class="sw"><span>Spoken feedback<div class="mut">“Correct!”, “Well done!”, “Congratulations!”</div></span><input type="checkbox" data-act="tog" data-k="cues" ${SET.cues?'checked':''}></div>
    <div class="row" style="margin-top:10px"><button class="plain sm" data-act="speak" data-v="Hello! This is the study voice. Let us get started.">▶ Test voice</button><button class="plain sm" data-act="dlaudio">⬇ Download voice for offline</button></div>
-   <p class="mut" id="dlst" style="margin:8px 0 0">Tap any word and press 🔊 to hear it. About 20 MB, downloaded once.</p></div>
+   <p class="mut" id="dlst" style="margin:8px 0 0">Tap any word and press 🔊 to hear it. About 18 MB, downloaded once.</p></div>
   ${aiSettings()}
   <div class="card"><h3>Exam</h3><div class="lbl" style="margin-top:0">Exam date</div><input type="date" class="inp" data-act="examdate" value="${esc(SET.examDate||'')}">
    <div class="lbl">Daily goal (answers)</div>${sel('goal',[[10,'10'],[20,'20'],[30,'30'],[50,'50'],[80,'80'],[120,'120']])}</div>

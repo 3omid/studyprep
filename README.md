@@ -15,7 +15,7 @@ Or paste/upload a pack JSON in the app under Courses > Add a course (no code nee
 
 ## v4 additions
 - `dict.js`: built-in English + Persian dictionary (works offline).
-- `audio/`: pre-recorded American English voice (Kokoro, voice `af_heart`) for cues, questions, notes and words. `idx.json` maps a text hash to a byte range in `w.txt` (single words) or `s.txt` (sentences). They are MP3 data; the `.txt` name keeps download managers such as IDM from grabbing them. Missing text falls back to the device voice.
+- `audio/`: pre-recorded American English voice (Chatterbox Turbo by Resemble AI, built-in voice; each clip checked with Whisper and re-made if misheard) for cues, questions, notes and words. `idx.json` maps a text hash to a byte range in `w2.txt` (single words) or `s2.txt` (sentences). A new voice set gets new bundle names, because the app caches bundles by name. They are MP3 data; the `.txt` name keeps download managers such as IDM from grabbing them. Missing text falls back to the device voice.
 - Stats tab: study time, daily right/wrong, accuracy trend, week-over-week, scores. Data in `sp1_day`.
 - Reading position is remembered (`sp1_rlast`, `sp1_rpos`).
 

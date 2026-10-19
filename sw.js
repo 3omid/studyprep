@@ -1,7 +1,7 @@
 // Offline cache. App files are fetched fresh when online (so an update shows up the next
 // time the app is opened) and come from the cache when offline. Audio stays cache-first.
-const VERSION='studyprep-v7';
-const AUDIO='sp-audio2'; // new name drops the old cache that still listed the .bin bundles
+const VERSION='studyprep-v8';
+const AUDIO='sp-audio3'; // new name drops the old cache that still held the Kokoro bundles
 const FILES=['./','index.html','style.css','app.js','manifest.webmanifest','packs/secplus.js','packs/secplus-m7-m8.js','packs/secplus-study.js','glossary.js','dict.js','fx.js','themes.js',
   'icons/icon-192.png','icons/icon-512.png','icons/maskable-512.png','icons/apple-touch-icon.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(VERSION).then(c=>c.addAll(FILES.map(f=>new Request(f,{cache:'reload'})))).then(()=>self.skipWaiting()))});
