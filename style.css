@@ -186,3 +186,13 @@ details{border:1px solid var(--line);border-radius:14px;padding:8px 12px;margin-
   .opts{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
 }
 @media(min-width:1600px){html{font-size:calc(16px*var(--fs))}}
+/* AI tutor */
+.ailog{max-height:52vh;overflow:auto;margin:10px 0;display:flex;flex-direction:column;gap:8px}
+.aim{border-radius:14px;padding:10px 14px;line-height:1.75;background:var(--sf2);unicode-bidi:plaintext}
+.aim.u{align-self:flex-end;background:var(--sel);max-width:85%}
+.aim.err{background:transparent;border:1px solid var(--bad,#e5484d);color:var(--ink)}
+.ailog.aifa .aim{font-family:var(--fa)}
+.aim code{font:.88em var(--mono);background:var(--sf);padding:1px 5px;border-radius:6px}
+.aiq{display:flex;gap:8px;align-items:center}.aiq .inp{flex:1}
+.sheet .aiq button{width:auto;margin:0;min-width:52px}
+.sheet .chips .chip{width:auto;margin:0}

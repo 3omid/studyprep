@@ -26,3 +26,6 @@ Or paste/upload a pack JSON in the app under Courses > Add a course (no code nee
 - Exam coach on Home: exam date countdown, readiness estimate, daily goal, weakest sections, next step, last studied.
 - Backup to a file and restore from a file (all progress, stats, reading position, settings, courses).
 - Windows: double-click `StudyPrep-Windows.bat` once. It starts a small local server (also at every Windows start) and opens the app. The server downloads the newest version from GitHub by itself when the app is opened, so closing and reopening the app is enough to get updates.
+
+## v6 additions
+- AI tutor: after answering a question (not in Exam mode), tap “Ask AI” to have it explained in Persian or English and ask follow-up questions. Set it up in Settings → AI tutor: pick a provider (Google Gemini, OpenRouter or Groq, all with free plans), paste your own free key and optionally a model name. The key stays in this browser only (`sp1_aikey`) and is not included in backups. Providers live in the `AIP` table in `app.js`; any OpenAI-compatible service can be added with one entry.

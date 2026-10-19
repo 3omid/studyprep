@@ -429,10 +429,74 @@ function renderSetup(){
 }
 
 /* ================= Quiz ================= */
+/* ---- AI tutor: explains answers and chats about a question. Uses the viewer's own free API key
+   (kept only on this device, never in backups). Providers are a table, so adding one is one entry. ---- */
+const AIP={
+  gemini:{n:'Google Gemini (free)',m:'gemini-flash-latest',key:'https://aistudio.google.com/apikey'},
+  openrouter:{n:'OpenRouter (free models, incl. Qwen / DeepSeek)',m:'openrouter/free',key:'https://openrouter.ai/keys',
+    url:'https://openrouter.ai/api/v1/chat/completions'},
+  groq:{n:'Groq (fast, free)',m:'openai/gpt-oss-20b',key:'https://console.groq.com/keys',
+    url:'https://api.groq.com/openai/v1/chat/completions'}
+};
+const aiCfg=()=>Object.assign({p:'gemini',m:{},lang:'fa'},SET.ai||{});
+const aiKeys=()=>st.get('aikey',{});
+const aiModel=c=>(c.m[c.p]||'').trim()||AIP[c.p].m;
+const aiReady=()=>!!aiKeys()[aiCfg().p];
+function aiCall(sys,msgs){
+  const c=aiCfg(),key=aiKeys()[c.p],model=aiModel(c),ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),60000);
+  if(!key)return Promise.reject(new Error('Add your AI key in Settings first.'));
+  let req;
+  if(c.p==='gemini')req=fetch('https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent(model)+':generateContent',{method:'POST',signal:ctl.signal,
+    headers:{'Content-Type':'application/json','x-goog-api-key':key},
+    body:JSON.stringify({systemInstruction:{parts:[{text:sys}]},contents:msgs.map(m=>({role:m.r==='u'?'user':'model',parts:[{text:m.t}]}))})});
+  else req=fetch(AIP[c.p].url,{method:'POST',signal:ctl.signal,
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+key,'X-Title':'StudyPrep'},
+    body:JSON.stringify({model,messages:[{role:'system',content:sys}].concat(msgs.map(m=>({role:m.r==='u'?'user':'assistant',content:m.t})))})});
+  return req.then(r=>r.json().catch(()=>({})).then(d=>{clearTimeout(t);
+    if(!r.ok)throw new Error((d.error&&(d.error.message||d.error))||('Error '+r.status));
+    const x=c.p==='gemini'?((((d.candidates||[])[0]||{}).content||{}).parts||[]).map(p=>p.text||'').join(''):(((d.choices||[])[0]||{}).message||{}).content;
+    if(!x)throw new Error('The AI sent an empty answer. Try again or pick another model.');
+    return String(x).replace(/<think>[\s\S]*?<\/think>/g,'').trim()}),
+    e=>{clearTimeout(t);throw new Error(e.name==='AbortError'?'The AI took too long. Try again.':'No connection to the AI. Check the internet.')});
+}
+// light markdown: bold, inline code, bullets; a line with any Persian reads right-to-left; everything else escaped
+const aiMd=s=>esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`([^`]+)`/g,'<code>$1</code>').replace(/^\s*[-*•]\s+/gm,'• ').replace(/^#+\s*/gm,'').split('\n').map(l=>l.trim()?`<div dir="${/[\u0600-\u06FF]/.test(l)?'rtl':'ltr'}">${l}</div>`:'').join('');
+function aiContext(it,q){
+  const L='ABCDEFGH';
+  if(q.k==='m'){const opts=it.ord.map((oi,d)=>L[d]+') '+q.o[oi]).join('\n'),right=L[it.ord.indexOf(0)],mine=it.pick!=null?L[it.pick]:'none';
+    return `Course: ${secName(q)}\nQuestion: ${q.q}\nOptions:\n${opts}\nCorrect answer: ${right}\nStudent chose: ${mine} (${it.ok?'correct':'wrong'})\nBook explanation: ${q.en||''}`}
+  return `Course: ${secName(q)}\nScenario: ${q.title}\nZones: ${q.zones.join(', ')}\n`+q.items.map((x,i)=>`- ${x[0]} → correct: ${q.zones[x[1]]}; student: ${it.ans[i]!=null?q.zones[it.ans[i]]:'none'}`).join('\n')+`\nBook explanation: ${q.en||''}`;
+}
+const AIH={};
+function aiOpen(){
+  const it=cur(),q=Q[it.id];
+  if(!aiReady()){modal(`<h3>🤖 AI tutor</h3><p>To use the AI tutor, add a free key once in Settings → AI tutor.</p><p class="fa">برای استفاده از هوش مصنوعی، یک بار کلید رایگان را در تنظیمات وارد کنید.</p><button data-act="aiset">Open Settings</button><button class="plain" data-act="close">Close</button>`);return}
+  const h=AIH[it.id]||(AIH[it.id]={it,q,m:[]});h.it=it;
+  modal(`<div class="spread"><h3 style="margin:0">🤖 AI tutor</h3><span class="mut" style="font-size:.75rem">${esc(AIP[aiCfg().p].n.split(' (')[0])} · ${esc(aiModel(aiCfg()))}</span></div>
+    <div id="ailog" class="ailog${aiCfg().lang==='fa'?' aifa':''}"></div>
+    <div class="aiq"><input class="inp" id="aiin" dir="auto" placeholder="Ask about this question… · سؤالتان را بپرسید" enterkeyhint="send"><button data-act="aisend" aria-label="Send">➤</button></div>
+    <div class="chips" style="margin-top:6px"><button class="chip" data-act="aiask" data-v="ex">Real-world example · مثال واقعی</button><button class="chip" data-act="aiask" data-v="sim">Explain simpler · ساده‌تر</button><button class="chip" data-act="aiask" data-v="mem">Memory trick · روش یادسپاری</button></div>`);
+  aiDraw(h);
+  if(!h.m.length)aiSend(h,it.ok?'Explain briefly why this answer is correct and why each other option is wrong.':'I got this wrong. Explain why my choice is wrong, why the correct answer is right, and how to spot it next time.');
+}
+function aiDraw(h){const b=$('#ailog');if(!b)return;
+  b.innerHTML=h.m.map(m=>`<div class="aim ${m.r}" dir="auto">${m.r==='u'?esc(m.t):aiMd(m.t)}</div>`).join('')+(h.busy?'<div class="aim a mut">…thinking · در حال فکر کردن</div>':'')+(h.err?`<div class="aim err">${esc(h.err)}</div>`:'');
+  b.scrollTop=b.scrollHeight}
+function aiSend(h,text){
+  text=String(text||'').trim();if(!text||h.busy)return;
+  const c=aiCfg(),lang=c.lang==='en'?'Answer in simple English.':'Answer in Persian (Farsi), keeping technical terms in English, e.g. "Firewall (فایروال)".';
+  const sys=`You are a friendly tutor helping a student prepare for an IT certification exam (such as CompTIA Security+). ${lang} Be short and clear: at most about 150 words unless asked for more. Use bullets for lists. Only talk about this subject.\n\nThe question the student is looking at:\n${aiContext(h.it,h.q)}`;
+  h.m.push({r:'u',t:text});h.busy=true;h.err='';aiDraw(h);
+  aiCall(sys,h.m.filter(m=>!m.fail)).then(x=>{h.m.push({r:'a',t:x})},e=>{h.m[h.m.length-1].fail=true;h.err=e.message}).then(()=>{h.busy=false;aiDraw(h)});
+}
+const AIQ={ex:'Give me one short real-world example of this.',sim:'Explain it again, much simpler, like I am new to IT.',mem:'Give me a short memory trick to remember this for the exam.'};
+function aiTest(){const s=$('#aist');if(s)s.textContent='Testing…';
+  aiCall('Reply with one short friendly sentence.',[{r:'u',t:'Say hello to a student in English and Persian.'}]).then(x=>{if(s)s.textContent='✅ '+x},e=>{if(s)s.textContent='⚠️ '+e.message})}
 function fbBlock(it,q){
   const fx=faExp()&&(q.fa||q.hf);
   const open=it.fe||SET.faExp==='auto';
-  const faTxt=fx?`${open?`<div class="why fa" style="color:var(--ink)">${q.hf?`<b>💡 ${esc(q.hf)}</b><br>`:''}${esc(q.fa||'')}</div>`:`<button class="plain sm" data-act="faexp">📖 توضیح فارسی</button>`}`:'';
+  const faTxt=(fx?`${open?`<div class="why fa" style="color:var(--ink)">${q.hf?`<b>💡 ${esc(q.hf)}</b><br>`:''}${esc(q.fa||'')}</div>`:`<button class="plain sm" data-act="faexp">📖 توضیح فارسی</button>`}`:'')+
+    (S.mode!=='exam'?` <button class="plain sm" data-act="ai">🤖 Ask AI · از هوش مصنوعی بپرس</button>`:'');
   if(q.k==='m'){
     const right=q.o[0];
     return `<div class="fb"><div class="${it.ok?'ok':'no'}">${it.ok?'✔ Correct':'✘ Incorrect'}${it.ok?'':' — this question will come back later'}</div>
@@ -662,6 +726,19 @@ function palGrid(){
   return `<div class="pals">${sw('classic','StudyPrep',...CLASSIC[dark?'dark':'light'])}${grp('car')}</div><div class="lbl">More colours</div><div class="pals">${grp('color')}</div>`;
 }
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;if(tab==='settings')renderSettings()});
+function aiSettings(){
+  const c=aiCfg(),k=aiKeys()[c.p]||'',P0=AIP[c.p];
+  return `<div class="card"><h3>🤖 AI tutor</h3>
+   <p class="mut" style="margin-top:0">After you answer a question, tap “Ask AI” to get it explained and ask follow-ups. Needs the internet and a free key from one provider.</p>
+   <p class="fa" style="margin-top:0">بعد از جواب دادن، «از هوش مصنوعی بپرس» را بزنید تا سؤال را برایتان توضیح بدهد. اینترنت و یک کلید رایگان لازم است.</p>
+   <div class="lbl">Provider</div><select data-act="aip">${Object.keys(AIP).map(p=>`<option value="${p}" ${p===c.p?'selected':''}>${esc(AIP[p].n)}</option>`).join('')}</select>
+   <div class="lbl">API key · <a href="${P0.key}" target="_blank" rel="noopener" style="color:var(--ac);text-transform:none;letter-spacing:0">get a free key ↗</a></div>
+   <input class="inp" type="password" autocomplete="off" data-act="aikey" value="${esc(k)}" placeholder="Paste your key here">
+   <div class="lbl">Model</div><input class="inp" data-act="aimodel" value="${esc(c.m[c.p]||'')}" placeholder="${esc(P0.m)} (default)">
+   <div class="lbl">AI answers in</div>${`<select data-act="ailang">${[['fa','Persian, with English terms'],['en','English']].map(o=>`<option value="${o[0]}" ${c.lang===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select>`}
+   <div class="row" style="margin-top:10px"><button class="plain sm" data-act="aitest">Test AI</button></div>
+   <p class="mut" id="aist" style="margin:8px 0 0">The key stays on this device only and is not put in backups. Free plans have a daily limit.</p></div>`;
+}
 function renderSettings(){
   const sel=(k,opts)=>`<select data-act="set" data-k="${k}">${opts.map(o=>`<option value="${o[0]}" ${String(SET[k])===String(o[0])?'selected':''}>${o[1]}</option>`).join('')}</select>`;
   page(`<h1>Settings</h1><div class="cols">
@@ -678,6 +755,7 @@ function renderSettings(){
    <div class="sw"><span>Spoken feedback<div class="mut">“Correct!”, “Well done!”, “Congratulations!”</div></span><input type="checkbox" data-act="tog" data-k="cues" ${SET.cues?'checked':''}></div>
    <div class="row" style="margin-top:10px"><button class="plain sm" data-act="speak" data-v="Hello! This is the study voice. Let us get started.">▶ Test voice</button><button class="plain sm" data-act="dlaudio">⬇ Download voice for offline</button></div>
    <p class="mut" id="dlst" style="margin:8px 0 0">Tap any word and press 🔊 to hear it. About 20 MB, downloaded once.</p></div>
+  ${aiSettings()}
   <div class="card"><h3>Exam</h3><div class="lbl" style="margin-top:0">Exam date</div><input type="date" class="inp" data-act="examdate" value="${esc(SET.examDate||'')}">
    <div class="lbl">Daily goal (answers)</div>${sel('goal',[[10,'10'],[20,'20'],[30,'30'],[50,'50'],[80,'80'],[120,'120']])}</div>
   <div class="card"><h3>Look</h3><div class="lbl" style="margin-top:0">Background</div>
@@ -723,6 +801,11 @@ document.addEventListener('click',e=>{
     case 'speak':speak(v);break;
     case 'speakq':{const q=Q[cur().id];speak(q.k==='m'?q.q:q.title);break}
     case 'dlaudio':dlAudio();break;
+    case 'ai':aiOpen();break;
+    case 'aisend':{const i=$('#aiin'),h=AIH[cur().id];if(i&&h){aiSend(h,i.value);i.value=''}break}
+    case 'aiask':{const h=AIH[cur().id];if(h)aiSend(h,AIQ[v]);break}
+    case 'aitest':aiTest();break;
+    case 'aiset':closeModal();clearInterval(timerId);if(S)st.set('sess',S);go('settings');break;
     case 'rdresume':readSess();break;
     case 'read':renderReader(v);break;
     case 'rlang':SET.rl=v;st.set('set',SET);renderReader(window._rk,true);break;
@@ -763,7 +846,11 @@ document.addEventListener('change',e=>{
   else if(a==='tog'){const k=t.dataset.k;SET[k]=t.checked;st.set('set',SET);FX.set({[k]:SET[k]});if(k==='mus')FX.music(SET.mus);if((k==='auto'||k==='cues')&&!t.checked)vStop();if(k==='snd'&&t.checked)FX.ok()}
   else if(a==='examfa'){SET.examFa=t.checked;st.set('set',SET)}
   else if(a==='examdate'){SET.examDate=t.value;st.set('set',SET)}
+  else if(a==='aip'||a==='aimodel'||a==='ailang'){const c=aiCfg();if(a==='aip')c.p=t.value;else if(a==='ailang')c.lang=t.value;else c.m[c.p]=t.value.trim();SET.ai=c;st.set('set',SET);if(a==='aip')renderSettings()}
+  else if(a==='aikey'){const k=aiKeys();k[aiCfg().p]=t.value.trim();st.set('aikey',k)}
 });
+
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='aiin'){e.preventDefault();const h=AIH[cur().id];if(h){aiSend(h,e.target.value);e.target.value=''}}});
 
 /* ================= boot ================= */
 FX.set({snd:SET.snd,mus:false,vib:SET.vib,vol:SET.vol});loadPacks();applyLook();renderTabs();renderHome();
