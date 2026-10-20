@@ -442,9 +442,21 @@ const aiCfg=()=>Object.assign({p:'gemini',m:{},lang:'fa'},SET.ai||{});
 const aiKeys=()=>st.get('aikey',{});
 const aiModel=c=>(c.m[c.p]||'').trim()||AIP[c.p].m;
 const aiReady=()=>!!aiKeys()[aiCfg().p];
+// Free models are often "busy" (503/429). Then try again, moving to a lighter Gemini model,
+// so one busy model does not stop the tutor.
+const AIBUSY=[429,500,502,503,504],AIFALL=['gemini-flash-lite-latest','gemini-2.5-flash'];
 function aiCall(sys,msgs){
-  const c=aiCfg(),key=aiKeys()[c.p],model=aiModel(c),ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),60000);
+  const c=aiCfg(),key=aiKeys()[c.p],model=aiModel(c);
   if(!key)return Promise.reject(new Error('Add your AI key in Settings first.'));
+  const tries=c.p==='gemini'?[model].concat(AIFALL.filter(m=>m!==model)):[model,model];
+  const next=i=>aiOnce(c,key,tries[i],sys,msgs).catch(e=>{
+    if(!AIBUSY.includes(e.status))throw e;
+    if(i+1>=tries.length)throw new Error('The AI is busy right now. Wait a minute and try again, or pick another provider in Settings. · هوش مصنوعی الان شلوغ است؛ یک دقیقه بعد دوباره امتحان کنید.');
+    return new Promise(ok=>setTimeout(ok,1500*(i+1))).then(()=>next(i+1))});
+  return next(0);
+}
+function aiOnce(c,key,model,sys,msgs){
+  const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),60000);
   let req;
   if(c.p==='gemini')req=fetch('https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent(model)+':generateContent',{method:'POST',signal:ctl.signal,
     headers:{'Content-Type':'application/json','x-goog-api-key':key},
@@ -453,7 +465,7 @@ function aiCall(sys,msgs){
     headers:{'Content-Type':'application/json','Authorization':'Bearer '+key,'X-Title':'StudyPrep'},
     body:JSON.stringify({model,messages:[{role:'system',content:sys}].concat(msgs.map(m=>({role:m.r==='u'?'user':'assistant',content:m.t})))})});
   return req.then(r=>r.json().catch(()=>({})).then(d=>{clearTimeout(t);
-    if(!r.ok)throw new Error((d.error&&(d.error.message||d.error))||('Error '+r.status));
+    if(!r.ok)throw Object.assign(new Error((d.error&&(d.error.message||d.error))||('Error '+r.status)),{status:r.status});
     const x=c.p==='gemini'?((((d.candidates||[])[0]||{}).content||{}).parts||[]).map(p=>p.text||'').join(''):(((d.choices||[])[0]||{}).message||{}).content;
     if(!x)throw new Error('The AI sent an empty answer. Try again or pick another model.');
     return String(x).replace(/<think>[\s\S]*?<\/think>/g,'').trim()}),
