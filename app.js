@@ -45,20 +45,28 @@ function fetchJ(url){const c=new AbortController(),t=setTimeout(()=>c.abort(),65
 function lookupOnline(w){
   const lw=w.toLowerCase();
   const tryEn=x=>fetchJ('https://api.dictionaryapi.dev/api/v2/entries/en/'+encodeURIComponent(x)).then(d=>{
-    const out=[];(d||[]).forEach(en=>(en.meanings||[]).forEach(m=>{const df=(m.definitions||[])[0];if(df&&out.length<3)out.push((m.partOfSpeech?m.partOfSpeech+': ':'')+df.definition)}));
-    if(!out.length)throw 0;return out});
+    const out=[],ex=[];(d||[]).forEach(en=>(en.meanings||[]).forEach(m=>{const df=(m.definitions||[])[0];if(df&&out.length<3)out.push((m.partOfSpeech?m.partOfSpeech+': ':'')+df.definition);
+      (m.definitions||[]).forEach(x=>{if(x.example&&ex.length<2)ex.push(x.example)})}));
+    if(!out.length)throw 0;out.ex=ex;return out});
   const en=tryEn(lw).catch(()=>{const alt=lw.replace(/(ies)$/,'y').replace(/(ing|ed|es|s)$/,'');return alt!==lw&&alt.length>2?tryEn(alt):Promise.reject()});
   const fa=fetchJ('https://api.mymemory.translated.net/get?q='+encodeURIComponent(lw)+'&langpair=en|fa').then(d=>{
     const t=d&&d.responseData&&d.responseData.translatedText;if(!t||/MYMEMORY|INVALID/i.test(t))throw 0;return t});
-  return Promise.allSettled([en,fa]).then(r=>({en:r[0].status==='fulfilled'?r[0].value:null,fa:r[1].status==='fulfilled'?r[1].value:null}));
+  return Promise.allSettled([en,fa]).then(r=>{const e=r[0].status==='fulfilled'?r[0].value:null;return{en:e,ex:(e&&e.ex)||[],fa:r[1].status==='fulfilled'?r[1].value:null}});
 }
 /* ---- human voice: pre-recorded audio bundles (offline); falls back to the device voice ---- */
-const VX={idx:null,bufs:{},el:null,url:null};
+const VX={idx:null,bufs:{},el:null,url:null,ac:null};
+/* the voice goes through its own amplifier: iPhones ignore an audio element's volume, so clips sounded quiet */
+function vUnlock(){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;if(!VX.ac)VX.ac=new C();if(VX.ac.state==='suspended')VX.ac.resume()}catch(e){}}
+function vAmp(a){try{const ac=VX.ac;if(!ac||ac.state!=='running')return false;
+  const src=ac.createMediaElementSource(a),g=ac.createGain(),cp=ac.createDynamicsCompressor();
+  g.gain.value=1+SET.vvol*2.2;cp.threshold.value=-12;cp.knee.value=6;cp.ratio.value=6;cp.attack.value=.003;cp.release.value=.2;
+  src.connect(g);g.connect(cp);cp.connect(ac.destination);return true}catch(e){return false}}
+const vRate=(t,opt)=>opt&&opt.rate||(/\s/.test(t)?SET.vsp:SET.vsp*.9);
 const vkey=t=>{t=String(t).replace(/\s+/g,' ').trim().toLowerCase();let h=2166136261;for(let i=0;i<t.length;i++){h^=t.charCodeAt(i);h=Math.imul(h,16777619)>>>0}return h.toString(36)+t.length.toString(36)};
 function vIdx(){return VX.idx||(VX.idx=fetch('audio/idx.json').then(r=>{if(!r.ok)throw 0;return r.json()}).catch(()=>({b:[],k:{}})))}
 function vBuf(b,name){return VX.bufs[b]||(VX.bufs[b]=fetch(name).then(r=>{if(!r.ok)throw 0;return r.arrayBuffer()}).catch(e=>{delete VX.bufs[b];throw e}))}
 function vStop(){try{if(VX.el){VX.el.pause();VX.el=null}if(VX.url){URL.revokeObjectURL(VX.url);VX.url=null}}catch(e){}try{speechSynthesis.cancel()}catch(e){}}
-function deviceSpeak(w){try{const u=new SpeechSynthesisUtterance(w);u.lang='en-US';u.rate=.9;const vs=speechSynthesis.getVoices().filter(v=>/en[-_]US/i.test(v.lang));const best=vs.find(v=>/natural|neural|premium|enhanced|samantha|aria|jenny|zira/i.test(v.name))||vs[0];if(best)u.voice=best;speechSynthesis.speak(u)}catch(e){}}
+function deviceSpeak(w,rate){try{const u=new SpeechSynthesisUtterance(w);u.lang='en-US';u.rate=Math.max(.5,(rate||.85)*.95);u.volume=1;const vs=speechSynthesis.getVoices().filter(v=>/en[-_]US/i.test(v.lang));const best=vs.find(v=>/natural|neural|premium|enhanced|samantha|aria|jenny|zira/i.test(v.name))||vs[0];if(best)u.voice=best;speechSynthesis.speak(u)}catch(e){}}
 function speak(text,opt){
   opt=opt||{};text=String(text||'').trim();if(!text)return Promise.resolve();
   vStop();
@@ -67,11 +75,13 @@ function speak(text,opt){
     const e=ix.k&&ix.k[k];if(!e)throw 0;
     return vBuf(e[0],ix.b[e[0]]).then(buf=>{
       const blob=new Blob([buf.slice(e[1],e[1]+e[2])],{type:'audio/mpeg'});
-      const url=URL.createObjectURL(blob),a=new Audio(url);a.volume=Math.min(1,.4+SET.vol*.7);
+      const url=URL.createObjectURL(blob),a=new Audio(url),r=vRate(text,opt);
+      a.defaultPlaybackRate=a.playbackRate=r;a.preservesPitch=a.webkitPreservesPitch=true;
+      if(!vAmp(a))a.volume=1;
       VX.el=a;VX.url=url;a.onended=()=>{if(VX.url===url){URL.revokeObjectURL(url);VX.url=null}};
       return a.play();
     });
-  }).catch(()=>{if(!opt.quiet)deviceSpeak(text)});
+  }).catch(()=>{if(!opt.quiet)deviceSpeak(text,vRate(text,opt))});
 }
 const CUES={ok:['Correct!','Well done!','Great job!','Nice work!','Excellent!'],bad:['Not quite.','Keep going.'],streak:['Perfect streak!'],pass:['You passed! Congratulations!'],fail:['Good effort. Review and try again.'],time:['Time is up.'],next:['Next question.']};
 function cue(k){if(!SET.cues)return;const a=CUES[k];setTimeout(()=>speak(a[Math.floor(Math.random()*a.length)],{quiet:true}),k==='ok'||k==='streak'?380:200)}
@@ -82,43 +92,78 @@ function offlineWord(w){
   if(w.includes('-')){const parts=w.split('-').map(p=>D[p]).filter(Boolean);if(parts.length===w.split('-').length)return[parts.map((p,i)=>w.split('-')[i]+': '+p[0]).join('; '),parts.map(p=>p[1]).join(' · ')]}
   return null;
 }
+/* the sentence around a tapped word, with the word highlighted */
+function ctxOf(text,s0,e0){
+  let a=s0,b=e0;while(a>0&&!/[.!?\n]/.test(text[a-1]))a--;while(b<text.length&&!/[.!?\n]/.test(text[b]))b++;
+  const pre=text.slice(a,s0).replace(/^\s+/,''),post=text.slice(e0,Math.min(text.length,b+1)).replace(/\s+$/,'');
+  return{plain:pre+text.slice(s0,e0)+post,html:esc(pre)+'<mark>'+esc(text.slice(s0,e0))+'</mark>'+esc(post),own:!pre.trim()&&!post.replace(/[.!?]/g,'').trim()};
+}
+const RL=t=>`<div class="lbl r">${t}</div>`;
+function wsHead(w){return `<h2 class="wt">${esc(w)}</h2><div class="spkr"><button class="plain sm spk" data-act="speak" data-v="${esc(w)}">🔊 Listen</button><button class="plain sm spk" data-act="speakslow" data-v="${esc(w)}">🐢 Slowly · آهسته</button></div>`}
+function wsTail(c){return (c&&!c.own?`<div class="lbl">In this sentence · در این جمله</div><div class="wctx">${c.html}</div>`:'')+
+  `<div id="wai"><button class="plain" data-act="wordai">🤖 توضیح بیشتر با هوش مصنوعی · Explain more</button></div><button class="plain" data-act="close">Close</button>`}
 function wordSheet(span){
   const box=span.closest('.tx');if(!box)return;
-  const text=TX[+box.dataset.tx]||span.textContent,s0=+span.dataset.s,e0=+span.dataset.e;
+  const text=TX[+box.dataset.tx]||span.textContent;
+  showWord(text,+span.dataset.s,+span.dataset.e,span.textContent);
+}
+function showWord(text,s0,e0,word){
   const hit=terms(text).find(h=>h.s<e0&&h.e>s0);
-  const word=span.textContent;
   FX.tap();
   if(hit){
-    const g=hit.g;
-    modal(`<h2 class="wt">${esc(text.slice(hit.s,hit.e))}</h2><button class="plain sm spk" data-act="speak" data-v="${esc(text.slice(hit.s,hit.e))}">🔊 Listen</button>
-      <div class="lbl">${esc(g.l)}</div><div class="wen">${esc(g.e)}</div><div class="wfa">${FA(g.p)}</div>
-      <button class="plain" data-act="close">Close</button>`);
+    const g=hit.g,x=(window.GLOSSX||{})[g.l],t=text.slice(hit.s,hit.e),c=ctxOf(text,hit.s,hit.e);
+    window._wq={w:t,c:c.plain};
+    modal(`${wsHead(t)}${t.toLowerCase()!==g.l.toLowerCase()?`<div class="lbl">${esc(g.l)}</div>`:''}
+      ${RL('معنی')}<div class="wfa">${FA(g.p)}</div>
+      ${x?`${RL('به زبان ساده')}<div class="wfa wsm">${FA(x[0])}</div><div class="wex">${RL('مثال')}${FA(x[1])}</div>`:''}
+      <div class="lbl">English</div><div class="wen">${esc(g.e)}</div>${wsTail(c)}`);
     return;
   }
-  const key=word.toLowerCase();
-  const off=offlineWord(word);
-  if(off){modal(`<h2 class="wt">${esc(word)}</h2><button class="plain sm spk" data-act="speak" data-v="${esc(word)}">🔊 Listen</button>
-    <div class="lbl">فارسی</div><div class="wfa">${FA(off[1])}</div><div class="lbl">English meaning</div><div class="wen">• ${esc(off[0])}</div>
-    <button class="plain" data-act="close">Close</button>`);return}
-  const show=r=>{
-    const en=(r&&r.en)||[];
-    return `<h2 class="wt">${esc(word)}</h2><button class="plain sm spk" data-act="speak" data-v="${esc(word)}">🔊 Listen</button>
-    ${r&&r.fa?`<div class="lbl">فارسی</div><div class="wfa">${FA(r.fa)}</div>`:''}
-    ${en.length?`<div class="lbl">English meaning</div>${en.map(x=>`<div class="wen">• ${esc(x)}</div>`).join('')}`:''}
-    ${r&&(r.fa||en.length)?'':`<p class="mut">This word is not in the built-in dictionary, and the online dictionary could not be reached.</p><p><a href="https://translate.google.com/?sl=en&tl=fa&text=${encodeURIComponent(word)}&op=translate" target="_blank" rel="noopener">Open in Google Translate ↗</a></p>`}
-    <button class="plain" data-act="close">Close</button>`};
-  if(dictC[key]){modal(show(dictC[key]));return}
-  modal(`<h2 class="wt">${esc(word)}</h2><p class="mut">Looking up…</p><button class="plain" data-act="close">Close</button>`);
+  const key=word.toLowerCase(),c=ctxOf(text,s0,e0);
+  window._wq={w:word,c:c.plain};
+  const show=(fa,en,ex,busy)=>`${wsHead(word)}
+    ${fa?`${RL('معنی فارسی')}<div class="wfa">${FA(fa)}</div>`:''}
+    ${en&&en.length?`<div class="lbl">English meaning</div>${en.map(x=>`<div class="wen">• ${esc(x)}</div>`).join('')}`:''}
+    ${ex&&ex.length?`<div class="lbl">Example · مثال</div>${ex.map(x=>`<div class="wen wexe">“${esc(x)}”</div>`).join('')}`:''}
+    ${busy?'<p class="mut">Looking up… · در حال جستجو</p>':''}
+    ${!busy&&!fa&&!(en&&en.length)?`<p class="mut">This word is not in the built-in dictionary, and the online dictionary could not be reached.</p><p><a href="https://translate.google.com/?sl=en&tl=fa&text=${encodeURIComponent(word)}&op=translate" target="_blank" rel="noopener">Open in Google Translate ↗</a></p>`:''}
+    ${wsTail(c)}`;
+  const off=offlineWord(word),hasEx=r=>r&&r.ex&&r.ex.length;
+  const open=()=>$('#ov')&&$('#ov .wt')&&$('#ov .wt').textContent===word;
+  const keepAI=()=>{const w=$('#wai');return w?w.innerHTML:''};
+  const draw=h=>{const a=keepAI();modal(h);if(a&&$('#wai'))$('#wai').innerHTML=a};
+  const cached=dictC[key];
+  if(off){
+    modal(show(off[1],[off[0]],cached&&cached.ex,false));
+    if(!hasEx(cached)&&navigator.onLine!==false)lookupOnline(word).then(r=>{if(r.en||r.fa){dictC[key]=r;saveDict()}if(open()&&hasEx(r))draw(show(off[1],[off[0]],r.ex,false))});
+    return;
+  }
+  if(cached){modal(show(cached.fa,cached.en,cached.ex,false));return}
+  modal(show(null,null,null,true));
   lookupOnline(word).then(r=>{
     if(r.en||r.fa){dictC[key]=r;saveDict()}
-    if($('#ov')&&$('#ov .wt')&&$('#ov .wt').textContent===word)modal(show(r));
+    if(open())draw(show(r.fa,r.en,r.ex,false));
   });
+}
+/* AI: a short, simple Persian explanation of the tapped word as it is used in its sentence */
+const WAI=st.get('wai',{});
+function wordAI(){
+  const q=window._wq,box=$('#wai');if(!q||!box)return;
+  if(!aiReady()){box.innerHTML=`<div class="wfa wsm">برای این کار، یک بار کلید رایگان هوش مصنوعی را در Settings ← AI tutor وارد کن.</div><button class="plain" data-act="tab" data-v="settings">⚙️ Settings</button>`;return}
+  const k=(q.w+'|'+q.c).toLowerCase().slice(0,160);
+  const put=x=>{const b=$('#wai');if(b)b.innerHTML=`${RL('🤖 توضیح هوش مصنوعی')}<div class="aim a wai">${aiMd(x)}</div>`};
+  if(WAI[k]){put(WAI[k]);return}
+  box.innerHTML='<div class="mut">…thinking · در حال فکر کردن</div>';
+  const sys='You explain English words and IT security terms to a 15-year-old Persian speaker who is studying for CompTIA Security+ and finds technical text hard. Answer ONLY in simple, friendly, everyday Persian; keep the English word or term itself in English. Write exactly 3 short lines, each starting with its label: «معنی:» what it means in this sentence. «کاربرد:» what it is for or how it is used (in IT/security if it is a technical term). «مثال:» one simple everyday example. Nothing else.';
+  aiCall(sys,[{r:'u',t:`Word: "${q.w}"\nSentence: "${q.c}"`}]).then(x=>{
+    WAI[k]=x;const ks=Object.keys(WAI);if(ks.length>300)ks.slice(0,60).forEach(z=>delete WAI[z]);st.set('wai',WAI);put(x);
+  },e=>{const b=$('#wai');if(b)b.innerHTML=`<div class="aim err">${esc(e.message)}</div><button class="plain" data-act="wordai">↻ Try again</button>`});
 }
 /* "what each option is" panel shown after answering */
 function whatsWhat(q,it,fa){
   const rows=[];const seen=new Set();
   const add=(tag,txt,cls)=>{terms(txt).slice(0,3).forEach(h=>{const k=cls+h.g.l;if(seen.has(k))return;seen.add(k);
-    rows.push(`<div class="gl"><span class="mk ${cls}">${tag}</span><b>${esc(h.g.l)}</b> — ${esc(h.g.e)}${fa?`<div class="fa">${FA(h.g.p)}</div>`:''}</div>`)})};
+    rows.push(`<div class="gl"><span class="mk ${cls}">${tag}</span><b>${W(h.g.l)}</b> — ${W(h.g.e)}${fa?`<div class="fa">${FA(h.g.p)}</div>`:''}</div>`)})};
   if(q.k==='m'){
     it.ord.forEach((oi,d)=>{const right=oi===0;add('ABCDEFGH'[d]+(right?' ✔':it.pick===d?' ✘':''),q.o[oi],right?'g':it.pick===d?'r':'')});
     add('Q',q.q,'');
@@ -131,7 +176,7 @@ function whatsWhat(q,it,fa){
 }
 
 /* ================= packs ================= */
-let SET=Object.assign({rl:'both',fa:'tap',faExp:'tap',examFa:false,theme:'auto',pal:'classic',size:1,examDate:'',goal:30,snd:true,mus:false,vib:true,vol:0.6,cues:true,auto:true,off:{packs:[],secs:[]}},st.get('set',{}));
+let SET=Object.assign({vsp:0.8,vvol:0.7,rl:'both',fa:'tap',faExp:'tap',examFa:false,theme:'auto',pal:'classic',size:1,examDate:'',goal:30,snd:true,mus:false,vib:true,vol:0.6,cues:true,auto:true,off:{packs:[],secs:[]}},st.get('set',{}));
 SET.off=SET.off||{packs:[],secs:[]};
 let P=st.get('prog',{}),PACKS=[],Q={};
 function normPack(p,user){
@@ -521,7 +566,7 @@ function fbBlock(it,q){
   }
   return `<div class="fb"><div class="${it.ok?'ok':'no'}">${it.ok?'✔ All correct':'Score: '+Math.round(it.frac*100)+'%'}</div>
     <div class="why">${W(q.en)}</div>${faTxt}
-    <div class="lbl">What each zone means</div>${q.zones.map((z,zi)=>`<div style="margin:4px 0"><b>${esc(z)}</b> — ${esc((q.zd[zi]||[])[0]||'')}${open&&(q.zd[zi]||[])[1]?`<div class="fa">${FA(q.zd[zi][1])}</div>`:''}</div>`).join('')}
+    <div class="lbl">What each zone means</div>${q.zones.map((z,zi)=>`<div style="margin:4px 0"><b>${W(z)}</b> — ${W((q.zd[zi]||[])[0]||'')}${open&&(q.zd[zi]||[])[1]?`<div class="fa">${FA(q.zd[zi][1])}</div>`:''}</div>`).join('')}
     ${whatsWhat(q,it,open)}</div>`;
 }
 function renderQuiz(keep){
@@ -556,7 +601,7 @@ function renderQuiz(keep){
       const rc=it.ck?(a===x[1]?' rk':' rn'):'';
       return `<div class="pbq${rc}"><div>${W(x[0])}</div>${sf&&x[2]?`<div class="fa">${FA(x[2])}</div>`:''}
       <select data-act="ans" data-v="${ii}" ${it.ck?'disabled':''}><option value="">Choose…</option>${zs.map((z,zi)=>`<option value="${zi}" ${a===zi?'selected':''}>${esc(z)}</option>`).join('')}</select>
-      ${it.ck&&a!==x[1]?`<div class="mut" style="margin-top:4px">Correct: <b>${esc(q.zones[x[1]])}</b></div>`:''}</div>`}).join('')}</div>
+      ${it.ck&&a!==x[1]?`<div class="mut" style="margin-top:4px">Correct: <b>${W(q.zones[x[1]])}</b></div>`:''}</div>`}).join('')}</div>
     ${it.ck?fbBlock(it,q):''}`;
   }
   const ready=q.k==='m'?it.pick!=null:Object.keys(it.ans).length>0;
@@ -768,6 +813,8 @@ function renderSettings(){
   <div class="card"><h3>Human voice (American English)</h3>
    <div class="sw"><span>Read each new question aloud<div class="mut">Also plays when you tap Next</div></span><input type="checkbox" data-act="tog" data-k="auto" ${SET.auto?'checked':''}></div>
    <div class="sw"><span>Spoken feedback<div class="mut">“Correct!”, “Well done!”, “Congratulations!”</div></span><input type="checkbox" data-act="tog" data-k="cues" ${SET.cues?'checked':''}></div>
+   <div class="lbl">Voice speed · سرعت صدا</div>${sel('vsp',[[0.65,'Slow · آهسته'],[0.8,'A bit slow · کمی آهسته'],[1,'Normal · عادی']])}
+   <div class="lbl">Voice loudness · بلندی صدا</div>${sel('vvol',[[0.3,'Normal · عادی'],[0.7,'Loud · بلند'],[1,'Very loud · خیلی بلند']])}
    <div class="row" style="margin-top:10px"><button class="plain sm" data-act="speak" data-v="Hello! This is the study voice. Let us get started.">▶ Test voice</button><button class="plain sm" data-act="dlaudio">⬇ Download voice for offline</button></div>
    <p class="mut" id="dlst" style="margin:8px 0 0">Tap any word and press 🔊 to hear it. About 18 MB, downloaded once.</p></div>
   ${aiSettings()}
@@ -789,8 +836,9 @@ function renderSettings(){
 
 /* ================= events ================= */
 document.addEventListener('click',e=>{
-  FX.unlock();
+  FX.unlock();vUnlock();
   const w=e.target.closest('.w');if(w&&!w.closest('[data-act]')){wordSheet(w);return}
+  const lt=e.target.closest('bdi.lt');if(lt&&!lt.closest('[data-act]')&&!lt.closest('#ov')){const t=lt.textContent;showWord(t,0,t.length,t);return}
   const b=e.target.closest('[data-act]');if(!b||b.tagName==='SELECT'||b.tagName==='INPUT')return;
   const a=b.dataset.act,v=b.dataset.v;
   switch(a){
@@ -814,6 +862,8 @@ document.addEventListener('click',e=>{
     case 'hint':cur().hint=!cur().hint;renderQuiz(true);break;
     case 'faexp':cur().fe=true;renderQuiz(true);break;
     case 'speak':speak(v);break;
+    case 'speakslow':speak(v,{rate:.6});break;
+    case 'wordai':wordAI();break;
     case 'speakq':{const q=Q[cur().id];speak(q.k==='m'?q.q:q.title);break}
     case 'dlaudio':dlAudio();break;
     case 'ai':aiOpen();break;
@@ -857,7 +907,7 @@ document.addEventListener('change',e=>{
   if(a==='ans'){const it=cur();if(it.ck)return;t.value===''?delete it.ans[t.dataset.v]:it.ans[t.dataset.v]=+t.value;st.set('sess',S);if(S.mode!=='exam'){const b=$('.bot button');if(b)b.disabled=!Object.keys(it.ans).length}}
   else if(a==='packtog'){const id=t.dataset.v;SET.off.packs=SET.off.packs.filter(x=>x!==id);if(!t.checked)SET.off.packs.push(id);st.set('set',SET);cfg.secs=null;renderCourses()}
   else if(a==='sectog'){const k=t.dataset.v;SET.off.secs=SET.off.secs.filter(x=>x!==k);if(!t.checked)SET.off.secs.push(k);st.set('set',SET);cfg.secs=null;renderCourses()}
-  else if(a==='set'){const k=t.dataset.k;SET[k]=(k==='size'||k==='vol'||k==='goal')?+t.value:t.value;st.set('set',SET);applyLook();if(k==='vol'){FX.set({vol:SET.vol});FX.ok()}}
+  else if(a==='set'){const k=t.dataset.k;SET[k]=(k==='size'||k==='vol'||k==='goal'||k==='vsp'||k==='vvol')?+t.value:t.value;st.set('set',SET);applyLook();if(k==='vol'){FX.set({vol:SET.vol});FX.ok()}}
   else if(a==='tog'){const k=t.dataset.k;SET[k]=t.checked;st.set('set',SET);FX.set({[k]:SET[k]});if(k==='mus')FX.music(SET.mus);if((k==='auto'||k==='cues')&&!t.checked)vStop();if(k==='snd'&&t.checked)FX.ok()}
   else if(a==='examfa'){SET.examFa=t.checked;st.set('set',SET)}
   else if(a==='examdate'){SET.examDate=t.value;st.set('set',SET)}
