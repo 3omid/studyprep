@@ -3,6 +3,9 @@
 /* ================= helpers & storage ================= */
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+/* Persian text: English terms inside it get their own direction and the English font, so they don't jump around or look mismatched */
+const FA=s=>String(s==null?'':s).split(/([A-Za-z0-9][A-Za-z0-9+#.\/_&'-]*(?: +[A-Za-z0-9][A-Za-z0-9+#.\/_&'-]*)*)/).map((x,i)=>{
+  if(!(i%2))return esc(x);const m=x.match(/^(.*?)([.\/'-]*)$/);return /[A-Za-z]/.test(m[1])?`<bdi class="lt${m[1].length<25?' nw':''}">${esc(m[1])}</bdi>${esc(m[2])}`:esc(x)}).join('');
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const now=()=>Date.now(),DAY=864e5,INT=[0,1,3,7,14,30];
 const mem={};
@@ -88,19 +91,19 @@ function wordSheet(span){
   if(hit){
     const g=hit.g;
     modal(`<h2 class="wt">${esc(text.slice(hit.s,hit.e))}</h2><button class="plain sm spk" data-act="speak" data-v="${esc(text.slice(hit.s,hit.e))}">🔊 Listen</button>
-      <div class="lbl">${esc(g.l)}</div><div class="wen">${esc(g.e)}</div><div class="wfa">${esc(g.p)}</div>
+      <div class="lbl">${esc(g.l)}</div><div class="wen">${esc(g.e)}</div><div class="wfa">${FA(g.p)}</div>
       <button class="plain" data-act="close">Close</button>`);
     return;
   }
   const key=word.toLowerCase();
   const off=offlineWord(word);
   if(off){modal(`<h2 class="wt">${esc(word)}</h2><button class="plain sm spk" data-act="speak" data-v="${esc(word)}">🔊 Listen</button>
-    <div class="lbl">فارسی</div><div class="wfa">${esc(off[1])}</div><div class="lbl">English meaning</div><div class="wen">• ${esc(off[0])}</div>
+    <div class="lbl">فارسی</div><div class="wfa">${FA(off[1])}</div><div class="lbl">English meaning</div><div class="wen">• ${esc(off[0])}</div>
     <button class="plain" data-act="close">Close</button>`);return}
   const show=r=>{
     const en=(r&&r.en)||[];
     return `<h2 class="wt">${esc(word)}</h2><button class="plain sm spk" data-act="speak" data-v="${esc(word)}">🔊 Listen</button>
-    ${r&&r.fa?`<div class="lbl">فارسی</div><div class="wfa">${esc(r.fa)}</div>`:''}
+    ${r&&r.fa?`<div class="lbl">فارسی</div><div class="wfa">${FA(r.fa)}</div>`:''}
     ${en.length?`<div class="lbl">English meaning</div>${en.map(x=>`<div class="wen">• ${esc(x)}</div>`).join('')}`:''}
     ${r&&(r.fa||en.length)?'':`<p class="mut">This word is not in the built-in dictionary, and the online dictionary could not be reached.</p><p><a href="https://translate.google.com/?sl=en&tl=fa&text=${encodeURIComponent(word)}&op=translate" target="_blank" rel="noopener">Open in Google Translate ↗</a></p>`}
     <button class="plain" data-act="close">Close</button>`};
@@ -115,7 +118,7 @@ function wordSheet(span){
 function whatsWhat(q,it,fa){
   const rows=[];const seen=new Set();
   const add=(tag,txt,cls)=>{terms(txt).slice(0,3).forEach(h=>{const k=cls+h.g.l;if(seen.has(k))return;seen.add(k);
-    rows.push(`<div class="gl"><span class="mk ${cls}">${tag}</span><b>${esc(h.g.l)}</b> — ${esc(h.g.e)}${fa?`<div class="fa">${esc(h.g.p)}</div>`:''}</div>`)})};
+    rows.push(`<div class="gl"><span class="mk ${cls}">${tag}</span><b>${esc(h.g.l)}</b> — ${esc(h.g.e)}${fa?`<div class="fa">${FA(h.g.p)}</div>`:''}</div>`)})};
   if(q.k==='m'){
     it.ord.forEach((oi,d)=>{const right=oi===0;add('ABCDEFGH'[d]+(right?' ✔':it.pick===d?' ✘':''),q.o[oi],right?'g':it.pick===d?'r':'')});
     add('Q',q.q,'');
@@ -507,7 +510,7 @@ function aiTest(){const s=$('#aist');if(s)s.textContent='Testing…';
 function fbBlock(it,q){
   const fx=faExp()&&(q.fa||q.hf);
   const open=it.fe||SET.faExp==='auto';
-  const faTxt=(fx?`${open?`<div class="why fa" style="color:var(--ink)">${q.hf?`<b>💡 ${esc(q.hf)}</b><br>`:''}${esc(q.fa||'')}</div>`:`<button class="plain sm" data-act="faexp">📖 توضیح فارسی</button>`}`:'')+
+  const faTxt=(fx?`${open?`<div class="why fa" style="color:var(--ink)">${q.hf?`<b>💡 ${FA(q.hf)}</b><br>`:''}${FA(q.fa||'')}</div>`:`<button class="plain sm" data-act="faexp">📖 توضیح فارسی</button>`}`:'')+
     (S.mode!=='exam'?` <button class="plain sm" data-act="ai">🤖 Ask AI · از هوش مصنوعی بپرس</button>`:'');
   if(q.k==='m'){
     const right=q.o[0];
@@ -518,7 +521,7 @@ function fbBlock(it,q){
   }
   return `<div class="fb"><div class="${it.ok?'ok':'no'}">${it.ok?'✔ All correct':'Score: '+Math.round(it.frac*100)+'%'}</div>
     <div class="why">${W(q.en)}</div>${faTxt}
-    <div class="lbl">What each zone means</div>${q.zones.map((z,zi)=>`<div style="margin:4px 0"><b>${esc(z)}</b> — ${esc((q.zd[zi]||[])[0]||'')}${open&&(q.zd[zi]||[])[1]?`<div class="fa">${esc(q.zd[zi][1])}</div>`:''}</div>`).join('')}
+    <div class="lbl">What each zone means</div>${q.zones.map((z,zi)=>`<div style="margin:4px 0"><b>${esc(z)}</b> — ${esc((q.zd[zi]||[])[0]||'')}${open&&(q.zd[zi]||[])[1]?`<div class="fa">${FA(q.zd[zi][1])}</div>`:''}</div>`).join('')}
     ${whatsWhat(q,it,open)}</div>`;
 }
 function renderQuiz(keep){
@@ -538,20 +541,20 @@ function renderQuiz(keep){
   if(q.k==='m'){
     const sf=sf0;
     body=`<div class="tag spread"><span>${esc(secName(q))}${it.re?' · ↻ retry':''}</span><button class="plain sm spk" data-act="speakq" aria-label="Read the question aloud">🔊</button></div><p class="q">${W(q.q)}</p>
-    ${sf&&q.qf?`<div class="fabox">${esc(q.qf)}${it.hint&&q.hf&&!it.ck?`<hr style="border:0;border-top:1px dashed var(--line)"><b>💡 ${esc(q.hf)}</b>`:''}</div>`:''}
+    ${sf&&q.qf?`<div class="fabox">${FA(q.qf)}${it.hint&&q.hf&&!it.ck?`<hr style="border:0;border-top:1px dashed var(--line)"><b>💡 ${FA(q.hf)}</b>`:''}</div>`:''}
     ${it.ck?'':`<p class="hint">Tap the circle to choose · tap any word to see its meaning</p>`}
     <div class="opts">${it.ord.map((oi,d)=>{
       let c='opt2';if(it.ck){if(oi===0)c+=' right';else if(it.pick===d)c+=' wrong'}else if(it.pick===d)c+=' sel';
-      return `<div class="${c}"><button class="rc" data-act="pick" data-v="${d}" aria-label="Choose option ${'ABCDEFGH'[d]}" aria-pressed="${it.pick===d}">${'ABCDEFGH'[d]}</button><div class="t">${W(q.o[oi])}${sf&&q.of[oi]?`<div class="fa">${esc(q.of[oi])}</div>`:''}</div></div>`}).join('')}</div>
+      return `<div class="${c}"><button class="rc" data-act="pick" data-v="${d}" aria-label="Choose option ${'ABCDEFGH'[d]}" aria-pressed="${it.pick===d}">${'ABCDEFGH'[d]}</button><div class="t">${W(q.o[oi])}${sf&&q.of[oi]?`<div class="fa">${FA(q.of[oi])}</div>`:''}</div></div>`}).join('')}</div>
     ${it.ck?fbBlock(it,q):''}`;
   }else{
     const sf=sf0;
     const zs=sf&&q.zf.length?q.zf:q.zones;
     body=`<div class="tag spread"><span>${esc(secName(q))} · scenario${it.re?' · ↻ retry':''}</span><button class="plain sm spk" data-act="speakq" aria-label="Read the question aloud">🔊</button></div><p class="q">${W(q.title)}</p>
-    ${sf&&q.tf?`<div class="fabox">${esc(q.tf)}</div>`:''}
+    ${sf&&q.tf?`<div class="fabox">${FA(q.tf)}</div>`:''}
     <div class="opts">${it.ord.map(ii=>{const x=q.items[ii];const a=it.ans[ii];
       const rc=it.ck?(a===x[1]?' rk':' rn'):'';
-      return `<div class="pbq${rc}"><div>${W(x[0])}</div>${sf&&x[2]?`<div class="fa">${esc(x[2])}</div>`:''}
+      return `<div class="pbq${rc}"><div>${W(x[0])}</div>${sf&&x[2]?`<div class="fa">${FA(x[2])}</div>`:''}
       <select data-act="ans" data-v="${ii}" ${it.ck?'disabled':''}><option value="">Choose…</option>${zs.map((z,zi)=>`<option value="${zi}" ${a===zi?'selected':''}>${esc(z)}</option>`).join('')}</select>
       ${it.ck&&a!==x[1]?`<div class="mut" style="margin-top:4px">Correct: <b>${esc(q.zones[x[1]])}</b></div>`:''}</div>`}).join('')}</div>
     ${it.ck?fbBlock(it,q):''}`;
@@ -606,7 +609,7 @@ function renderAnswers(){
     const mine=q.k==='m'?(it.pick!=null?q.o[it.ord[it.pick]]:'No answer'):'';
     return `<details><summary>${n+1}. ${st_} ${esc((q.k==='m'?q.q:q.title).slice(0,90))}</summary>
     <p>${q.k==='m'?`<b>Correct:</b> ${esc(q.o[0])}<br>${it.ok?'':`<b>You chose:</b> ${esc(mine)}`}`:q.items.map((x,i)=>`${esc(x[0])} → <b>${esc(q.zones[x[1]])}</b>${it.ans[i]===x[1]?' ✔':' ✘'}`).join('<br>')}</p>
-    <p>${esc(q.en)}</p>${SET.fa!=='off'&&q.fa?`<p class="fa" style="color:var(--ink)">${esc(q.fa)}</p>`:''}</details>`}).join('')}`);
+    <p>${esc(q.en)}</p>${SET.fa!=='off'&&q.fa?`<p class="fa" style="color:var(--ink)">${FA(q.fa)}</p>`:''}</details>`}).join('')}`);
 }
 
 
@@ -625,14 +628,14 @@ function renderLearn(){
 }
 function blockHTML(b,lang){
   const both=lang==='both',en=lang!=='fa',fa=lang!=='en';
-  const E=t=>en?W(t):'',F=t=>fa?`<span class="fa${both?'':' only'}">${esc(t)}</span>`:'';
-  const pair=(e,f)=>{const h=(en?`<div>${E(e)}</div>`:'')+(fa?`<div class="fa${both?'':' only'}">${esc(f)}</div>`:'');return both?`<div class="pair">${h}</div>`:h};
-  if(b.k==='h')return `<h3 class="rh">${en?esc(b.en):''}${both?' <span class="fa">· '+esc(b.fa)+'</span>':fa?esc(b.fa):''}</h3>`;
+  const E=t=>en?W(t):'';
+  const pair=(e,f)=>{const h=(en?`<div>${E(e)}</div>`:'')+(fa?`<div class="fa${both?'':' only'}">${FA(f)}</div>`:'');return both?`<div class="pair">${h}</div>`:h};
+  if(b.k==='h')return `<h3 class="rh">${en?esc(b.en):''}${both?' <span class="fa">· '+FA(b.fa)+'</span>':fa?FA(b.fa):''}</h3>`;
   if(b.k==='p')return `<div class="rp">${pair(b.en,b.fa)}</div>`;
   if(b.k==='tip')return `<div class="rtip"><b>${fa&&!en?'نکته‌ی امتحان':'Exam tip'}</b>${pair(b.en,b.fa)}</div>`;
   if(b.k==='ul')return `<ul class="rl">${b.en.map((x,i)=>`<li>${pair(x,b.fa[i]||'')}</li>`).join('')}</ul>`;
   if(b.k==='tbl'){
-    const cell=c=>`${en?`<div>${W(c[0])}</div>`:''}${fa?`<div class="fa${both?'':' only'}">${esc(c[1]||'')}</div>`:''}`;
+    const cell=c=>`${en?`<div>${W(c[0])}</div>`:''}${fa&&!(en&&c[1]===c[0])?`<div class="fa${both?'':' only'}">${FA(c[1]||'')}</div>`:''}`;
     return `<div class="rtw"><table class="rt"><thead><tr>${b.h.map(c=>`<th>${cell(c)}</th>`).join('')}</tr></thead><tbody>${b.r.map(r=>`<tr>${r.map(c=>`<td>${cell(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
   }
   return '';
@@ -644,11 +647,11 @@ function renderReader(sk,keep){
   window._rk=sk;ACT='read';lastAct({mode:'Reading',what:' · '+p.short+' · '+(t[0]||'')});{const rp=st.get('rpos',{});st.set('rlast',sk);if(!keep&&rp[sk]>40)setTimeout(()=>window.scrollTo(0,rp[sk]),60)}
   const lg=[['en','English'],['both','English + فارسی'],['fa','فارسی']];
   page(`<div class="spread"><button class="plain sm" data-act="tab" data-v="learn">← Learn</button><span class="mut">${esc(p.short)}</span></div>
-   <h1 style="margin-top:10px">${lang==='fa'?esc(t[1]):esc(t[0])}</h1>${lang==='both'?`<div class="fa" style="margin:-2px 0 8px;font-size:1.05rem">${esc(t[1])}</div>`:''}
+   <h1 style="margin-top:10px"${lang==='fa'?' class="fah" dir="rtl"':''}>${lang==='fa'?FA(t[1]):esc(t[0])}</h1>${lang==='both'?`<div class="fa" style="margin:-2px 0 8px;font-size:1.05rem">${FA(t[1])}</div>`:''}
    <div class="chips">${lg.map(x=>`<button class="chip ${lang===x[0]?'on':''}" data-act="rlang" data-v="${x[0]}">${x[1]}</button>`).join('')}</div>
-   <p class="hint">Tap any English word to see its meaning.</p>
-   <div class="card read">${d.b.map(b=>blockHTML(b,lang)).join('')}</div>
-   <div class="bot"><div class="in"><button class="plain" data-act="markread">${rd[sk]?'✅ Read':'Mark as read'}</button><button data-act="readprac">Practice this section →</button></div></div>`,false,keep);
+   ${lang==='fa'?'':'<p class="hint">Tap any English word to see its meaning.</p>'}
+   <div class="card read${lang==='fa'?' rtl" dir="rtl':''}">${d.b.map(b=>blockHTML(b,lang)).join('')}</div>
+   <div class="bot"><div class="in"><button class="plain" data-act="markread">${rd[sk]?(lang==='fa'?'✅ خواندم':'✅ Read'):(lang==='fa'?'خواندم ✓':'Mark as read')}</button><button data-act="readprac">${lang==='fa'?'تمرین این بخش ←':'Practice this section →'}</button></div></div>`,false,keep);
 }
 
 /* ================= Courses ================= */

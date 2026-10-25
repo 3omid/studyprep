@@ -130,13 +130,19 @@ details{border:1px solid var(--line);border-radius:14px;padding:8px 12px;margin-
 .read{padding:18px 16px}
 .rh{font-size:1.12rem;margin:18px 0 8px;padding-top:6px;border-top:1px solid var(--line)}.rh:first-child{margin-top:0;border-top:0;padding-top:0}
 .rp{margin:0 0 12px;line-height:1.75}
-.rl{margin:0 0 14px;padding-left:20px;line-height:1.7}.rl li{margin:0 0 10px}
-.fa.only{margin-top:0}
+.rl{margin:0 0 14px;padding-inline-start:22px;line-height:1.7}.rl li{margin:0 0 10px}
+.fa.only{margin-top:0;color:var(--ink);font-size:1.02em;line-height:2}
+/* English words inside Persian text */
+.lt{direction:ltr;unicode-bidi:isolate;font-family:var(--sans);font-size:.94em}.lt.nw{white-space:nowrap}
+/* Persian-only reading: whole page runs right to left */
+.read.rtl,.fah{font-family:var(--fa);text-align:right}
+.read.rtl .rh{font-size:1.18rem}
+.read.rtl .rl li::marker{color:var(--ac)}
 .rtip{background:color-mix(in srgb,var(--warn) 14%,var(--sf2));border:1px solid color-mix(in srgb,var(--warn) 55%,var(--line));border-radius:14px;padding:10px 14px;margin:12px 0}
 .rtip b{color:var(--warn);display:block;margin-bottom:2px}
 .rtw{overflow-x:auto;margin:0 0 14px;border:1px solid var(--line);border-radius:12px}
 .rt{border-collapse:collapse;width:100%;font-size:.92rem}
-.rt th,.rt td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line);min-width:110px}
+.rt th,.rt td{text-align:start;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line);min-width:110px}
 .rt th{background:var(--sf2);font-weight:700}.rt tr:last-child td{border-bottom:0}
 .rt .fa{text-align:right}
 
