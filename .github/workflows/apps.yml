@@ -1,0 +1,93 @@
+# Builds the Android (.apk) and Windows (.exe) apps and publishes them on the "Download the apps" release.
+# Both apps open the live site, so new content reaches them without a new build; this only runs again
+# when the app wrappers change (or when started by hand from the Actions tab).
+name: Build apps
+
+on:
+  push:
+    branches: [main]
+    paths: ['native/**', 'icons/**', '.github/workflows/apps.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: apps
+  cancel-in-progress: true
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: native/android
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Create the Android project
+        run: |
+          npm install --no-audit --no-fund
+          npx cap add android
+          npx cap sync android
+      - name: App icon
+        run: |
+          res=android/app/src/main/res
+          rm -rf $res/mipmap-anydpi-v26
+          for d in $res/mipmap-*; do
+            cp ../../icons/icon-512.png $d/ic_launcher.png
+            cp ../../icons/icon-512.png $d/ic_launcher_round.png
+            rm -f $d/ic_launcher_foreground.png
+          done
+      - name: Build the APK
+        run: |
+          # the same signing key every time, so a new APK installs over the old one and keeps your progress
+          mkdir -p ~/.android && cp debug.keystore ~/.android/debug.keystore
+          cd android && chmod +x gradlew && ./gradlew assembleDebug --no-daemon
+          cp app/build/outputs/apk/debug/app-debug.apk ../StudyPrep.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android
+          path: native/android/StudyPrep.apk
+
+  windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: native/windows
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Build the installer
+        run: |
+          npm install --no-audit --no-fund
+          npx electron-builder --win --publish never
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: native/windows/dist/StudyPrep-Setup.exe
+
+  publish:
+    needs: [android, windows]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: out
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete apps --yes --cleanup-tag || true
+          gh release create apps out/android/StudyPrep.apk out/windows/StudyPrep-Setup.exe \
+            --title "Download the apps" --latest \
+            --notes "Android: download StudyPrep.apk on the phone and open it. Windows: download StudyPrep-Setup.exe and run it. The apps open the live StudyPrep, so new lessons and fixes arrive by themselves; you only need a new download if this page shows a newer date."

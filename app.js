@@ -826,6 +826,7 @@ function renderSettings(){
    <div class="lbl">Colour theme</div>${palGrid()}</div>
   <div class="card"><h3>Install on this device</h3>
    ${deferred?`<button data-act="install">Install app</button>`:''}
+   <div class="row" style="margin:6px 0 10px"><a class="btn" href="https://github.com/3omid/studyprep/releases/latest/download/StudyPrep.apk">⬇ Android app (.apk)</a><a class="btn" href="https://github.com/3omid/studyprep/releases/latest/download/StudyPrep-Setup.exe">⬇ Windows app (.exe)</a></div>
    <p class="mut"><b>iPhone / iPad (Safari):</b> Share → Add to Home Screen.<br><b>Android (Chrome):</b> menu → Install app.<br><b>Windows / Linux (Chrome, Edge):</b> install icon in the address bar.<br><b>Mac:</b> Chrome install icon, or Safari File → Add to Dock.<br>It works offline once opened one time. Progress is stored on each device separately; use backup to move it.</p></div>
   <div class="card"><h3>Backup</h3><p class="mut" style="margin-top:0">Saves everything: progress, weak questions, reading position, stats, settings and added courses. ${st.get('bkat')?'Last backup: '+ago(st.get('bkat'))+'.':'No backup yet.'}</p>
    <div class="row"><button data-act="export">💾 Save backup file</button><button class="plain" data-act="importfile">📂 Restore from file</button><input type="file" id="bkf" accept=".json,application/json" hidden></div>

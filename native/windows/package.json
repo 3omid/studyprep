@@ -1,0 +1,21 @@
+{
+  "name": "studyprep",
+  "productName": "StudyPrep",
+  "private": true,
+  "version": "1.0.0",
+  "description": "StudyPrep for Windows. It opens the live app, so content updates arrive without reinstalling.",
+  "author": "Omid",
+  "main": "main.js",
+  "devDependencies": {
+    "electron": "31.7.7",
+    "electron-builder": "24.13.3"
+  },
+  "build": {
+    "appId": "io.github.omid.studyprep",
+    "productName": "StudyPrep",
+    "files": ["main.js", "offline.html"],
+    "icon": "icon.png",
+    "win": { "target": "nsis", "artifactName": "StudyPrep-Setup.exe" },
+    "nsis": { "oneClick": true, "perMachine": false, "createDesktopShortcut": true, "createStartMenuShortcut": true, "shortcutName": "StudyPrep" }
+  }
+}

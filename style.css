@@ -31,6 +31,7 @@ button:active{transform:scale(.97)}
 button:hover{filter:brightness(1.06)}
 button.ghost{background:transparent;color:var(--ac);border:1px solid var(--ac)}
 button.plain{background:var(--sf2);color:var(--ink);border:1px solid var(--line)}
+a.btn{display:inline-flex;align-items:center;justify-content:center;font-weight:600;color:var(--ink);background:var(--sf2);border:1px solid var(--line);border-radius:14px;padding:10px 16px;min-height:44px;text-decoration:none}
 button.danger{background:transparent;color:var(--bad);border:1px solid var(--bad)}
 button:disabled{opacity:.4;cursor:not-allowed;filter:none}
 button.sm{min-height:36px;padding:6px 12px;font-size:.88rem;border-radius:12px}

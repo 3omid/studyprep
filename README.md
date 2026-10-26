@@ -29,3 +29,10 @@ Or paste/upload a pack JSON in the app under Courses > Add a course (no code nee
 
 ## v6 additions
 - AI tutor: after answering a question (not in Exam mode), tap “Ask AI” to have it explained in Persian or English and ask follow-up questions. Set it up in Settings → AI tutor: pick a provider (Google Gemini, OpenRouter or Groq, all with free plans), paste your own free key and optionally a model name. The key stays in this browser only (`sp1_aikey`) and is not included in backups. Providers live in the `AIP` table in `app.js`; any OpenAI-compatible service can be added with one entry.
+
+## Android and Windows apps
+`.github/workflows/apps.yml` builds `StudyPrep.apk` (Capacitor, `native/android`) and `StudyPrep-Setup.exe` (Electron, `native/windows`) and publishes them on the **apps** release:
+- https://github.com/3omid/studyprep/releases/latest/download/StudyPrep.apk
+- https://github.com/3omid/studyprep/releases/latest/download/StudyPrep-Setup.exe
+
+Both open the live site (https://3omid.github.io/studyprep/), so content updates arrive without a new build. The workflow runs again only when `native/`, `icons/` or the workflow changes, or by hand from the Actions tab. The APK is signed with the fixed key in `native/android/debug.keystore`, so a newer APK installs over the old one.

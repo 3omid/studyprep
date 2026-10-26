@@ -1,1 +1,5 @@
 windows/installed.txt
+native/*/node_modules/
+native/*/package-lock.json
+native/android/android/
+native/windows/dist/

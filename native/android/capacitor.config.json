@@ -1,0 +1,12 @@
+{
+  "appId": "io.github.omid.studyprep",
+  "appName": "StudyPrep",
+  "webDir": "www",
+  "server": {
+    "url": "https://3omid.github.io/studyprep/",
+    "androidScheme": "https"
+  },
+  "android": {
+    "backgroundColor": "#0d1520"
+  }
+}
