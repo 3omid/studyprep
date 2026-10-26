@@ -213,3 +213,5 @@ details{border:1px solid var(--line);border-radius:14px;padding:8px 12px;margin-
 .aiq{display:flex;gap:8px;align-items:center}.aiq .inp{flex:1}
 .sheet .aiq button{width:auto;margin:0;min-width:52px}
 .sheet .chips .chip{width:auto;margin:0}
+
+.aik{display:flex;gap:8px;align-items:stretch}.aik .inp{flex:1;min-width:0}.aik button{flex:none;min-height:44px;padding:8px 14px}

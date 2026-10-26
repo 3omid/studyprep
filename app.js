@@ -490,6 +490,11 @@ const aiCfg=()=>Object.assign({p:'gemini',m:{},lang:'fa'},SET.ai||{});
 const aiKeys=()=>st.get('aikey',{});
 const aiModel=c=>(c.m[c.p]||'').trim()||AIP[c.p].m;
 const aiReady=()=>!!aiKeys()[aiCfg().p];
+/* the key is saved as soon as it is typed or pasted, and again with the Save button */
+function aiSaveKey(v){v=String(v||'').trim();const k=aiKeys();k[aiCfg().p]=v;st.set('aikey',k);
+  const ok=aiKeys()[aiCfg().p]===v,s=$('#aiks');
+  if(s)s.textContent=!v?'No key saved yet · هنوز کلیدی ذخیره نشده':ok?`✅ Key saved on this device (…${v.slice(-4)}) · کلید ذخیره شد`:'⚠️ This browser would not save the key (private mode?) · مرورگر اجازه‌ی ذخیره نداد';
+  return ok&&!!v}
 // Free models are often "busy" (503/429). Then try again, moving to a lighter Gemini model,
 // so one busy model does not stop the tutor.
 const AIBUSY=[429,500,502,503,504],AIFALL=['gemini-flash-lite-latest','gemini-2.5-flash'];
@@ -816,7 +821,8 @@ function aiSettings(){
    <p class="fa" style="margin-top:0">بعد از جواب دادن، «از هوش مصنوعی بپرس» را بزنید تا سؤال را برایتان توضیح بدهد. اینترنت و یک کلید رایگان لازم است.</p>
    <div class="lbl">Provider</div><select data-act="aip">${Object.keys(AIP).map(p=>`<option value="${p}" ${p===c.p?'selected':''}>${esc(AIP[p].n)}</option>`).join('')}</select>
    <div class="lbl">API key · <a href="${P0.key}" target="_blank" rel="noopener" style="color:var(--ac);text-transform:none;letter-spacing:0">get a free key ↗</a></div>
-   <input class="inp" type="password" autocomplete="off" data-act="aikey" value="${esc(k)}" placeholder="Paste your key here">
+   <div class="aik"><input class="inp" id="aikin" type="password" autocomplete="off" data-act="aikey" value="${esc(k)}" placeholder="Paste your key here"><button data-act="aisave">💾 Save · ذخیره</button></div>
+   <div class="mut" id="aiks" style="margin-top:6px">${k?`✅ Key saved on this device (…${esc(k.slice(-4))}) · کلید ذخیره شده است`:'No key saved yet · هنوز کلیدی ذخیره نشده'}</div>
    <div class="lbl">Model</div><input class="inp" data-act="aimodel" value="${esc(c.m[c.p]||'')}" placeholder="${esc(P0.m)} (default)">
    <div class="lbl">AI answers in</div>${`<select data-act="ailang">${[['fa','Persian, with English terms'],['en','English']].map(o=>`<option value="${o[0]}" ${c.lang===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select>`}
    <div class="row" style="margin-top:10px"><button class="plain sm" data-act="aitest">Test AI</button></div>
@@ -894,6 +900,7 @@ document.addEventListener('click',e=>{
     case 'aisend':{const i=$('#aiin'),h=AIH[cur().id];if(i&&h){aiSend(h,i.value);i.value=''}break}
     case 'aiask':{const h=AIH[cur().id];if(h)aiSend(h,AIQ[v]);break}
     case 'aitest':aiTest();break;
+    case 'aisave':{const i=$('#aikin');if(i&&aiSaveKey(i.value))aiTest();break}
     case 'aiset':closeModal();clearInterval(timerId);if(S)st.set('sess',S);go('settings');break;
     case 'rdresume':readSess();break;
     case 'read':renderReader(v);break;
@@ -936,9 +943,12 @@ document.addEventListener('change',e=>{
   else if(a==='examfa'){SET.examFa=t.checked;st.set('set',SET)}
   else if(a==='examdate'){SET.examDate=t.value;st.set('set',SET)}
   else if(a==='aip'||a==='aimodel'||a==='ailang'){const c=aiCfg();if(a==='aip')c.p=t.value;else if(a==='ailang')c.lang=t.value;else c.m[c.p]=t.value.trim();SET.ai=c;st.set('set',SET);if(a==='aip')renderSettings()}
-  else if(a==='aikey'){const k=aiKeys();k[aiCfg().p]=t.value.trim();st.set('aikey',k)}
+  else if(a==='aikey')aiSaveKey(t.value)
 });
 
+document.addEventListener('input',e=>{const t=e.target;if(t.dataset&&t.dataset.act==='aikey')aiSaveKey(t.value)});
+/* ask the browser to keep this app's saved data (progress, settings, AI key) instead of clearing it when space runs low */
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='aiin'){e.preventDefault();const h=AIH[cur().id];if(h){aiSend(h,e.target.value);e.target.value=''}}});
 
 /* ================= boot ================= */
