@@ -155,7 +155,7 @@ function wordAI(){
   if(WAI[k]){put(WAI[k]);return}
   box.innerHTML='<div class="mut">…thinking · در حال فکر کردن</div>';
   const sys='You explain English words and IT security terms to a 15-year-old Persian speaker who is studying for CompTIA Security+ and finds technical text hard. Answer ONLY in simple, friendly, everyday Persian; keep the English word or term itself in English. Write exactly 3 short lines, each starting with its label: «معنی:» what it means in this sentence. «کاربرد:» what it is for or how it is used (in IT/security if it is a technical term). «مثال:» one simple everyday example. Nothing else.';
-  aiCall(sys,[{r:'u',t:`Word: "${q.w}"\nSentence: "${q.c}"`}]).then(x=>{
+  aiCall(sys,[{r:'u',t:`Word: "${q.w}"\nSentence: "${q.c}"`}],put).then(x=>{
     WAI[k]=x;const ks=Object.keys(WAI);if(ks.length>300)ks.slice(0,60).forEach(z=>delete WAI[z]);st.set('wai',WAI);put(x);
   },e=>{const b=$('#wai');if(b)b.innerHTML=`<div class="aim err">${esc(e.message)}</div><button class="plain" data-act="wordai">↻ Try again</button>`});
 }
@@ -493,31 +493,52 @@ const aiReady=()=>!!aiKeys()[aiCfg().p];
 // Free models are often "busy" (503/429). Then try again, moving to a lighter Gemini model,
 // so one busy model does not stop the tutor.
 const AIBUSY=[429,500,502,503,504],AIFALL=['gemini-flash-lite-latest','gemini-2.5-flash'];
-function aiCall(sys,msgs){
+function aiCall(sys,msgs,onPart){
   const c=aiCfg(),key=aiKeys()[c.p],model=aiModel(c);
   if(!key)return Promise.reject(new Error('Add your AI key in Settings first.'));
   const tries=c.p==='gemini'?[model].concat(AIFALL.filter(m=>m!==model)):[model,model];
-  const next=i=>aiOnce(c,key,tries[i],sys,msgs).catch(e=>{
-    if(!AIBUSY.includes(e.status))throw e;
+  let got=false;const part=x=>{got=true;if(onPart)onPart(x)};
+  const next=i=>aiOnce(c,key,tries[i],sys,msgs,part).catch(e=>{
+    if(got||!AIBUSY.includes(e.status))throw e;
     if(i+1>=tries.length)throw new Error('The AI is busy right now. Wait a minute and try again, or pick another provider in Settings. · هوش مصنوعی الان شلوغ است؛ یک دقیقه بعد دوباره امتحان کنید.');
     return new Promise(ok=>setTimeout(ok,1500*(i+1))).then(()=>next(i+1))});
   return next(0);
 }
-function aiOnce(c,key,model,sys,msgs){
-  const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),60000);
+// Gemini Flash "thinks" before answering, which made every answer take many seconds; short tutoring answers don't need it.
+// A model that refuses a thinking setting is remembered and asked again without it.
+const AINOTHINK={};
+const noThink=x=>x.replace(/<think>[\s\S]*?(<\/think>|$)/g,'').trim();
+function aiOnce(c,key,model,sys,msgs,onPart){
+  const ctl=new AbortController();let t=setTimeout(()=>ctl.abort(),60000);
+  const think=!AINOTHINK[c.p+model];
   let req;
-  if(c.p==='gemini')req=fetch('https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent(model)+':generateContent',{method:'POST',signal:ctl.signal,
+  if(c.p==='gemini')req=fetch('https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent(model)+':streamGenerateContent?alt=sse',{method:'POST',signal:ctl.signal,
     headers:{'Content-Type':'application/json','x-goog-api-key':key},
-    body:JSON.stringify({systemInstruction:{parts:[{text:sys}]},contents:msgs.map(m=>({role:m.r==='u'?'user':'model',parts:[{text:m.t}]}))})});
+    body:JSON.stringify(Object.assign({systemInstruction:{parts:[{text:sys}]},contents:msgs.map(m=>({role:m.r==='u'?'user':'model',parts:[{text:m.t}]}))},
+      think&&/flash/i.test(model)?{generationConfig:{thinkingConfig:{thinkingBudget:0}}}:{}))});
   else req=fetch(AIP[c.p].url,{method:'POST',signal:ctl.signal,
     headers:{'Content-Type':'application/json','Authorization':'Bearer '+key,'X-Title':'StudyPrep'},
-    body:JSON.stringify({model,messages:[{role:'system',content:sys}].concat(msgs.map(m=>({role:m.r==='u'?'user':'assistant',content:m.t})))})});
-  return req.then(r=>r.json().catch(()=>({})).then(d=>{clearTimeout(t);
-    if(!r.ok)throw Object.assign(new Error((d.error&&(d.error.message||d.error))||('Error '+r.status)),{status:r.status});
-    const x=c.p==='gemini'?((((d.candidates||[])[0]||{}).content||{}).parts||[]).map(p=>p.text||'').join(''):(((d.choices||[])[0]||{}).message||{}).content;
-    if(!x)throw new Error('The AI sent an empty answer. Try again or pick another model.');
-    return String(x).replace(/<think>[\s\S]*?<\/think>/g,'').trim()}),
-    e=>{clearTimeout(t);throw new Error(e.name==='AbortError'?'The AI took too long. Try again.':'No connection to the AI. Check the internet.')});
+    body:JSON.stringify(Object.assign({model,stream:true,messages:[{role:'system',content:sys}].concat(msgs.map(m=>({role:m.r==='u'?'user':'assistant',content:m.t})))},
+      think&&c.p==='groq'&&/gpt-oss/i.test(model)?{reasoning_effort:'low'}:{}))});
+  return req.then(r=>{
+    if(!r.ok)return r.json().catch(()=>({})).then(d=>{clearTimeout(t);
+      const msg=(d.error&&(d.error.message||d.error))||(Array.isArray(d)&&d[0]&&d[0].error&&d[0].error.message)||('Error '+r.status);
+      if(think&&r.status===400&&/think|reason/i.test(String(msg))){AINOTHINK[c.p+model]=1;return aiOnce(c,key,model,sys,msgs,onPart)}
+      throw Object.assign(new Error(msg),{status:r.status})});
+    // read the answer piece by piece, so text shows up as soon as it starts
+    const rd=r.body.getReader(),dec=new TextDecoder();let buf='',out='';
+    const line=l=>{l=l.trim();if(!l.startsWith('data:'))return;const p=l.slice(5).trim();if(!p||p==='[DONE]')return;
+      let d;try{d=JSON.parse(p)}catch(e){return}
+      if(d.error)throw Object.assign(new Error(d.error.message||'AI error'),{status:d.error.code});
+      const x=c.p==='gemini'?((((d.candidates||[])[0]||{}).content||{}).parts||[]).filter(q=>!q.thought).map(q=>q.text||'').join(''):((((d.choices||[])[0]||{}).delta||{}).content||'');
+      if(x){out+=x;const v=noThink(out);if(v&&onPart)onPart(v)}};
+    const pump=()=>rd.read().then(({done,value})=>{
+      clearTimeout(t);t=setTimeout(()=>ctl.abort(),30000);
+      buf+=dec.decode(value||new Uint8Array(),{stream:!done});const ls=buf.split('\n');buf=done?'':ls.pop();ls.forEach(line);
+      if(done){if(buf)line(buf);clearTimeout(t);const v=noThink(out);if(!v)throw new Error('The AI sent an empty answer. Try again or pick another model.');return v}
+      return pump()});
+    return pump();
+  },e=>{clearTimeout(t);throw new Error(e.name==='AbortError'?'The AI took too long. Try again.':'No connection to the AI. Check the internet.')});
 }
 // light markdown: bold, inline code, bullets; a line with any Persian reads right-to-left; everything else escaped
 const aiMd=s=>esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`([^`]+)`/g,'<code>$1</code>').replace(/^\s*[-*•]\s+/gm,'• ').replace(/^#+\s*/gm,'').split('\n').map(l=>l.trim()?`<div dir="${/[\u0600-\u06FF]/.test(l)?'rtl':'ltr'}">${l}</div>`:'').join('');
@@ -540,14 +561,16 @@ function aiOpen(){
   if(!h.m.length)aiSend(h,it.ok?'Explain briefly why this answer is correct and why each other option is wrong.':'I got this wrong. Explain why my choice is wrong, why the correct answer is right, and how to spot it next time.');
 }
 function aiDraw(h){const b=$('#ailog');if(!b)return;
-  b.innerHTML=h.m.map(m=>`<div class="aim ${m.r}" dir="auto">${m.r==='u'?esc(m.t):aiMd(m.t)}</div>`).join('')+(h.busy?'<div class="aim a mut">…thinking · در حال فکر کردن</div>':'')+(h.err?`<div class="aim err">${esc(h.err)}</div>`:'');
+  b.innerHTML=h.m.map(m=>`<div class="aim ${m.r}" dir="auto">${m.r==='u'?esc(m.t):aiMd(m.t)}</div>`).join('')+(h.busy&&(h.m[h.m.length-1]||{}).r!=='a'?'<div class="aim a mut">…thinking · در حال فکر کردن</div>':'')+(h.err?`<div class="aim err">${esc(h.err)}</div>`:'');
   b.scrollTop=b.scrollHeight}
 function aiSend(h,text){
   text=String(text||'').trim();if(!text||h.busy)return;
   const c=aiCfg(),lang=c.lang==='en'?'Answer in simple English.':'Answer in Persian (Farsi), keeping technical terms in English, e.g. "Firewall (فایروال)".';
   const sys=`You are a friendly tutor helping a student prepare for an IT certification exam (such as CompTIA Security+). ${lang} Be short and clear: at most about 150 words unless asked for more. Use bullets for lists. Only talk about this subject.\n\nThe question the student is looking at:\n${aiContext(h.it,h.q)}`;
   h.m.push({r:'u',t:text});h.busy=true;h.err='';aiDraw(h);
-  aiCall(sys,h.m.filter(m=>!m.fail)).then(x=>{h.m.push({r:'a',t:x})},e=>{h.m[h.m.length-1].fail=true;h.err=e.message}).then(()=>{h.busy=false;aiDraw(h)});
+  const msgs=h.m.filter(m=>!m.fail),live={r:'a',t:''};let raf=0;
+  aiCall(sys,msgs,x=>{live.t=x;if(!h.m.includes(live))h.m.push(live);if(!raf)raf=requestAnimationFrame(()=>{raf=0;aiDraw(h)})})
+    .then(x=>{live.t=x;if(!h.m.includes(live))h.m.push(live)},e=>{const i=h.m.indexOf(live);if(i>=0)h.m.splice(i,1);h.m[h.m.length-1].fail=true;h.err=e.message}).then(()=>{h.busy=false;aiDraw(h)});
 }
 const AIQ={ex:'Give me one short real-world example of this.',sim:'Explain it again, much simpler, like I am new to IT.',mem:'Give me a short memory trick to remember this for the exam.'};
 function aiTest(){const s=$('#aist');if(s)s.textContent='Testing…';
