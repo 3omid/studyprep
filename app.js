@@ -57,11 +57,11 @@ function lookupOnline(w){
 const VX={idx:null,bufs:{},el:null,url:null,ac:null};
 /* the voice goes through its own amplifier: iPhones ignore an audio element's volume, so clips sounded quiet */
 function vUnlock(){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;if(!VX.ac)VX.ac=new C();if(VX.ac.state==='suspended')VX.ac.resume()}catch(e){}}
-function vAmp(a){try{const ac=VX.ac;if(!ac||ac.state!=='running')return false;
+function vAmp(a){try{const ac=VX.ac;if(!ac||ac.state!=='running'||!SET.vboost)return false;
   const src=ac.createMediaElementSource(a),g=ac.createGain(),cp=ac.createDynamicsCompressor();
-  g.gain.value=1+SET.vvol*2.2;cp.threshold.value=-12;cp.knee.value=6;cp.ratio.value=6;cp.attack.value=.003;cp.release.value=.2;
+  g.gain.value=1+SET.vboost*1.6;cp.threshold.value=-12;cp.knee.value=6;cp.ratio.value=6;cp.attack.value=.003;cp.release.value=.2;
   src.connect(g);g.connect(cp);cp.connect(ac.destination);return true}catch(e){return false}}
-const vRate=(t,opt)=>opt&&opt.rate||(/\s/.test(t)?SET.vsp:SET.vsp*.9);
+const vRate=(t,opt)=>opt&&opt.rate||SET.vspeed;
 const vkey=t=>{t=String(t).replace(/\s+/g,' ').trim().toLowerCase();let h=2166136261;for(let i=0;i<t.length;i++){h^=t.charCodeAt(i);h=Math.imul(h,16777619)>>>0}return h.toString(36)+t.length.toString(36)};
 function vIdx(){return VX.idx||(VX.idx=fetch('audio/idx.json').then(r=>{if(!r.ok)throw 0;return r.json()}).catch(()=>({b:[],k:{}})))}
 function vBuf(b,name){return VX.bufs[b]||(VX.bufs[b]=fetch(name).then(r=>{if(!r.ok)throw 0;return r.arrayBuffer()}).catch(e=>{delete VX.bufs[b];throw e}))}
@@ -176,7 +176,7 @@ function whatsWhat(q,it,fa){
 }
 
 /* ================= packs ================= */
-let SET=Object.assign({vsp:0.8,vvol:0.7,rl:'both',fa:'tap',faExp:'tap',examFa:false,theme:'auto',pal:'classic',size:1,examDate:'',goal:30,snd:true,mus:false,vib:true,vol:0.6,cues:true,auto:true,off:{packs:[],secs:[]}},st.get('set',{}));
+let SET=Object.assign({vspeed:1,vboost:0,rl:'both',fa:'tap',faExp:'tap',examFa:false,theme:'auto',pal:'classic',size:1,examDate:'',goal:30,snd:true,mus:false,vib:true,vol:0.6,cues:true,auto:true,off:{packs:[],secs:[]}},st.get('set',{}));
 SET.off=SET.off||{packs:[],secs:[]};
 let P=st.get('prog',{}),PACKS=[],Q={};
 function normPack(p,user){
@@ -836,8 +836,8 @@ function renderSettings(){
   <div class="card"><h3>Human voice (American English)</h3>
    <div class="sw"><span>Read each new question aloud<div class="mut">Also plays when you tap Next</div></span><input type="checkbox" data-act="tog" data-k="auto" ${SET.auto?'checked':''}></div>
    <div class="sw"><span>Spoken feedback<div class="mut">“Correct!”, “Well done!”, “Congratulations!”</div></span><input type="checkbox" data-act="tog" data-k="cues" ${SET.cues?'checked':''}></div>
-   <div class="lbl">Voice speed · سرعت صدا</div>${sel('vsp',[[0.65,'Slow · آهسته'],[0.8,'A bit slow · کمی آهسته'],[1,'Normal · عادی']])}
-   <div class="lbl">Voice loudness · بلندی صدا</div>${sel('vvol',[[0.3,'Normal · عادی'],[0.7,'Loud · بلند'],[1,'Very loud · خیلی بلند']])}
+   <div class="lbl">Voice speed · سرعت صدا</div>${sel('vspeed',[[0.85,'Slower · آهسته‌تر'],[1,'Normal · عادی'],[1.15,'Faster · تندتر']])}
+   <div class="lbl">Voice loudness · بلندی صدا</div>${sel('vboost',[[0,'Normal · عادی'],[0.5,'Louder · بلندتر'],[1,'Loudest · خیلی بلند']])}
    <div class="row" style="margin-top:10px"><button class="plain sm" data-act="speak" data-v="Hello! This is the study voice. Let us get started.">▶ Test voice</button><button class="plain sm" data-act="dlaudio">⬇ Download voice for offline</button></div>
    <p class="mut" id="dlst" style="margin:8px 0 0">Tap any word and press 🔊 to hear it. About 18 MB, downloaded once.</p></div>
   ${aiSettings()}
@@ -886,7 +886,7 @@ document.addEventListener('click',e=>{
     case 'hint':cur().hint=!cur().hint;renderQuiz(true);break;
     case 'faexp':cur().fe=true;renderQuiz(true);break;
     case 'speak':speak(v);break;
-    case 'speakslow':speak(v,{rate:.6});break;
+    case 'speakslow':speak(v,{rate:.75});break;
     case 'wordai':wordAI();break;
     case 'speakq':{const q=Q[cur().id];speak(q.k==='m'?q.q:q.title);break}
     case 'dlaudio':dlAudio();break;
@@ -931,7 +931,7 @@ document.addEventListener('change',e=>{
   if(a==='ans'){const it=cur();if(it.ck)return;t.value===''?delete it.ans[t.dataset.v]:it.ans[t.dataset.v]=+t.value;st.set('sess',S);if(S.mode!=='exam'){const b=$('.bot button');if(b)b.disabled=!Object.keys(it.ans).length}}
   else if(a==='packtog'){const id=t.dataset.v;SET.off.packs=SET.off.packs.filter(x=>x!==id);if(!t.checked)SET.off.packs.push(id);st.set('set',SET);cfg.secs=null;renderCourses()}
   else if(a==='sectog'){const k=t.dataset.v;SET.off.secs=SET.off.secs.filter(x=>x!==k);if(!t.checked)SET.off.secs.push(k);st.set('set',SET);cfg.secs=null;renderCourses()}
-  else if(a==='set'){const k=t.dataset.k;SET[k]=(k==='size'||k==='vol'||k==='goal'||k==='vsp'||k==='vvol')?+t.value:t.value;st.set('set',SET);applyLook();if(k==='vol'){FX.set({vol:SET.vol});FX.ok()}}
+  else if(a==='set'){const k=t.dataset.k;SET[k]=(k==='size'||k==='vol'||k==='goal'||k==='vspeed'||k==='vboost')?+t.value:t.value;st.set('set',SET);applyLook();if(k==='vol'){FX.set({vol:SET.vol});FX.ok()}}
   else if(a==='tog'){const k=t.dataset.k;SET[k]=t.checked;st.set('set',SET);FX.set({[k]:SET[k]});if(k==='mus')FX.music(SET.mus);if((k==='auto'||k==='cues')&&!t.checked)vStop();if(k==='snd'&&t.checked)FX.ok()}
   else if(a==='examfa'){SET.examFa=t.checked;st.set('set',SET)}
   else if(a==='examdate'){SET.examDate=t.value;st.set('set',SET)}
