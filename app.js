@@ -511,24 +511,24 @@ function aiCall(sys,msgs,onPart){
 }
 // Gemini Flash "thinks" before answering, which made every answer take many seconds; short tutoring answers don't need it.
 // A model that refuses a thinking setting is remembered and asked again without it.
-const AINOTHINK={};
+const AINOTHINK=st.get('ainothink',{});
 const noThink=x=>x.replace(/<think>[\s\S]*?(<\/think>|$)/g,'').trim();
 function aiOnce(c,key,model,sys,msgs,onPart){
   const ctl=new AbortController();let t=setTimeout(()=>ctl.abort(),60000);
-  const think=!AINOTHINK[c.p+model];
+  const lv=AINOTHINK[c.p+model]|0,think=lv<2;
   let req;
   if(c.p==='gemini')req=fetch('https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent(model)+':streamGenerateContent?alt=sse',{method:'POST',signal:ctl.signal,
     headers:{'Content-Type':'application/json','x-goog-api-key':key},
     body:JSON.stringify(Object.assign({systemInstruction:{parts:[{text:sys}]},contents:msgs.map(m=>({role:m.r==='u'?'user':'model',parts:[{text:m.t}]}))},
-      think&&/flash/i.test(model)?{generationConfig:{thinkingConfig:{thinkingBudget:0}}}:{}))});
+      think&&/flash/i.test(model)?{generationConfig:{thinkingConfig:lv?{thinkingLevel:'minimal'}:{thinkingBudget:0}}}:{}))});
   else req=fetch(AIP[c.p].url,{method:'POST',signal:ctl.signal,
     headers:{'Content-Type':'application/json','Authorization':'Bearer '+key,'X-Title':'StudyPrep'},
     body:JSON.stringify(Object.assign({model,stream:true,messages:[{role:'system',content:sys}].concat(msgs.map(m=>({role:m.r==='u'?'user':'assistant',content:m.t})))},
-      think&&c.p==='groq'&&/gpt-oss/i.test(model)?{reasoning_effort:'low'}:{}))});
+      think&&!lv&&c.p==='groq'&&/gpt-oss/i.test(model)?{reasoning_effort:'low'}:{}))});
   return req.then(r=>{
     if(!r.ok)return r.json().catch(()=>({})).then(d=>{clearTimeout(t);
       const msg=(d.error&&(d.error.message||d.error))||(Array.isArray(d)&&d[0]&&d[0].error&&d[0].error.message)||('Error '+r.status);
-      if(think&&r.status===400&&/think|reason/i.test(String(msg))){AINOTHINK[c.p+model]=1;return aiOnce(c,key,model,sys,msgs,onPart)}
+      if(think&&r.status===400&&(c.p==='gemini'?/flash/i.test(model):/gpt-oss/i.test(model))){AINOTHINK[c.p+model]=c.p==='gemini'?lv+1:2;st.set('ainothink',AINOTHINK);return aiOnce(c,key,model,sys,msgs,onPart)}
       throw Object.assign(new Error(msg),{status:r.status})});
     // read the answer piece by piece, so text shows up as soon as it starts
     const rd=r.body.getReader(),dec=new TextDecoder();let buf='',out='';
