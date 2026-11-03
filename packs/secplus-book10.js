@@ -3,12 +3,12 @@
    for the chapter's objectives (2.3, 3.1, 3.3, 4.1); no text or review questions from the book are copied.
    The correct option is always first in o/of; the app shuffles the options. */
 (function(){
-  var pack=(window.PACKS||[]).find(function(p){return p.id==='secplus'});
+  var pack=(window.PACKS||[]).find(function(p){return p.id==='secbook'});
   if(!pack)return;
-  pack.sections['B10']={en:'Book Ch. 10: Cloud and virtualization security',fa:'فصل ۱۰ کتاب: امنیت ابر و مجازی‌سازی'};
+  pack.sections['10']={en:'Cloud and virtualization security',fa:'امنیت ابر و مجازی‌سازی'};
   var n=0;
   function M(t,q,qf,hf,o,of,en,fa){
-    pack.mcq.push({id:'secplus:b10_'+(++n),sec:'B10',t:t,q:q,qf:qf,hf:hf,o:o,of:of,en:en,fa:fa});
+    pack.mcq.push({id:'secplus:b10_'+(++n),sec:'10',t:t,q:q,qf:qf,hf:hf,o:o,of:of,en:en,fa:fa});
   }
   var T1='Cloud basics & service models',T2='Deployment & shared responsibility',T3='Virtualization, containers & storage',T4='Cloud security controls';
 
@@ -288,7 +288,7 @@
   var L=function(items){return{k:'ul',en:items.map(function(x){return x[0]}),fa:items.map(function(x){return x[1]})}};
   var TB=function(h,r){return{k:'tbl',h:h,r:r}};
 
-  pack.study['B10']={t:['Book Ch. 10: Cloud and virtualization security','فصل ۱۰ کتاب: امنیت ابر و مجازی‌سازی'],b:[
+  pack.study['10']={t:['Cloud and virtualization security','امنیت ابر و مجازی‌سازی'],b:[
     PP('Matched to Chapter 10 of the course textbook (objectives 2.3, 3.1, 3.3 and 4.1). These are short review notes in our own words; read the chapter itself for the full explanation.',
       'این بخش با فصل ۱۰ کتاب درس جور است (سرفصل‌های 2.3، 3.1، 3.3 و 4.1). این‌ها یادداشت‌های کوتاه مرور به زبان خودمان است؛ توضیح کامل را در خود کتاب بخوان.'),
 

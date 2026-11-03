@@ -9,8 +9,8 @@
   function M(t,q,qf,hf,o,of,en,fa){
     pack.mcq.push({id:'secplus:e'+(++n),sec:'11',t:t,q:q,qf:qf,hf:hf,o:o,of:of,en:en,fa:fa});
   }
-  var P=function(t,title,tf,zones,zf,items,zd,en,fa){
-    pack.pbq.push({id:'secplus:p11_'+(pack.pbq.length+1),sec:'11',t:t,title:title,tf:tf,zones:zones,zf:zf,items:items,zd:zd,en:en,fa:fa});
+  var P=function(t,name,title,tf,zones,zf,items,zd,en,fa){ /* name = short label; the app shows title */
+    pack.pbq.push({id:'secplus:p11_'+(pack.pbq.length+1),sec:'11',t:t,name:name,title:title,tf:tf,zones:zones,zf:zf,items:items,zd:zd,en:en,fa:fa});
   };
 
   /* ================= QUESTIONS ================= */
