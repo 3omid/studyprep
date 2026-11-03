@@ -32,7 +32,7 @@ Or paste/upload a pack JSON in the app under Courses > Add a course (no code nee
 
 ## Security+ course and textbook
 - `packs/secplus*.js` (not `-book`) = the course modules (pack `secplus`, sections 1–14 and R7-8).
-- `packs/secbook.js` + `packs/secplus-book<N>.js` = the textbook, Chapple & Seidl 9th ed. (pack `secbook`, chapters 1–14). Each chapter file adds section `'<N>'`, its questions and its notes. Question ids stay `secplus:b<N>_<n>` so progress made before the split is kept; old reading marks under `secplus:B<N>` are moved once at start-up.
+- `packs/secbook.js` + `packs/secplus-book<N>.js` = the textbook, Chapple & Seidl 9th ed. (pack `secbook`, chapters 1–17). Each chapter file adds section `'<N>'`, its questions and its notes. Question ids stay `secplus:b<N>_<n>` so progress made before the split is kept; old reading marks under `secplus:B<N>` are moved once at start-up.
 - Learn shows one of them at a time (switch at the top). Home → **Security+ mock exam** = 90 questions in 90 minutes from both, including scenario questions.
 - `packs/defsec2.js` (Sheridan Defensive Security 2) is loaded but starts switched off (`defOff`); turn it on in Courses.
 

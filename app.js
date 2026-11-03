@@ -753,7 +753,7 @@ function renderReader(sk,keep){
   if(window._rk!==sk){RV.on=false;RV.tok++;vStop()}
   window._rk=sk;window._rl=noteLines(d,t[0]);ACT='read';lastAct({mode:'Reading',what:' · '+p.short+' · '+(t[0]||'')});{const rp=st.get('rpos',{});st.set('rlast',sk);if(!keep&&rp[sk]>40)setTimeout(()=>window.scrollTo(0,rp[sk]),60)}
   const lg=[['en','English'],['both','English + فارسی'],['fa','فارسی']];
-  page(`<div class="spread"><button class="plain sm" data-act="tab" data-v="learn">← Learn</button><span class="mut">${esc(p.short)}</span></div>
+  page(`<div class="spread"><button class="plain sm" data-act="tab" data-v="learn">← Learn</button><span class="mut">${esc(p.short+(secNo(p,sk.split(':')[1])?' · '+secNo(p,sk.split(':')[1]):''))}</span></div>
    <h1 style="margin-top:10px" data-vl="0"${lang==='fa'?' class="fah" dir="rtl"':''}>${lang==='fa'?FA(t[1]):esc(t[0])}</h1>${lang==='both'?`<div class="fa" style="margin:-2px 0 8px;font-size:1.05rem">${FA(t[1])}</div>`:''}
    <div class="chips">${lg.map(x=>`<button class="chip ${lang===x[0]?'on':''}" data-act="rlang" data-v="${x[0]}">${x[1]}</button>`).join('')}</div>
    ${lang==='fa'?'':'<p class="hint">Tap any English word to see its meaning.</p>'}
