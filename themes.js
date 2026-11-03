@@ -41,3 +41,53 @@ window.THEMES=[
   ["spring","Spring","بهاری","color",["#E8EFE2","#F8FAF7","#CFDEC3","#1D2A17","#667A5C","#3F7A0E","#F3722C"],["#151C13","#1F291D","#303F2E","#EEF6E8","#A9BE9C","#498E10","#F9A26C"]],
   ["berry","Berry","میوه‌ای","color",["#F4E5ED","#FCF7FA","#E8C9DA","#2B1426","#80617A","#A4286A","#5B5BD6"],["#1F131D","#2D1E2A","#442E40","#FBEAF4","#CBA3BD","#D24490","#8C8CF0"]]
 ];
+
+/* Game themes: picture backgrounds drawn in code (no image files), plus chunky game-style panels
+   and buttons across the whole app. Same row format as above; the scene is in window.SCENES. */
+window.THEMES.push(
+  ["g-arena","Arena","میدان نبرد","game",["#5fb4f2","#fdf7e8","#d9bf86","#2b1d0e","#76603e","#1f6fd1","#f5b301"],["#0e2846","#17365c","#2d5b8f","#f1f6ff","#a9c1e3","#4aa3ff","#ffc62e"]],
+  ["g-night","Royal Night","شب سلطنتی","game",["#7155c9","#f7f2ff","#cbb8f2","#241446","#6a5a8e","#6e35d8","#f2a900"],["#1a1036","#2a1b52","#4a358d","#f3edff","#b9a8e6","#a06bff","#ffc233"]],
+  ["g-jungle","Jungle","جنگل","game",["#4aa64f","#f6fbed","#bcd99c","#1c2e12","#5b7048","#25893a","#ff9f1c"],["#0f2a17","#183a22","#2f5d3a","#ecf8e6","#a5c79a","#4cc760","#ffb347"]],
+  ["g-lava","Lava","آتشفشان","game",["#de5a2f","#fff6ef","#f0bc9f","#3a120a","#85503f","#cc3317","#f0a400"],["#2a0e0a","#3d1712","#6c2c21","#fff0ea","#e3a897","#ff5a36","#ffc233"]],
+  ["g-frost","Frost","یخبندان","game",["#8fd1f2","#f5fbff","#b6dbef","#0d2a3d","#4f7389","#1478b8","#7357f0"],["#0b2233","#12344b","#25536f","#eaf7ff","#9cc6de","#4cb8f5","#a08bff"]],
+  ["g-desert","Desert","صحرا","game",["#f0b860","#fffaf0","#e9cf9c","#33210a","#7d6440","#c0651a","#1f8fb8"],["#2b1c0b","#3b2912","#634724","#fff5e6","#dcc39c","#f08a3a","#4cc0e8"]]
+);
+(function(){
+  const stars=(n,seed,w,h,op)=>{let s=seed,o='';const r=()=>(s=(s*9301+49297)%233280)/233280;for(let i=0;i<n;i++)o+=`<circle cx="${(r()*w).toFixed(1)}" cy="${(r()*h).toFixed(1)}" r="${(r()*1.6+.4).toFixed(1)}" fill="#fff" opacity="${(op*(.4+r()*.6)).toFixed(2)}"/>`;return o};
+  const cloud=(x,y,s,c)=>`<g transform="translate(${x} ${y}) scale(${s})" fill="${c||'#fff'}"><ellipse cx="0" cy="0" rx="34" ry="16"/><ellipse cx="26" cy="-10" rx="24" ry="18"/><ellipse cx="54" cy="0" rx="30" ry="14"/></g>`;
+  const castle=(x,y,s,c,d)=>`<g transform="translate(${x} ${y}) scale(${s})" fill="${c}"><rect x="-30" y="-40" width="60" height="40"/><rect x="-44" y="-62" width="20" height="62"/><rect x="24" y="-62" width="20" height="62"/>
+    ${[-44,-36,-28,24,32,40].map(v=>`<rect x="${v}" y="-70" width="5" height="8"/>`).join('')}${[-30,-20,-10,0,10,20].map(v=>`<rect x="${v}" y="-47" width="6" height="7"/>`).join('')}
+    <rect x="-1" y="-96" width="2" height="34"/><path d="M1-96l16 5-16 5z" fill="${d}"/><path d="M-9 0v-16a9 9 0 0 1 18 0v16z" fill="rgba(0,0,0,.35)"/></g>`;
+  const pine=(x,y,s,c)=>`<g transform="translate(${x} ${y}) scale(${s})" fill="${c}"><path d="M0-60L18-24H8L22 0H-22L-8-24H-18Z"/><rect x="-3" y="0" width="6" height="8" fill="#5b3a1e"/></g>`;
+  const leaf=(x,y,r,s,c)=>`<path transform="translate(${x} ${y}) rotate(${r}) scale(${s})" d="M0 0C30-40 90-40 120 0C90 40 30 40 0 0Z" fill="${c}"/><path transform="translate(${x} ${y}) rotate(${r}) scale(${s})" d="M4 0H116" stroke="rgba(0,0,0,.18)" stroke-width="3"/>`;
+  const wrap=(defs,body)=>`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 860" preserveAspectRatio="xMidYMax slice"><defs>${defs}</defs>${body}</svg>`;
+  const lg=(id,a,b,c)=>`<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/>${c?`<stop offset=".6" stop-color="${b}"/><stop offset="1" stop-color="${c}"/>`:`<stop offset="1" stop-color="${b}"/>`}</linearGradient>`;
+  const S={
+    'g-arena':()=>wrap(lg('s','#2f8de4','#8fd3ff','#cdeeff'),`<rect width="400" height="860" fill="url(#s)"/><circle cx="330" cy="110" r="38" fill="#fff6c2"/><circle cx="330" cy="110" r="60" fill="#fff6c2" opacity=".25"/>
+      ${cloud(40,150,1,'#fff')}${cloud(250,240,.8,'#f2faff')}${cloud(120,330,.6,'#eaf6ff')}
+      <path d="M0 600Q100 540 200 580T400 560V860H0Z" fill="#6cc46a"/><path d="M0 650Q120 600 230 640T400 630V860H0Z" fill="#4fae4f"/>
+      ${castle(300,600,1,'#9aa7b8','#e23b3b')}${castle(70,640,.7,'#8794a6','#2f6fe0')}
+      <path d="M0 720Q200 680 400 720V860H0Z" fill="#3f9a43"/><path d="M180 860Q200 760 240 700L262 700Q228 770 232 860Z" fill="#e2c48a"/>`),
+    'g-night':()=>wrap(lg('s','#120a33','#3b237a','#7a4cc8'),`<rect width="400" height="860" fill="url(#s)"/>${stars(70,7,400,560,1)}<circle cx="300" cy="130" r="40" fill="#fff4d6"/><circle cx="316" cy="118" r="38" fill="#2a1a5e"/>
+      <path d="M0 620Q90 560 190 600T400 580V860H0Z" fill="#2b1a5a"/>${castle(210,600,1.25,'#1c1240','#ffc233')}
+      <path d="M0 690Q140 640 260 680T400 670V860H0Z" fill="#1f1446"/><path d="M0 760Q200 720 400 760V860H0Z" fill="#160e34"/>
+      ${[[60,700],[330,720],[150,760]].map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="3" fill="#ffd86b"/><circle cx="${p[0]}" cy="${p[1]}" r="10" fill="#ffd86b" opacity=".2"/>`).join('')}`),
+    'g-jungle':()=>wrap(lg('s','#bfe9a8','#6cc060','#2f7d3a'),`<rect width="400" height="860" fill="url(#s)"/><circle cx="90" cy="120" r="44" fill="#fffbd1" opacity=".8"/>
+      <path d="M0 560Q100 500 200 540T400 520V860H0Z" fill="#3f9a48"/><path d="M0 640Q130 590 250 630T400 610V860H0Z" fill="#2e8139"/><path d="M0 740Q200 700 400 740V860H0Z" fill="#22672c"/>
+      ${leaf(-20,60,30,1.1,'#2a8a3a')}${leaf(420,90,150,1.2,'#237a33')}${leaf(-30,420,-20,1,'#1f6f2e')}${leaf(430,470,200,1,'#2a8a3a')}${leaf(20,830,-40,1.3,'#1a5e27')}${leaf(390,850,220,1.3,'#1f6f2e')}
+      ${stars(22,3,400,800,.9).replace(/#fff/g,'#fff59d')}`),
+    'g-lava':()=>wrap(lg('s','#2a0a08','#7a1d10','#e8662a'),`<rect width="400" height="860" fill="url(#s)"/>${stars(40,11,400,860,.8).replace(/#fff/g,'#ffb36b')}
+      <path d="M60 640L170 360H230L340 640Z" fill="#3a1410"/><path d="M170 360Q200 330 230 360L214 420Q200 400 186 420Z" fill="#ff7a2a"/><ellipse cx="200" cy="350" rx="70" ry="30" fill="#ff8a3a" opacity=".3"/>
+      <path d="M195 420Q185 520 150 640H178Q205 540 210 420Z" fill="#ff6a1f"/>
+      <path d="M0 640Q100 600 200 630T400 620V860H0Z" fill="#4a1a12"/><path d="M0 740Q200 690 400 740V860H0Z" fill="#2e0e0a"/><path d="M0 800Q120 770 220 800T400 790" stroke="#ff7a2a" stroke-width="8" fill="none" opacity=".8"/>`),
+    'g-frost':()=>wrap(lg('s','#5fb8ea','#b9e4fa','#eef9ff'),`<rect width="400" height="860" fill="url(#s)"/>${stars(60,5,400,860,.9)}
+      <path d="M-20 600L90 380L170 520L250 340L420 600Z" fill="#8fb8d8"/><path d="M90 380L120 440L100 430L80 455L66 428ZM250 340L285 405L262 392L244 418L222 396Z" fill="#fff"/>
+      <path d="M0 620Q120 580 240 610T400 600V860H0Z" fill="#e6f5ff"/>${pine(60,660,1,'#2f7a6a')}${pine(110,690,.8,'#2a6c5e')}${pine(330,670,1.1,'#2f7a6a')}${pine(370,700,.7,'#2a6c5e')}
+      <path d="M0 740Q200 700 400 740V860H0Z" fill="#fff"/>`),
+    'g-desert':()=>wrap(lg('s','#f9c46b','#ffe2a8','#fff2d6'),`<rect width="400" height="860" fill="url(#s)"/><circle cx="290" cy="150" r="54" fill="#fff6d0"/><circle cx="290" cy="150" r="82" fill="#fff6d0" opacity=".3"/>
+      <path d="M40 600L150 420L260 600Z" fill="#d99a4a"/><path d="M150 420L260 600H200Z" fill="#c08033"/><path d="M220 600L300 480L380 600Z" fill="#e3a95a"/><path d="M300 480L380 600H340Z" fill="#c98d3e"/>
+      <path d="M0 620Q120 580 240 615T400 600V860H0Z" fill="#f0c27a"/><path d="M0 720Q200 680 400 725V860H0Z" fill="#e8b062"/>
+      <g fill="#3f8a4a"><rect x="70" y="650" width="12" height="60" rx="6"/><rect x="56" y="664" width="10" height="26" rx="5"/><rect x="86" y="670" width="10" height="22" rx="5"/></g>`)
+  };
+  window.SCENES={};Object.keys(S).forEach(k=>{const svg=S[k]();window.SCENES[k]="url('data:image/svg+xml,"+encodeURIComponent(svg)+"')"});
+})();

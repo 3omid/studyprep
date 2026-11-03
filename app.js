@@ -316,7 +316,8 @@ function checkItem(){
   if(q.k==='m'){it.ok=it.pick!=null&&it.ord[it.pick]===0;it.frac=it.ok?1:0}
   else{let c=0;q.items.forEach((x,i)=>{if(it.ans[i]===x[1])c++});it.frac=c/q.items.length;it.ok=c===q.items.length}
   it.ck=true;rec(it.id,it.ok);savP();
-  if(S.mode==='game')gameAnswer(it,q);
+  if(S.mode==='game')gameAnswer(it,q);else if(it.ok)G.xp+=2;
+  qProg('ans',1);if(it.ok)qProg('right',1);saveG();
   if(it.ok){S.streak=(S.streak||0)+1;S.best=Math.max(S.best||0,S.streak);const big=S.streak%5===0;big?FX.streak():FX.ok();praise(true,big?S.streak:0);cue(big?'streak':'ok')}else{S.streak=0;FX.bad();praise(false);cue('bad')}
   if(!it.ok&&(it.tries||0)<2&&S.mode!=='exam'&&!(S.mode==='game'&&(S.g.type==='lightning'||S.g.h===0))){
     const rem=S.items.length-1-S.i,at=S.i+1+Math.min(3,rem);
@@ -329,10 +330,11 @@ function finish(){
   if(S.mode==='game')return gameFinish();
   clearInterval(timerId);S.done=true;
   const real=S.items.filter(i=>!i.re);
-  if(S.mode==='exam'){real.forEach(it=>{if(!it.ck){const q=Q[it.id];
+  if(S.mode==='exam'){const an=real.filter(i=>!i.ck&&(Q[i.id].k==='m'?i.pick!=null:Object.keys(i.ans).length));let rc=0;
+    real.forEach(it=>{if(!it.ck){const q=Q[it.id];
     if(q.k==='m'){it.ok=it.pick!=null&&it.ord[it.pick]===0;it.frac=it.ok?1:0}
     else{let c=0;q.items.forEach((x,i)=>{if(it.ans[i]===x[1])c++});it.frac=c/q.items.length;it.ok=c===q.items.length}
-    it.ck=true;rec(it.id,it.ok)}});savP()}
+    it.ck=true;rec(it.id,it.ok);if(it.ok)rc++}});savP();qProg('ans',an.length);qProg('right',rc);G.xp+=rc*2;saveG()}
   const answered=real.filter(i=>i.ck);
   let pts=0,max=0,right=0;const by={};
   real.forEach(it=>{const q=Q[it.id],w=q.k==='p'?3:1;max+=w;const f=it.ck?it.frac:0;pts+=w*f;if(it.ck&&it.ok)right++;
@@ -368,18 +370,22 @@ function page(html,bar,keep){const y=window.scrollY,m=$('#main');m.innerHTML=htm
   document.querySelectorAll('body>.bot,body>.qhead').forEach(b=>b.remove());const bb=m.querySelector('.bot');if(bb)document.body.appendChild(bb);
   // the question header is fixed at the top, outside #main for the same reason; #main leaves room for it
   const qh=m.querySelector('.qhead');m.classList.toggle('quiz',!!qh);if(qh){document.body.appendChild(qh);qhH()}
-  window.scrollTo(0,keep?y:0)}
+  skin();window.scrollTo(0,keep?y:0)}
+/* game look: always on the Play pages and in games, everywhere with a game theme */
+function skin(){const b=document.body;if(!b)return;const g=document.documentElement.hasAttribute('data-game');
+  b.classList.toggle('gskin',g||tab==='game'||tab==='base'||(ACT==='quiz'&&!!S&&S.mode==='game'));b.classList.toggle('gall',g)}
 function qhH(){const q=$('body>.qhead');if(q)document.documentElement.style.setProperty('--qh',q.offsetHeight+'px')}
 window.addEventListener('resize',()=>{tabH();qhH()});
 function renderTabs(){
-  const T=[['home','🏠','Home'],['learn','📖','Learn'],['exam','⏱️','Exam'],['courses','📚','Courses'],['stats','📈','Stats'],['settings','⚙️','Settings']];
-  $('#tabs').innerHTML=T.map(t=>`<button data-act="tab" data-v="${t[0]}" class="${tab===t[0]?'on':''}"><span class="i">${t[1]}</span>${t[2]}</button>`).join('');
+  const T=[['home','🏠','Home'],['learn','📖','Learn'],['game','🎮','Play'],['exam','⏱️','Exam'],['stats','📈','Stats'],['settings','⚙️','Settings']];
+  const dot=claimable();
+  $('#tabs').innerHTML=T.map(t=>`<button data-act="tab" data-v="${t[0]}" class="${tab===t[0]||(t[0]==='game'&&tab==='base')||(t[0]==='settings'&&tab==='courses')?'on':''}"><span class="i">${t[1]}${t[0]==='game'&&dot?'<em class="dot"></em>':''}</span>${t[2]}</button>`).join('');
   tabH();
 }
 /* the menu bar is on every page; bars at the bottom of a page sit just above it */
 function tabH(){const t=$('#tabs');if(t)document.documentElement.style.setProperty('--tabh',t.offsetHeight+'px')}
 window.addEventListener('resize',tabH);
-function go(t){ACT=null;RV.on=false;RV.tok++;vStop();tab=t;renderTabs();({home:renderHome,learn:renderLearn,exam:renderExams,courses:renderCourses,stats:renderStats,settings:renderSettings,setup:renderSetup,game:renderGame})[t]()}
+function go(t){ACT=null;RV.on=false;RV.tok++;vStop();tab=t;renderTabs();({home:renderHome,learn:renderLearn,exam:renderExams,courses:renderCourses,stats:renderStats,settings:renderSettings,setup:renderSetup,game:renderGame,base:renderBase})[t]()}
 /* ---- colour themes (themes.js, copied from Shift Priority) ---- */
 const hexN=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
 const mixC=(a,b,t)=>'#'+hexN(a).map((v,i)=>Math.round(v*(1-t)+hexN(b)[i]*t).toString(16).padStart(2,'0')).join('');
@@ -404,14 +410,16 @@ function applyLook(){
   r.style.setProperty('--fs',SET.size);
   const th=THEMES.find(t=>t[0]===SET.pal);
   let css=$('#palcss');if(!css){css=document.createElement('style');css.id='palcss';document.head.appendChild(css)}
-  css.textContent=th?`:root[data-theme]{${palVars(th[dark?5:4],dark)}}`:'';
+  const sc=(window.SCENES||{})[th&&th[3]==='game'?th[0]:'g-arena']||'none';
+  css.textContent=(th?`:root[data-theme]{${palVars(th[dark?5:4],dark)}}`:'')+`:root{--scene:${sc}}`;
+  r.toggleAttribute('data-game',!!(th&&th[3]==='game'));skin();
   const m=document.querySelector('meta[name=theme-color]');if(m)m.content=th?th[dark?5:4][0]:CLASSIC.bg[dark?'dark':'light'];
   tabH();
 }
-if(darkMQ&&darkMQ.addEventListener)darkMQ.addEventListener('change',()=>{if(SET.theme==='auto'){applyLook();if(tab==='settings')renderSettings()}});
+if(darkMQ&&darkMQ.addEventListener)darkMQ.addEventListener('change',()=>{if(SET.theme==='auto'){applyLook();if(tab==='settings')renderSettings(true)}});
 
 /* ================= Home ================= */
-function renderHome(){
+function renderHome(keep){
   const keys=activeKeys(),pool=qsIn(keys),ids=pool.map(q=>q.id);
   const seen=ids.filter(i=>P[i]).length,weak=ids.filter(isWeak).length,due=ids.filter(i=>P[i]&&!isWeak(i)&&isDue(i)).length;
   const att=ids.reduce((a,i)=>a+(P[i]?P[i].c+P[i].w:0),0),cor=ids.reduce((a,i)=>a+(P[i]?P[i].c:0),0);
@@ -419,11 +427,11 @@ function renderHome(){
   const active=PACKS.filter(packOn).map(p=>p.short).join(', ')||'none';
   const res=S&&!S.done,np=pausedL().length;
   const mp=pct(mas,pool.length);
-  page(`<div class="hero"><div class="ring" style="--p:${mp}"><i>${mp}%</i></div><div><h1>StudyPrep</h1>
+  page(`${resBar()}${leagueCard()}<div class="hero"><div class="ring" style="--p:${mp}"><i>${mp}%</i></div><div><h1>StudyPrep</h1>
   <p class="sub">Active: ${esc(active)} · ${keys.length} sections · ${pool.length} questions<br>${mas} mastered${(S&&S.best)?'':''}</p></div></div>
   ${res?`<div class="card" style="border-color:var(--ac)"><div class="spread"><div><b>Continue where you stopped</b><div class="mut">${esc(S.mode)} · question ${Math.min(S.i+1,S.items.length)} of ${S.items.length}${S.left!=null?' · '+fmt(S.left)+' left':''}</div></div></div>
   <div class="row" style="margin-top:10px"><button data-act="resume">Resume</button><button class="plain" data-act="tab" data-v="exam">All sessions</button></div></div>`:np?`<div class="card" style="border-color:var(--ac)"><div class="spread"><div><b>${np} unfinished session${np>1?'s':''}</b><div class="mut">${esc(sessLbl(pausedL()[0]))}</div></div><button class="sm" data-act="tab" data-v="exam">Open</button></div></div>`:''}
-  ${pool.length?gameHomeCard():''}
+  ${chestRow()}${questCard()}
   ${(!res&&st.get('rlast')&&PACKS.some(p=>p.study&&p.study[(st.get('rlast')||'').split(':')[1]]))?`<div class="card"><div class="spread"><div><b>Continue reading</b><div class="mut">Pick up your notes where you left off</div></div><button class="sm" data-act="rdresume">Open</button></div></div>`:''}
   ${pool.length?coachCard(pool,ids,weak,due,seen):''}
   ${bkDue()?`<div class="card"><div class="spread"><div><b>💾 Back up your progress</b><div class="mut">${st.get('bkat')?'Last backup '+ago(st.get('bkat')):'You have not saved a backup yet'} · keeps your progress safe</div></div><button class="sm" data-act="export">Save</button></div></div>`:''}
@@ -439,7 +447,8 @@ function renderHome(){
    <div class="stat"><b>${att?pct(cor,att):'–'}${att?'%':''}</b><span>accuracy</span></div>
    <div class="stat"><b>${mas}</b><span>mastered</span></div></div>
    <p class="mut" style="margin:10px 0 0">${weak?weak+' question'+(weak>1?'s':'')+' need work. ':''}Mastered = answered correctly 3 times in a row.</p></div>`
-  :`<div class="card empty">No sections are on. Open <b>Courses</b> and turn a course on.</div>`}`);
+  :`<div class="card empty">No sections are on. Open <b>Courses</b> and turn a course on.</div>`}`,false,keep===true);
+  renderTabs();if(calDue()&&!_calShown&&!keep){_calShown=true;setTimeout(()=>{if(tab==='home'&&!$('#ov'))calModal()},500)}
 }
 
 /* ================= Exam coach ================= */
@@ -799,12 +808,13 @@ function renderLearn(){
 /* the lines "Listen" reads in a section, in order; audio/n1.txt has a recording of each */
 const nclean=x=>String(x||'').replace(/\s+/g,' ').trim();
 const nrow=r=>r.map(c=>nclean(c[0]).replace(/[.;:,]+$/,'')).filter(Boolean).join('. ')+'.';
-function noteLines(d,t){const L=[nclean(t)];d.b.forEach(b=>{if(b.k==='ul')b.en.forEach(x=>L.push(nclean(x)));else if(b.k==='tbl')b.r.forEach(r=>L.push(nrow(r)));else L.push(nclean(b.en))});return L}
+function noteLines(d,t){const L=[nclean(t)];d.b.forEach(b=>{if(b.k==='fig')return;if(b.k==='ul')b.en.forEach(x=>L.push(nclean(x)));else if(b.k==='tbl')b.r.forEach(r=>L.push(nrow(r)));else L.push(nclean(b.en))});return L}
 function blockHTML(b,lang,ln){
   const both=lang==='both',en=lang!=='fa',fa=lang!=='en';
   const V=()=>ln?` data-vl="${ln.n++}"`:'';
   const E=t=>en?W(t):'';
   const pair=(e,f)=>{const h=(en?`<div>${E(e)}</div>`:'')+(fa?`<div class="fa${both?'':' only'}">${FA(f)}</div>`:'');return both?`<div class="pair">${h}</div>`:h};
+  if(b.k==='fig'){const f=(window.FIGS||{})[b.id];return f?`<figure class="fig" dir="ltr">${f}<figcaption>📊 ${en?esc(b.en):''}${both?' · ':''}${fa?`<span class="fa">${esc(b.fa)}</span>`:''}</figcaption></figure>`:''}
   if(b.k==='h')return `<h3 class="rh"${V()}>${en?esc(b.en):''}${both?' <span class="fa">· '+FA(b.fa)+'</span>':fa?FA(b.fa):''}</h3>`;
   if(b.k==='p')return `<div class="rp"${V()}>${pair(b.en,b.fa)}</div>`;
   if(b.k==='tip')return `<div class="rtip"${V()}><b>${fa&&!en?'نکته‌ی امتحان':'Exam tip'}</b>${pair(b.en,b.fa)}</div>`;
@@ -942,10 +952,27 @@ function renderStats(){
 
 /* ================= Settings ================= */
 let deferred=null;
+const THG=[['game','🎮 Game','بازی'],['car','🏎️ Cars','ماشین'],['color','🎨 Colours','رنگی']];
+let thTab=null;
+const thOf=id=>THEMES.find(t=>t[0]===id);
+function thPrev(id){
+  const dark=isDark(),t=thOf(id),c=t?t[dark?5:4]:[CLASSIC.bg[dark?'dark':'light'],dark?'#121a33':'#ffffff',dark?'#27335c':'#d7dcf3',dark?'#eaf0ff':'#101736',dark?'#9aa8c7':'#58638a',...CLASSIC[dark?'dark':'light']];
+  const sc=t&&t[3]==='game'&&window.SCENES?window.SCENES[id]:'';
+  return `<span class="thp" style="background:${sc?sc+' center bottom/cover,':''}${c[0]}"><span style="background:${c[1]};border-color:${c[2]}"><i style="background:${c[3]};opacity:.75"></i><i style="background:${c[4]};width:60%;opacity:.6"></i><em style="background:linear-gradient(180deg,${c[5]},${c[6]})"></em></span></span>`;
+}
+const thName=id=>{const t=thOf(id);return t?t[1]:'StudyPrep'};
 function palGrid(){
-  const dark=isDark(),sw=(id,name,a,b)=>`<button class="pal ${SET.pal===id?'on':''}" data-act="pal" data-v="${esc(id)}"><i style="background:linear-gradient(135deg,${a},${b})"></i><span>${esc(name)}</span></button>`;
-  const grp=g=>THEMES.filter(t=>t[3]===g).map(t=>{const c=t[dark?5:4];return sw(t[0],t[1],c[5],c[6])}).join('');
-  return `<div class="pals">${sw('classic','StudyPrep',...CLASSIC[dark?'dark':'light'])}${grp('car')}</div><div class="lbl">More colours</div><div class="pals">${grp('color')}</div>`;
+  const t=thOf(SET.pal);
+  return `<button class="thcur" data-act="thopen">${thPrev(SET.pal)}<span><b>${esc(thName(SET.pal))}</b><small>${t&&t[3]==='game'?'Game theme · picture background':'Tap to see all '+(THEMES.length+1)+' themes'}</small></span><span class="thgo">Change ▸</span></button>`;
+}
+function thModal(){
+  const cur=thOf(SET.pal);if(!thTab)thTab=cur?cur[3]:'game';
+  const items=(thTab==='color'?[['classic']]:[]).concat(THEMES.filter(t=>t[3]===thTab));
+  const html=`<div class="thsheet"><h3 style="margin:0 0 2px">🎨 Theme · تم</h3><p class="mut" style="margin:0 0 10px">Tap one to try it. Game themes have a picture background and game-style buttons.</p>
+   <div class="seg" style="--n:3;margin-bottom:12px">${THG.map(g=>`<button class="${thTab===g[0]?'on':''}" data-act="thtab" data-v="${g[0]}">${g[1]}</button>`).join('')}</div>
+   <div class="thgrid">${items.map(t=>`<button class="thi ${SET.pal===t[0]?'on':''}" data-act="pal" data-v="${esc(t[0])}">${thPrev(t[0])}<b>${esc(thName(t[0]))}</b>${t[2]&&t[2]!==t[1]?`<small class="fa">${esc(t[2])}</small>`:''}${SET.pal===t[0]?'<i class="thok">✓</i>':''}</button>`).join('')}</div>
+   <button data-act="close">Done · تمام</button></div>`;
+  const sh=$('#ov .thsheet');if(sh){const y=sh.parentNode.scrollTop;sh.parentNode.innerHTML=html;$('#ov .sheet').scrollTop=y}else modal(html);
 }
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;if(tab==='settings')renderSettings()});
 function aiSettings(){
@@ -962,9 +989,9 @@ function aiSettings(){
    <div class="row" style="margin-top:10px"><button class="plain sm" data-act="aitest">Test AI</button></div>
    <p class="mut" id="aist" style="margin:8px 0 0">The key stays on this device only and is not put in backups. Free plans have a daily limit.</p></div>`;
 }
-function renderSettings(){
+function renderSettings(keep){
   const sel=(k,opts)=>`<select data-act="set" data-k="${k}">${opts.map(o=>`<option value="${o[0]}" ${String(SET[k])===String(o[0])?'selected':''}>${o[1]}</option>`).join('')}</select>`;
-  page(`<h1>Settings</h1><div class="cols">
+  page(`<h1>Settings</h1><button class="tile plain" style="margin-bottom:12px" data-act="tab" data-v="courses"><span class="ic">📚</span><span><b>Courses</b><span class="d">Turn courses and sections on or off, add a course</span></span></button><div class="cols">
   <div class="card"><h3>Persian help (practice and review)</h3>${sel('fa',[['off','Off — English only'],['tap','Tap to show per question'],['always','Always show']])}
    <div class="sw" style="margin-top:6px"><span>Allow Persian help in Exam mode<div class="mut">Off = like the real English exam</div></span><input type="checkbox" data-act="examfa" ${SET.examFa?'checked':''}></div></div>
   <div class="card"><h3>Persian explanation after answering</h3>${sel('faExp',[['tap','Tap a button to show it'],['auto','Show automatically']])}</div>
@@ -995,7 +1022,7 @@ function renderSettings(){
    <div class="row"><button data-act="export">💾 Save backup file</button><button class="plain" data-act="importfile">📂 Restore from file</button><input type="file" id="bkf" accept=".json,application/json" hidden></div>
    <div class="row" style="margin-top:8px"><button class="plain sm" data-act="exporttxt">Copy as text</button><button class="plain sm" data-act="importui">Paste text</button></div></div>
   <div class="card"><h3>Reset</h3><button class="danger" data-act="reset">Erase all progress</button></div>
-  </div><p class="mut">StudyPrep v5 · scores are practice estimates.</p>`);
+  </div><p class="mut">StudyPrep v5 · scores are practice estimates.</p>`,false,keep===true);
 }
 
 /* ================= Game mode ================= */
@@ -1033,7 +1060,7 @@ function seeded(a,seed){let h=0;for(const c of seed)h=Math.imul(h^c.charCodeAt(0
 const gameKeys=()=>cfg.secs&&cfg.secs.length?cfg.secs.filter(k=>activeKeys().includes(k)):activeKeys();
 function gameStart(type,o){
   o=o||{};const keys=o.secs||(type==='daily'?activeKeys():gameKeys());const pool=qsIn(keys);
-  let chosen,hearts=3,total=null;
+  let chosen,hearts=maxHearts(),total=null;
   if(type==='survival')chosen=shuffle(smart(pool,200));
   else if(type==='lightning'){chosen=shuffle(pool.filter(q=>q.k==='m')).slice(0,150);hearts=null;total=90}
   else if(type==='daily')chosen=seeded(pool,dkey()).slice(0,10);
@@ -1041,7 +1068,7 @@ function gameStart(type,o){
   if(!chosen.length){toast('No questions in the selected sections.');return}
   const items=chosen.map(mkItem);
   const s={mode:'game',items,i:0,total,left:total,used:0,start:now(),done:false,
-    g:{type,h:hearts,pts:0,combo:0,best:0,right:0,wrong:0,skip:0,rev:0,key:o.key||null,secs:o.secs||null,n:o.n||10}};
+    g:{type,h:hearts,mh:hearts,pts:0,combo:0,best:0,right:0,wrong:0,skip:0,rev:0,key:o.key||null,secs:o.secs||null,n:o.n||10}};
   s.id=now();s.what=GT[type][1]+(o.key?' · '+(()=>{const[pid,sec]=o.key.split(':');const p=PACKS.find(x=>x.id===pid);return p?p.short+' · '+secTitle(p,sec):''})():'');
   park();S=s;st.set('sess',S);runTimer();renderQuiz();lastAct({mode:'Game',what:' · '+s.what});
 }
@@ -1061,12 +1088,16 @@ const gOut=()=>S&&S.mode==='game'&&S.g.h===0;
 const revCost=()=>30*(S.g.rev+1);
 function gameHead(){
   const g=S.g,m=multOf(g.combo);
-  const hearts=g.h==null?'':`<span class="ghearts" aria-label="${g.h} hearts">${'❤️'.repeat(g.h)}${'🤍'.repeat(Math.max(0,3-g.h))}</span>`;
+  const hearts=g.h==null?'':`<span class="ghearts" aria-label="${g.h} hearts">${'❤️'.repeat(g.h)}${'🤍'.repeat(Math.max(0,(g.mh||3)-g.h))}</span>`;
   return `<div class="ghud">${hearts}<span class="gch ${m>1?'hot':''}">${m>1?'🔥 ×'+m:'×1'}</span><span class="gch">⭐ <b>${g.pts}</b></span><span class="gch">🪙 <b>${G.coins}</b></span></div>`;
 }
+const PWC={f:15,s:10,h:25};
+const canUse=k=>(G.inv[k]||0)>0||G.coins>=PWC[k];
+function useCard(k){if((G.inv[k]||0)>0){G.inv[k]--;saveG();return true}if(G.coins>=PWC[k]){G.coins-=PWC[k];saveG();return true}return false}
+const pwLbl=k=>(G.inv[k]||0)>0?`${CARD[k][0]} ${CARD[k][1]} · <b>×${G.inv[k]}</b>`:`${CARD[k][0]} ${CARD[k][1]} · ${PWC[k]}🪙`;
 function gamePowers(it,q){
-  if(it.ck)return '';const c=G.coins,g=S.g;
-  return `<div class="gpw">${q.k==='m'&&!it.hide?`<button class="plain sm" data-act="g5050" ${c<15?'disabled':''}>✂️ 50/50 · 15🪙</button>`:''}<button class="plain sm" data-act="gskip" ${c<10?'disabled':''}>⏭ Skip · 10🪙</button>${g.h!=null&&g.h<5?`<button class="plain sm" data-act="gheart" ${c<25?'disabled':''}>❤️ +1 · 25🪙</button>`:''}</div>`;
+  if(it.ck)return '';const g=S.g;
+  return `<div class="gpw">${q.k==='m'&&!it.hide?`<button class="plain sm" data-act="g5050" ${canUse('f')?'':'disabled'}>${pwLbl('f')}</button>`:''}<button class="plain sm" data-act="gskip" ${canUse('s')?'':'disabled'}>${pwLbl('s')}</button>${g.h!=null&&g.h<6?`<button class="plain sm" data-act="gheart" ${canUse('h')?'':'disabled'}>${pwLbl('h')}</button>`:''}</div>`;
 }
 function gameFinish(){
   clearInterval(timerId);S.done=true;const g=S.g,lv0=lvlOf(G.xp).L,had=Object.assign({},G.ach);
@@ -1078,10 +1109,16 @@ function gameFinish(){
   if(g.type==='level'&&g.key){stars=g.h>0?(acc>=1?3:acc>=.8?2:acc>=.6?1:0):0;const was=G.stars[g.key]||0;if(stars>was){coins+=(stars-was)*5;G.stars[g.key]=stars;bonus.push('⭐ New stars +'+(stars-was)*5+'🪙')}}
   if(G.day!==dkey()){G.streak=G.day===yday()?G.streak+1:1;G.day=dkey();const b=5*Math.min(G.streak,7);coins+=b;bonus.push('🔥 Day '+G.streak+' streak +'+b+'🪙')}
   if(g.type==='lightning')G.lt=Math.max(G.lt,g.right);if(g.type==='survival')G.sv=Math.max(G.sv,g.right);
+  xp=Math.round(xp*xpMul());coins=Math.round(coins*coinMul());
+  const win=g.type==='lightning'?g.right>=8:g.type==='survival'?g.right>=10:g.h>0&&acc>=.6;
+  const tr0=G.tr,lg0=leagueOf(G.tr),dt=win?20+Math.min(10,g.best):-12;G.tr=Math.max(LEAGUES[lg0][0],G.tr+dt);G.trMax=Math.max(G.trMax,G.tr);
+  const promo=leagueOf(G.tr)>lg0&&G.tr>=G.trMax;if(promo){G.gems+=10;bonus.push('🎖️ New league · +10💎')}
+  const chest=win?dropChest(acc,perfect):null;
+  if(win)qProg('win',1);qProg('combo',g.best);if(g.type==='lightning')qProg('light',1);if(g.type==='daily')qProg('daily',1);
   const xp0=G.xp;G.xp+=xp;G.coins+=coins;G.earned+=coins;G.games++;G.best=Math.max(G.best,g.best);
   ACH.forEach(a=>{if(!G.ach[a[0]]&&a[4]())G.ach[a[0]]=now()});
   saveG();
-  S.gres={xp,coins,bonus,stars,acc,ans,perfect,xp0,lvUp:lvlOf(G.xp).L>lv0,newA:ACH.filter(a=>G.ach[a[0]]&&!had[a[0]])};
+  S.gres={xp,coins,bonus,stars,acc,ans,perfect,xp0,win,dt:G.tr-tr0,tr:G.tr,promo,chest,lvUp:lvlOf(G.xp).L>lv0,newA:ACH.filter(a=>G.ach[a[0]]&&!had[a[0]])};
   S._wrong=S.items.filter(i=>!i.re&&i.ck&&i.ok===false).map(i=>i.id);
   st.del('sess');renderGameResult();FX.done(acc>=.6);if(acc>=.6||S.gres.lvUp)confetti();
 }
@@ -1094,7 +1131,9 @@ function renderGameResult(){
    <div class="gbig">${g.pts}<span>points</span></div></div>
   <div class="card"><div class="stats"><div class="stat"><b>${g.right}/${r.ans}</b><span>correct</span></div><div class="stat"><b>${Math.round(r.acc*100)}%</b><span>accuracy</span></div><div class="stat"><b>🔥${g.best}</b><span>best combo</span></div></div></div>
   <div class="card"><h2>Rewards · جایزه‌ها</h2>
-   <div class="row" style="gap:8px"><span class="gch lg">✨ +${r.xp} XP</span><span class="gch lg">🪙 +${r.coins}</span></div>
+   <div class="row" style="gap:8px"><span class="gch lg">✨ +${r.xp} XP</span><span class="gch lg">🪙 +${r.coins}</span><span class="gch lg ${r.win?'tup':'tdn'}">🏆 ${r.dt>0?'+':''}${r.dt}</span></div>
+   ${r.chest?`<div class="gotchest">${chestSVG(r.chest,64)}<div><b>${CH[r.chest].n} chest won!</b><div class="mut">It is waiting in your chest slots · صندوق ${CH[r.chest].fa} گرفتی</div></div></div>`:r.win?'<p class="warnline">You won, but your chest slots are full — open a chest to make room.</p>':'<p class="mut">Win the game (60% or more without losing all hearts) to earn trophies and a chest.</p>'}
+   ${r.promo?`<div class="glvup">🎖️ Promoted to ${LEAGUES[leagueOf(r.tr)][1]} ${esc(LEAGUES[leagueOf(r.tr)][2])}!</div>`:''}
    ${r.bonus.length?`<div class="mut" style="margin-top:8px">${r.bonus.map(esc).join('<br>')}</div>`:''}
    ${r.lvUp?`<div class="glvup">⬆️ Level up! Level ${b.L} · ${rk[1]} ${esc(rk[2])} <span class="fa">${esc(rk[3])}</span></div>`:''}
    <div class="spread" style="margin-top:12px"><b>Level ${b.L}</b><span class="mut">${b.cur} / ${b.need} XP</span></div>
@@ -1103,16 +1142,15 @@ function renderGameResult(){
   <div class="row"><button data-act="gagain">▶ Play again</button>${S._wrong.length?`<button class="plain" data-act="drillwrong">Practise my ${S._wrong.length} mistake${S._wrong.length>1?'s':''}</button>`:''}<button class="plain" data-act="answers">Review answers</button><button class="plain" data-act="tab" data-v="game">🎮 Game hub</button></div>`);
   setTimeout(()=>{const x=$('#gxpb');if(x)x.style.width=pct(b.cur,b.need)+'%'},300);
 }
-function renderGame(){
+function renderGame(keep){
   const v=lvlOf(G.xp),rk=rankOf(v.L),gk=gameKeys(),nq=qsIn(gk).length,dd=G.daily===dkey();
   const map=PACKS.filter(packOn).map(p=>{const ks=Object.keys(p.sections).filter(s=>secOn(p,s)&&qsIn([secKey(p,s)]).length);if(!ks.length)return '';
     const nodes=ks.map((s,i)=>{const k=secKey(p,s),stv=G.stars[k]||0,open=i<3||G.unl[k]||(G.stars[secKey(p,ks[i-1])]||0)>0||stv>0;
       return `<button class="gnode ${open?'':'lock'} ${stv===3?'gold':''}" data-act="${open?'glevel':'gunlock'}" data-v="${esc(k)}" title="${esc(p.sections[s].en)}"><b>${open?esc(s):'🔒'}</b><span>${[1,2,3].map(j=>j<=stv?'★':'☆').join('')}</span></button>`}).join('');
     const got=ks.reduce((a,s)=>a+(G.stars[secKey(p,s)]||0),0);
     return `<div class="card"><div class="spread"><h2 style="margin:0">🗺️ ${esc(p.short==='Book'?'Textbook':p.short)}</h2><span class="mut">★ ${got} / ${ks.length*3}</span></div><p class="mut" style="margin:4px 0 10px">10 questions per level · 60% = ★ · 80% = ★★ · 100% = ★★★ · a star opens the next level</p><div class="gmap">${nodes}</div></div>`}).join('');
-  page(`<div class="ghero"><div class="ring" style="--p:${pct(v.cur,v.need)}"><i>${v.L}</i></div><div style="min-width:0"><div class="mut">Level ${v.L}</div><h1 style="margin:0">${rk[1]} ${esc(rk[2])}</h1><div class="fa">${esc(rk[3])}</div>
-   <div class="gxp" style="margin-top:6px"><i style="width:${pct(v.cur,v.need)}%"></i></div><div class="mut" style="font-size:.8rem">${v.cur} / ${v.need} XP to level ${v.L+1}</div></div></div>
-  <div class="stats" style="margin-bottom:12px"><div class="stat"><b>🪙 ${G.coins}</b><span>coins</span></div><div class="stat"><b>🔥 ${G.streak}</b><span>day streak${G.day===dkey()?' ✓':''}</span></div><div class="stat"><b>×${G.best}</b><span>best combo</span></div></div>
+  page(`${playerBar()}${leagueCard()}${chestRow()}${questCard()}${baseCard()}
+  <div class="stats gstats" style="margin-bottom:12px"><div class="stat"><b>🔥 ${G.streak}</b><span>day streak${G.day===dkey()?' ✓':''}</span></div><div class="stat"><b>×${G.best}</b><span>best combo</span></div><div class="stat"><b>🏆 ${G.trMax||G.tr}</b><span>best trophies</span></div></div>
   <button class="tile plain gdaily ${dd?'done':''}" data-act="gplay" data-v="daily"><span class="ic">📅</span><span><b>Daily challenge${dd?' ✓':''}</b><span class="d">${dd?'Done for today — play again for fun':'10 questions · double XP · +20🪙 · چالش امروز'}</span></span></button>
   <div class="tiles">
    <button class="tile plain" data-act="gplay" data-v="quick"><span class="ic">🎮</span><span><b>Quick play</b><span class="d">10 questions · 3 ❤️ · بازی سریع</span></span></button>
@@ -1122,12 +1160,157 @@ function renderGame(){
   <div class="card"><div class="spread"><div><b>Questions from</b><div class="mut">${gk.length} section${gk.length===1?'':'s'} · ${nq} questions</div></div><button class="plain sm" style="white-space:nowrap;flex:none" data-act="setup" data-v="game">Choose sections</button></div></div>
   <div class="card"><h2>How to score · امتیاز</h2><p class="mut" style="margin:0">✅ 10 points (scenario 30) · 🔥 3 in a row ×2, 6 ×3, 10 ×4 · ⚡ answer fast +5 · 💔 a wrong answer costs a heart · 🪙 coins buy 50/50, skip, extra hearts and locked levels · you always see the explanation, so every game teaches.</p></div>
   ${map}
-  <div class="card"><h2>🏅 Achievements · ${Object.keys(G.ach).length}/${ACH.length}</h2><div class="gach">${ACH.map(x=>`<div class="ga ${G.ach[x[0]]?'on':''}"><span>${x[1]}</span><b>${esc(x[2])}</b><small class="fa">${esc(x[3])}</small></div>`).join('')}</div></div>`);
+  <div class="card"><h2>🏅 Achievements · ${Object.keys(G.ach).length}/${ACH.length}</h2><div class="gach">${ACH.map(x=>`<div class="ga ${G.ach[x[0]]?'on':''}"><span>${x[1]}</span><b>${esc(x[2])}</b><small class="fa">${esc(x[3])}</small></div>`).join('')}</div></div>
+  <div class="card"><h2>🏆 Leagues</h2>${LEAGUES.map((l,i)=>`<div class="spread lgrow ${leagueOf(G.tr)===i?'cur':''}"><span>${l[1]} <b>${esc(l[2])}</b> <span class="fa">${esc(l[3])}</span></span><span class="mut">${l[0]}🏆</span></div>`).join('')}<p class="mut" style="margin:8px 0 0">Win: +20 to +30 🏆 · lose: −12 🏆 · you never drop below the league you reached.</p></div>`,false,keep===true);
 }
-function gameHomeCard(){
-  const v=lvlOf(G.xp),rk=rankOf(v.L);
-  return `<button class="gcard" data-act="tab" data-v="game"><span class="gcl"><span class="glv">${v.L}</span><span><b>🎮 Game · ${rk[1]} ${esc(rk[2])}</b><span class="d">🪙 ${G.coins} · 🔥 ${G.streak} day${G.streak===1?'':'s'}${G.daily===dkey()?'':' · 📅 daily challenge waiting'}</span><span class="gxp sm"><i style="width:${pct(v.cur,v.need)}%"></i></span></span></span><span class="gplay">Play ▶</span></button>`;
+
+/* ================= Daily loop: leagues, chests, daily rewards, quests and the Cyber Base =================
+   Every reward comes from studying: answering questions, winning games and reading lessons.
+   Timers (chests, building upgrades, the free chest) give a reason to come back later in the day. */
+G=Object.assign({gems:20,tr:0,trMax:0,chests:[],free:0,inv:{f:1,s:1,h:1},cal:{n:0,last:''},q:null,base:{hq:1,fw:1,vault:1,lab:1,soc:1},build:null,readR:{}},G);
+const MIN=60e3,HR=36e5;
+const LEAGUES=[[0,'🥉','Bronze Bunker','سنگر برنزی','#b45309','#f59e0b'],[150,'🥈','Silver Server','سرور نقره‌ای','#475569','#94a3b8'],[400,'🥇','Gold Gateway','دروازه‌ی طلایی','#a16207','#facc15'],[800,'💠','Crystal Cloud','ابر کریستالی','#0e7490','#22d3ee'],[1300,'🗼','Titan Tower','برج تایتان','#6d28d9','#a78bfa'],[2000,'⚛️','Quantum Core','هسته‌ی کوانتومی','#be185d','#f472b6'],[3000,'👑','Legend League','لیگ افسانه‌ها','#b91c1c','#fbbf24']];
+const leagueOf=tr=>{let i=0;LEAGUES.forEach((l,j)=>{if(tr>=l[0])i=j});return i};
+const CH={wood:{n:'Wooden',fa:'چوبی',m:15,c:[15,30],k:1,g:[0,0],col:['#7c2d12','#d97706']},
+  silver:{n:'Silver',fa:'نقره‌ای',m:60,c:[40,80],k:2,g:[0,2],col:['#475569','#cbd5e1']},
+  gold:{n:'Golden',fa:'طلایی',m:240,c:[100,180],k:4,g:[3,6],col:['#a16207','#fde047']},
+  magic:{n:'Magic',fa:'جادویی',m:480,c:[250,400],k:6,g:[10,15],col:['#6d28d9','#f0abfc']}};
+const FREE=4*HR,SLOTS=4;
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const hms=ms=>{let s=Math.max(0,Math.ceil(ms/1000));const h=Math.floor(s/3600),m=Math.floor(s%3600/60);s%=60;return h?h+'h '+String(m).padStart(2,'0')+'m':m?m+'m '+String(s).padStart(2,'0')+'s':s+'s'};
+const gemsFor=ms=>Math.max(1,Math.ceil(ms/(10*MIN)));
+const CARD={f:['✂️','50/50'],s:['⏭','Skip'],h:['❤️','Heart']};
+/* base perks */
+const maxHearts=()=>3+(G.base.fw>=3)+(G.base.fw>=5);
+const coinMul=()=>1+.1*(G.base.vault-1),xpMul=()=>1+.1*(G.base.lab-1);
+const chestDur=t=>CH[t].m*MIN*(1-.1*(G.base.soc-1));
+function chestSVG(t,w){const c=CH[t].col;return `<svg class="chest ch-${t}" viewBox="0 0 64 58" width="${w}" height="${Math.round(w*58/64)}" aria-hidden="true">
+  <ellipse cx="32" cy="54" rx="25" ry="3.5" fill="rgba(0,0,0,.2)"/><rect x="7" y="25" width="50" height="27" rx="5" fill="${c[0]}"/>
+  <rect x="10" y="29" width="44" height="20" rx="3" fill="${c[1]}" opacity=".35"/><path d="M7 27Q7 7 32 7Q57 7 57 27Z" fill="${c[1]}"/>
+  <path d="M12 24Q13 12 32 11" stroke="#fff" stroke-opacity=".45" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <rect x="7" y="23" width="50" height="5" fill="${c[0]}"/><rect x="28" y="7" width="8" height="45" fill="${c[0]}" opacity=".55"/>
+  <rect x="25.5" y="21" width="13" height="13" rx="3" fill="#fef3c7" stroke="${c[0]}" stroke-width="1.5"/><circle cx="32" cy="27.5" r="2.2" fill="${c[0]}"/></svg>`}
+/* ---- chests ---- */
+function chestState(c){if(!c.s)return 'idle';return now()>=c.s+chestDur(c.t)?'ready':'run'}
+const unlocking=()=>G.chests.find(c=>chestState(c)==='run');
+function dropChest(acc,perfect){
+  if(G.chests.length>=SLOTS)return null;
+  let r=Math.random()*100+(perfect?15:0)+(acc>=.9?5:0);
+  const t=r>=97?'magic':r>=82?'gold':r>=52?'silver':'wood';G.chests.push({t,s:0});return t;
 }
+function rollChest(t){const d=CH[t],r={coins:Math.round(rnd(d.c[0],d.c[1])*coinMul()),gems:rnd(d.g[0],d.g[1]),cards:{}};
+  for(let i=0;i<d.k;i++){const k='fsh'[rnd(0,2)];r.cards[k]=(r.cards[k]||0)+1}return r}
+function giveR(r){G.coins+=r.coins||0;G.earned+=r.coins||0;G.gems+=r.gems||0;Object.entries(r.cards||{}).forEach(([k,n])=>G.inv[k]=(G.inv[k]||0)+n);if(r.xp)G.xp+=r.xp}
+const rwHTML=r=>[r.coins?`<span class="rw" style="--d:.5s">🪙<b>+${r.coins}</b></span>`:'',r.gems?`<span class="rw" style="--d:.7s">💎<b>+${r.gems}</b></span>`:'',r.xp?`<span class="rw" style="--d:.8s">✨<b>+${r.xp} XP</b></span>`:'',
+  ...Object.entries(r.cards||{}).map(([k,n],i)=>`<span class="rw" style="--d:${.9+i*.2}s">${CARD[k][0]}<b>${CARD[k][1]} ×${n}</b></span>`)].join('');
+function openChest(t,title){
+  const r=rollChest(t);giveR(r);qProg('chest',1);saveG();FX.streak();
+  modal(`<div class="chopen"><div class="chbox">${chestSVG(t,130)}<div class="burst"></div></div><h3>${esc(title||CH[t].n+' chest')}</h3><div class="fa" style="margin-top:-4px">صندوق ${CH[t].fa}</div>
+   <div class="rws">${rwHTML(r)}</div></div><button data-act="closeR">Collect · بردار</button>`);
+  confetti();
+}
+function chestTap(i){
+  const c=G.chests[i];if(!c)return;const s=chestState(c),u=unlocking();
+  if(s==='ready'){G.chests.splice(i,1);openChest(c.t);return}
+  if(s==='idle'&&!u){c.s=now();saveG();toast('⏳ Unlocking · '+hms(chestDur(c.t)));refresh();return}
+  const left=s==='run'?c.s+chestDur(c.t)-now():chestDur(c.t),g=gemsFor(left);
+  modal(`<div class="chopen">${chestSVG(c.t,96)}<h3>${CH[c.t].n} chest</h3><p class="mut">${s==='run'?'Unlocking — '+hms(left)+' left':'Another chest is unlocking. You can open this one now with gems.'}</p></div>
+   <button data-act="chgem" data-v="${i}" ${G.gems<g?'disabled':''}>Open now · ${g}💎</button><button class="plain" data-act="close">Wait</button><p class="mut" style="text-align:center">You have ${G.gems}💎 · win games and finish quests for more</p>`);
+}
+function chestRow(){
+  const fr=G.free+FREE-now();
+  return `<div class="card chests"><div class="spread"><h2 style="margin:0">🎁 Chests · صندوق‌ها</h2><span class="mut">${G.chests.length}/${SLOTS}</span></div>
+  <div class="slots">${Array.from({length:SLOTS},(_,i)=>{const c=G.chests[i];if(!c)return `<div class="slot empty"><span>Win a game<br>to get a chest</span></div>`;
+    const s=chestState(c);return `<button class="slot ${s}" data-act="chest" data-v="${i}">${chestSVG(c.t,54)}<b>${CH[c.t].n}</b><span ${s==='run'?`data-end="${c.s+chestDur(c.t)}"`:''}>${s==='ready'?'OPEN!':s==='run'?hms(c.s+chestDur(c.t)-now()):'Tap to unlock · '+hms(chestDur(c.t))}</span></button>`}).join('')}</div>
+  <button class="freech ${fr<=0?'ready':''}" data-act="freechest">${chestSVG('wood',36)}<span><b>Free chest</b><span ${fr>0?`data-end="${G.free+FREE}"`:''}>${fr<=0?'Ready — tap to open!':hms(fr)}</span></span></button>
+  ${G.chests.length>=SLOTS?'<p class="warnline">Chest slots are full — open one so your next win can drop a new chest!</p>':''}</div>`;
+}
+/* ---- daily login calendar: 7 days, bigger each day; missing a day starts again at day 1 ---- */
+const CAL=[{coins:30},{gems:5},{chest:'wood'},{coins:80},{gems:10},{chest:'silver'},{chest:'gold'}];
+const calDue=()=>G.cal.last!==dkey();
+function calModal(){
+  let n=G.cal.n;if(G.cal.last&&G.cal.last!==yday()&&calDue())n=0;
+  modal(`<h3 style="text-align:center">📆 Daily reward · جایزه‌ی روزانه</h3><p class="mut" style="text-align:center;margin-top:0">Come back every day — day 7 is a golden chest!</p>
+  <div class="cal">${CAL.map((x,i)=>{const d=i<n%7||(!calDue()&&i===(n-1)%7)?'got':i===n%7&&calDue()?'today':'';
+    return `<div class="cd ${d}"><small>Day ${i+1}</small><span>${x.chest?chestSVG(x.chest,34):x.gems?'💎':'🪙'}</span><b>${x.chest?CH[x.chest].n:x.gems?x.gems:x.coins}</b>${d==='got'?'<i>✓</i>':''}</div>`}).join('')}</div>
+  ${calDue()?'<button data-act="calclaim">Claim · بگیر</button>':'<p style="text-align:center">✅ Claimed today. See you tomorrow!</p>'}<button class="plain" data-act="close">Close</button>`);
+}
+function calClaim(){
+  if(!calDue())return;if(G.cal.last&&G.cal.last!==yday())G.cal.n=0;
+  const x=CAL[G.cal.n%7];G.cal.n++;G.cal.last=dkey();
+  if(x.chest){saveG();openChest(x.chest,'Day '+G.cal.n+' reward');return}
+  giveR(x);saveG();modal(`<div class="chopen"><div style="font-size:4rem">${x.gems?'💎':'🪙'}</div><h3>Day ${G.cal.n} reward</h3><div class="rws">${rwHTML(x)}</div></div><button data-act="closeR">Collect · بردار</button>`);FX.streak();
+}
+/* ---- daily quests: three new ones every day, plus a bonus for finishing all three ---- */
+const QP=[['ans','Answer {n} questions','به {n} سؤال جواب بده',[20,30,40]],['right','Get {n} answers right','{n} جواب درست بده',[15,25]],
+  ['combo','Reach a combo of {n} in a game','در بازی {n} تا پشت سر هم درست بزن',[5,8]],['win','Win {n} games','{n} بازی را ببر',[2,3]],
+  ['read','Read {n} lesson in Learn','{n} درس را در Learn بخوان',[1]],['light','Play {n} Lightning game','{n} بازی رعد و برق انجام بده',[1]],
+  ['daily','Finish the daily challenge','چالش روزانه را تمام کن',[1]],['chest','Open {n} chests','{n} صندوق باز کن',[2]]];
+function quests(){
+  if(G.q&&G.q.day===dkey())return G.q;
+  const pick=seeded(QP,'q'+dkey()).slice(0,3);
+  G.q={day:dkey(),bonus:false,l:pick.map(p=>{const goal=seeded(p[3],dkey()+p[0])[0];return{id:p[0],goal,n:0,cl:false,r:{coins:20+Math.round(goal*1.5),gems:rnd(2,3)}}})};saveG();return G.q;
+}
+function qProg(id,v){const q=quests();let ch=false;q.l.forEach(x=>{if(x.id!==id||x.n>=x.goal)return;x.n=id==='combo'?Math.max(x.n,v):x.n+v;if(x.n>=x.goal){x.n=x.goal;ch=true}});
+  if(ch){saveG();setTimeout(()=>gpop('✅ Quest complete!','combo'),900)}}
+function questCard(){
+  const q=quests(),all=q.l.every(x=>x.cl);
+  return `<div class="card quests"><div class="spread"><h2 style="margin:0">📜 Daily quests · مأموریت‌ها</h2><span class="mut" data-end="${new Date(new Date().toDateString()).getTime()+DAY}">${hms(new Date(new Date().toDateString()).getTime()+DAY-now())}</span></div>
+  ${q.l.map((x,i)=>{const p=QP.find(y=>y[0]===x.id),done=x.n>=x.goal;
+    return `<div class="qrow ${x.cl?'cl':''}"><div class="qt"><b>${esc(p[1].replace('{n}',x.goal))}</b><small class="fa">${esc(p[2].replace('{n}',x.goal))}</small><div class="qbar"><i style="width:${pct(x.n,x.goal)}%"></i><span>${x.n}/${x.goal}</span></div></div>
+    ${x.cl?'<span class="qok">✓</span>':done?`<button class="sm qclaim" data-act="qclaim" data-v="${i}">Claim<br>🪙${x.r.coins} 💎${x.r.gems}</button>`:`<span class="qrw">🪙${x.r.coins}<br>💎${x.r.gems}</span>`}</div>`}).join('')}
+  <div class="qbonus ${all&&!q.bonus?'ready':''}">${chestSVG('silver',34)}<span><b>Finish all 3</b> → Silver chest + 10💎</span>${q.bonus?'<span class="qok">✓</span>':all?'<button class="sm" data-act="qbonus">Open</button>':''}</div></div>`;
+}
+/* ---- Cyber Base: upgrade buildings with coins; each upgrade takes real time and gives a perk ---- */
+const BLD={hq:['🏛️','Headquarters','مقر فرماندهی','Other buildings can go one level above it','#6366f1'],
+  fw:['🧱','Firewall','فایروال','+1 heart in games at level 3 and level 5','#ef4444'],
+  vault:['🏦','Coin Vault','گاوصندوق سکه','+10% coins from games and chests per level','#f59e0b'],
+  lab:['🔬','Crypto Lab','آزمایشگاه رمزنگاری','+10% XP from games per level','#10b981'],
+  soc:['🛰️','SOC Center','مرکز عملیات امنیت','Chests unlock 10% faster per level','#0ea5e9']};
+const BMAX=5,BCOST=[60,180,450,1000],BTIME=[5,30,120,360],HQREQ=[2,4,7,10];
+const bCost=(id,L)=>Math.round(BCOST[L-1]*(id==='hq'?1.5:1));
+function bBlock(id){const L=G.base[id];if(L>=BMAX)return 'Max level';if(id==='hq'&&lvlOf(G.xp).L<HQREQ[L-1])return 'Needs player level '+HQREQ[L-1];if(id!=='hq'&&L>G.base.hq)return 'Upgrade Headquarters to level '+(L)+' first';return ''}
+function bldSVG(id,L){const c=BLD[id][4];let f='';for(let i=0;i<L;i++){const y=74-13*(i+1);
+    f+=`<rect x="16" y="${y}" width="48" height="12.5" rx="2" fill="${c}" opacity="${.62+.08*i}"/>`+[23,36,49].map(x=>`<rect x="${x}" y="${y+3.5}" width="7" height="5.5" rx="1" fill="#fff" opacity=".8"/>`).join('')}
+  const top=74-13*L;
+  return `<svg viewBox="0 0 80 92" width="86" height="99" aria-hidden="true"><ellipse cx="40" cy="80" rx="34" ry="7" fill="#22c55e" opacity=".35"/><ellipse cx="40" cy="78" rx="28" ry="4" fill="rgba(0,0,0,.18)"/>${f}
+   <path d="M12 ${top+1}L40 ${top-14}L68 ${top+1}Z" fill="${c}"/><rect x="34" y="66" width="12" height="9" rx="1.5" fill="#1e293b" opacity=".75"/>
+   ${L>=BMAX?`<line x1="40" y1="${top-14}" x2="40" y2="${top-26}" stroke="#334155" stroke-width="1.5"/><path d="M40 ${top-26}l10 3-10 3z" fill="#facc15"/>`:''}</svg>`}
+function checkBuild(){const b=G.build;if(!b||now()<b.end)return false;G.base[b.id]++;G.build=null;saveG();toast('🎉 '+BLD[b.id][1]+' is now level '+G.base[b.id]+'!');FX.streak();return true}
+function renderBase(keep){
+  checkBuild();const b=G.build;
+  page(`<div class="spread"><button class="plain sm" data-act="tab" data-v="game">← Play</button>${resBar(true)}</div>
+  <h1 style="margin-top:10px">🏰 Cyber Base</h1><p class="sub">Upgrade your buildings with coins from studying. One builder works at a time — upgrades finish even while the app is closed. · پایگاه سایبری‌ات را بساز</p>
+  <div class="card builder"><div class="spread"><b>👷 Builder</b>${b?`<span>Building ${BLD[b.id][0]} ${esc(BLD[b.id][1])} · <b data-end="${b.end}">${hms(b.end-now())}</b></span>`:'<span class="ok">Free — pick an upgrade</span>'}</div>
+   ${b?`<button class="sm" style="margin-top:8px" data-act="bfast" ${G.gems<gemsFor(b.end-now())?'disabled':''}>Finish now · ${gemsFor(b.end-now())}💎</button>`:''}</div>
+  <div class="base">${Object.keys(BLD).map(id=>{const d=BLD[id],L=G.base[id],blk=bBlock(id),busy=b&&b.id===id,c=L<BMAX?bCost(id,L):0;
+    return `<div class="bcard ${busy?'busy':''}"><div class="bart">${bldSVG(id,L)}<span class="blv">Lv ${L}</span></div><b>${d[0]} ${esc(d[1])}</b><small class="fa">${esc(d[2])}</small><p class="mut">${esc(d[3])}</p>
+     ${busy?`<span class="mut">⏳ <span data-end="${b.end}">${hms(b.end-now())}</span></span>`:blk?`<span class="mut">${esc(blk)}</span>`:`<button class="sm" data-act="bup" data-v="${id}" ${b||G.coins<c?'disabled':''}>⬆ Lv ${L+1} · ${c}🪙 · ${hms(BTIME[L-1]*MIN)}</button>`}</div>`}).join('')}</div>
+  <div class="card"><h2>Your perks now</h2><p class="mut" style="margin:0">❤️ ${maxHearts()} hearts per game · 🪙 ×${coinMul().toFixed(1)} coins · ✨ ×${xpMul().toFixed(1)} XP · 🎁 chests ${Math.round(100*(1-.1*(G.base.soc-1)))}% of normal time</p></div>`,false,keep===true);
+}
+function baseCard(){const b=G.build;return `<button class="tile plain basetile" data-act="tab" data-v="base"><span class="ic">🏰</span><span><b>Cyber Base · HQ ${G.base.hq}</b><span class="d">${b?'👷 '+esc(BLD[b.id][1])+' · <span data-end="'+b.end+'">'+hms(b.end-now())+'</span>':'👷 Builder is free — upgrade a building!'}</span></span>${b?'':'<span class="badge">!</span>'}</button>`}
+/* ---- league banner and resources ---- */
+/* top bar on the Play page: level shield, rank, XP and resources */
+function playerBar(){const v=lvlOf(G.xp),rk=rankOf(v.L);
+  return `<div class="plbar"><div class="pshield"><span>${v.L}</span></div><div class="pinfo"><b>${rk[1]} ${esc(rk[2])}</b><div class="pxp"><i style="width:${pct(v.cur,v.need)}%"></i><span>${v.cur}/${v.need} XP</span></div></div>
+   <div class="pres"><span><em>🪙</em><b>${G.coins}</b></span><span><em>💎</em><b>${G.gems}</b></span></div></div>`}
+function resBar(sm){return `<div class="res ${sm?'sm':''}"><span>🪙 <b>${G.coins}</b></span><span>💎 <b>${G.gems}</b></span><span>🏆 <b>${G.tr}</b></span></div>`}
+function leagueCard(){
+  const i=leagueOf(G.tr),l=LEAGUES[i],nx=LEAGUES[i+1],v=lvlOf(G.xp),rk=rankOf(v.L);
+  return `<div class="league" style="--l1:${l[4]};--l2:${l[5]}"><div class="lg1"><span class="lgem">${l[1]}</span><div><small>League ${i+1}</small><b>${esc(l[2])}</b><span class="fa">${esc(l[3])}</span></div>
+   <div class="lglv"><span>${v.L}</span><small>${rk[1]} ${esc(rk[2])}</small></div></div>
+   <div class="lgbar"><i style="width:${nx?pct(G.tr-l[0],nx[0]-l[0]):100}%"></i><span>🏆 ${G.tr}${nx?' / '+nx[0]+' → '+nx[1]+' '+esc(nx[2]):' · top league!'}</span></div>
+   <button class="battle" data-act="gplay" data-v="quick">⚔️ Battle · بازی</button></div>`;
+}
+const claimable=()=>G.chests.some(c=>chestState(c)==='ready')||G.free+FREE<=now()||calDue()||(()=>{const q=quests();return q.l.some(x=>x.n>=x.goal&&!x.cl)||(q.l.every(x=>x.cl)&&!q.bonus)})()||(!G.build&&Object.keys(BLD).some(id=>!bBlock(id)&&G.coins>=bCost(id,G.base[id])));
+/* refresh the page in place (keeps the scroll position) when a timer runs out */
+function refresh(){if(ACT==='quiz'||ACT==='read'||$('#ov'))return;if(tab==='home')renderHome(true);else if(tab==='game')renderGame(true);else if(tab==='base')renderBase(true);renderTabs()}
+let _calShown=false;
+setInterval(()=>{
+  if(document.hidden)return;let flip=checkBuild();
+  document.querySelectorAll('[data-end]').forEach(e=>{const l=+e.dataset.end-now();if(l<=0){if(!e.dataset.fired){e.dataset.fired=1;flip=true}}else e.textContent=hms(l)});
+  if(flip)refresh();
+},1000);
 
 /* ================= events ================= */
 document.addEventListener('click',e=>{
@@ -1138,8 +1321,10 @@ document.addEventListener('click',e=>{
   const a=b.dataset.act,v=b.dataset.v;
   switch(a){
     case 'tab':closeModal();clearInterval(timerId);if(S&&S.done)S=null;if(S)st.set('sess',S);go(v);break;
-    case 'mode':SET.theme=v;st.set('set',SET);applyLook();renderSettings();break;
-    case 'pal':SET.pal=v;st.set('set',SET);applyLook();renderSettings();break;
+    case 'mode':SET.theme=v;st.set('set',SET);applyLook();renderSettings(true);break;
+    case 'pal':SET.pal=v;st.set('set',SET);applyLook();if(tab==='settings')renderSettings(true);if($('#ov .thsheet'))thModal();break;
+    case 'thopen':thTab=null;thModal();break;
+    case 'thtab':thTab=v;thModal();break;
     case 'drillsec':startSession({mode:'review',secs:[v],n:15,timer:'off'});break;
     case 'setup':cfg.mode=v;go('setup');break;
     case 'cfgmode':cfg.mode=v;st.set('cfg',cfg);renderSetup(true);break;
@@ -1155,14 +1340,24 @@ document.addEventListener('click',e=>{
     case 'cfgclear':cfg.secs=[];PACKS.filter(packOn).forEach(p=>SETX[p.id]=true);st.set('cfg',cfg);renderSetup(true);break;
     case 'cfgsec':{const i=cfg.secs.indexOf(v);i>=0?cfg.secs.splice(i,1):cfg.secs.push(v);st.set('cfg',cfg);renderSetup(true);break}
     case 'gplay':gameStart(v);break;
+    case 'chest':chestTap(+v);break;
+    case 'chgem':{const c=G.chests[+v];if(!c)break;const left=chestState(c)==='run'?c.s+chestDur(c.t)-now():chestDur(c.t),g=gemsFor(left);if(G.gems<g)break;G.gems-=g;G.chests.splice(+v,1);openChest(c.t);break}
+    case 'freechest':{const l=G.free+FREE-now();if(l>0){toast('🎁 Free chest in '+hms(l)+' — come back then!');break}G.free=now();openChest('wood','Free chest');break}
+    case 'closeR':closeModal();refresh();break;
+    case 'cal':calModal();break;
+    case 'calclaim':calClaim();break;
+    case 'qclaim':{const x=quests().l[+v];if(!x||x.cl||x.n<x.goal)break;x.cl=true;giveR(x.r);saveG();FX.streak();gpop('🪙+'+x.r.coins+' 💎+'+x.r.gems,'good');refresh();break}
+    case 'qbonus':{const q=quests();if(q.bonus||!q.l.every(x=>x.cl))break;q.bonus=true;G.gems+=10;openChest('silver','Quest bonus · +10💎');break}
+    case 'bup':{const L=G.base[v];if(G.build||bBlock(v)||G.coins<bCost(v,L))break;G.coins-=bCost(v,L);G.build={id:v,end:now()+BTIME[L-1]*MIN};saveG();FX.ok();toast('👷 Building started');renderBase(true);break}
+    case 'bfast':{const b=G.build;if(!b)break;const g=gemsFor(b.end-now());if(G.gems<g)break;G.gems-=g;b.end=now();checkBuild();renderBase(true);break}
     case 'glevel':gameStart('level',{secs:[v],key:v,n:10});break;
     case 'gunlock':modal(`<h3>🔒 Locked level</h3><p>Get at least one ★ on the level before it, or unlock it now for <b>30🪙</b> (you have ${G.coins}).</p><button data-act="gbuy" data-v="${esc(v)}" ${G.coins<30?'disabled':''}>Unlock · 30🪙</button><button class="plain" data-act="close">Not now</button>`);break;
     case 'gbuy':if(G.coins>=30){G.coins-=30;G.unl[v]=1;saveG();closeModal();FX.streak();renderGame(true)}break;
     case 'gagain':{const g=S.g;gameStart(g.type,{secs:g.secs,key:g.key,n:g.n});break}
-    case 'g5050':{const it=cur(),q=Q[it.id];if(it.ck||it.hide||G.coins<15)break;G.coins-=15;saveG();
+    case 'g5050':{const it=cur(),q=Q[it.id];if(it.ck||it.hide||!useCard('f'))break;
       it.pick=null;it.hide=shuffle(it.ord.map((oi,d)=>oi===0?-1:d).filter(d=>d>=0)).slice(0,Math.max(0,q.o.length-2));st.set('sess',S);FX.tap();renderQuiz(true);break}
-    case 'gheart':if(G.coins>=25&&S.g.h!=null&&S.g.h<5){G.coins-=25;S.g.h++;saveG();st.set('sess',S);gpop('❤️ +1','good');renderQuiz(true)}break;
-    case 'gskip':{const it=cur();if(it.ck||G.coins<10)break;G.coins-=10;saveG();it.ck=true;it.sk=true;it.ok=null;it.frac=0;S.g.skip++;st.set('sess',S);
+    case 'gheart':if(S.g.h!=null&&S.g.h<6&&useCard('h')){S.g.h++;S.g.mh=Math.max(S.g.mh||3,S.g.h);st.set('sess',S);gpop('❤️ +1','good');renderQuiz(true)}break;
+    case 'gskip':{const it=cur();if(it.ck||!useCard('s'))break;it.ck=true;it.sk=true;it.ok=null;it.frac=0;S.g.skip++;st.set('sess',S);
       if(S.i>=S.items.length-1)finish();else{S.i++;renderQuiz()}break}
     case 'gover':modal(`<h3>💀 Out of hearts</h3><p>Keep your ${S.g.pts} points and continue with one heart for <b>${revCost()}🪙</b> (you have ${G.coins}), or end the game.</p><button data-act="grevive" ${G.coins<revCost()?'disabled':''}>❤️ Revive · ${revCost()}🪙</button><button class="plain" data-act="finish">End game · see my score</button>`);break;
     case 'grevive':if(G.coins>=revCost()){G.coins-=revCost();S.g.rev++;S.g.h=1;saveG();closeModal();gpop('❤️ Revived!','good');
@@ -1196,7 +1391,9 @@ document.addEventListener('click',e=>{
     case 'raloud':RV.on?aloudStop():aloudStart();break;
     case 'rafresh':aloudStop();aloudPos(window._rk,0);renderReader(window._rk,true);window.scrollTo(0,0);aloudStart();break;
     case 'rlang':SET.rl=v;st.set('set',SET);renderReader(window._rk,true);break;
-    case 'markread':{const r=readSt();r[window._rk]=!r[window._rk];st.set('read',r);renderReader(window._rk,true);break}
+    case 'markread':{const r=readSt();r[window._rk]=!r[window._rk];st.set('read',r);
+      if(r[window._rk]&&!G.readR[window._rk]){G.readR[window._rk]=1;G.coins+=20;G.xp+=15;qProg('read',1);saveG();gpop('📘 +20🪙 +15 XP','good');FX.ok()}
+      renderReader(window._rk,true);break}
     case 'readprac':{cfg.mode='practice';cfg.n=20;cfg.timer='off';cfg.secs=[window._rk];st.set('cfg',cfg);startSession(cfg);break}
     case 'mus':{SET.mus=!FX.isMusic();st.set('set',SET);FX.set({mus:SET.mus});FX.music(SET.mus);if(S&&!S.done)renderQuiz(true);break}
     case 'flag':cur().fl=!cur().fl;renderQuiz(true);break;
@@ -1237,7 +1434,7 @@ document.addEventListener('change',e=>{
   else if(a==='tog'){const k=t.dataset.k;SET[k]=t.checked;st.set('set',SET);FX.set({[k]:SET[k]});if(k==='mus')FX.music(SET.mus);if((k==='auto'||k==='cues')&&!t.checked)vStop();if(k==='snd'&&t.checked)FX.ok()}
   else if(a==='examfa'){SET.examFa=t.checked;st.set('set',SET)}
   else if(a==='examdate'){SET.examDate=t.value;st.set('set',SET)}
-  else if(a==='aip'||a==='aimodel'||a==='ailang'){const c=aiCfg();if(a==='aip')c.p=t.value;else if(a==='ailang')c.lang=t.value;else c.m[c.p]=t.value.trim();SET.ai=c;st.set('set',SET);if(a==='aip')renderSettings()}
+  else if(a==='aip'||a==='aimodel'||a==='ailang'){const c=aiCfg();if(a==='aip')c.p=t.value;else if(a==='ailang')c.lang=t.value;else c.m[c.p]=t.value.trim();SET.ai=c;st.set('set',SET);if(a==='aip')renderSettings(true)}
   else if(a==='aikey')aiSaveKey(t.value)
 });
 
