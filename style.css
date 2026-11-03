@@ -235,3 +235,21 @@ details{border:1px solid var(--line);border-radius:14px;padding:8px 12px;margin-
 
 /* the line being read aloud */
 .vl-on{background:color-mix(in srgb,var(--ac) 16%,transparent);border-radius:10px;box-shadow:0 0 0 6px color-mix(in srgb,var(--ac) 16%,transparent);transition:background .2s}
+
+/* ---- tidy controls: equal-width segmented choices ---- */
+.seg{display:grid;grid-template-columns:repeat(var(--n),1fr);gap:4px;background:var(--sf2);border:1px solid var(--line);border-radius:14px;padding:4px}
+.seg button{background:transparent;color:var(--ink);border:0;border-radius:10px;min-height:42px;padding:6px 4px;font-weight:600;font-size:.92rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.seg button.on{background:var(--grad);color:var(--acink);box-shadow:0 2px 8px color-mix(in srgb,var(--ac) 30%,transparent)}
+/* ---- session setup: one card per course, sections as equal rows ---- */
+.sg .sghead{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.sgname{display:flex;align-items:center;gap:12px;min-width:0}
+.sgname img{width:40px;height:50px;object-fit:cover;border-radius:5px;flex:none;box-shadow:0 1px 5px rgba(0,0,0,.2)}
+.sgic{width:40px;height:50px;display:grid;place-items:center;font-size:1.6rem;flex:none}
+.slist{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:6px;margin-top:10px}
+.srow{display:grid;grid-template-columns:24px 2.2rem 1fr auto;align-items:center;gap:10px;width:100%;text-align:left;background:var(--sf2);color:var(--ink);border:1.5px solid var(--line);border-radius:12px;padding:0 12px;height:3.6rem;min-height:0;font-weight:500;font-size:.95rem}
+.srow .ck{width:24px;height:24px;border-radius:7px;border:2px solid var(--line);display:grid;place-items:center;font-weight:800;font-size:.85rem;color:var(--acink)}
+.srow.on{border-color:var(--ac);background:var(--sel)}
+.srow.on .ck{background:var(--grad);border-color:transparent}
+.srow .no{font-weight:700;font-size:.8rem;color:var(--ac);background:color-mix(in srgb,var(--ac) 12%,transparent);border-radius:8px;height:1.9rem;display:grid;place-items:center;white-space:nowrap}
+.srow .tt{line-height:1.25;min-width:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.srow .nq{font:600 .82rem var(--mono);color:var(--mut);background:var(--sf);border:1px solid var(--line);border-radius:99px;padding:2px 8px;min-width:2.4rem;text-align:center}

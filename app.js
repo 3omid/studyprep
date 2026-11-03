@@ -485,27 +485,32 @@ function restoreBackup(txt){
 }
 
 /* ================= Setup ================= */
-function renderSetup(){
+/* setup: equal-width segmented choices, and each course as a card with a tidy list of sections */
+const SETX={};
+function renderSetup(keep){
   const keys=activeKeys();
   if(!cfg.secs)cfg.secs=keys.slice();
   cfg.secs=cfg.secs.filter(k=>keys.includes(k));
   if(!cfg.secs.length)cfg.secs=keys.slice();
   const pool=qsIn(cfg.secs);
-  const modes=[['practice','Practice'],['exam','Exam'],['review','Smart review']];
-  const ns=[10,20,30,60,90];
-  const tm=[['off','Off'],['auto','Auto'],['15','15 min'],['30','30 min'],['60','60 min'],['90','90 min']];
+  const seg=(items,cur,act)=>`<div class="seg" style="--n:${items.length}">${items.map(m=>`<button class="${String(cur)===String(m[0])?'on':''}" data-act="${act}" data-v="${m[0]}">${m[1]}</button>`).join('')}</div>`;
+  const modes=[['practice','Practice'],['exam','Exam'],['review','Review']];
+  const ns=[[10,'10'],[20,'20'],[30,'30'],[60,'60'],[90,'90'],[9999,'All']];
+  const tm=[['off','Off'],['auto','Auto'],['15','15m'],['30','30m'],['60','60m'],['90','90m']];
   const groups=PACKS.filter(packOn).map(p=>{
-    const ks=Object.keys(p.sections).filter(s=>secOn(p,s));
-    const gk=ks.map(x=>secKey(p,x)),all=gk.every(k=>cfg.secs.includes(k));
-    return ks.length?`<div class="spread" style="margin-top:14px"><div class="lbl" style="margin:0">${esc(p.name)}</div><div class="row" style="gap:6px"><button class="plain sm" data-act="cfgonly" data-v="${esc(p.id)}">Only this</button><button class="plain sm" data-act="cfgall" data-v="${esc(p.id)}">${all?'None':'All'}</button></div></div><div class="chips" style="margin-top:6px">${ks.map(s=>{const k=secKey(p,s);const n=qsIn([k]).length;
-      return `<button class="chip ${cfg.secs.includes(k)?'on':''}" data-act="cfgsec" data-v="${esc(k)}">${esc(secNo(p,s,1)||s)} · ${esc(p.sections[s].en)} (${n})</button>`}).join('')}</div>`:''}).join('');
-  page(`<div class="spread"><h1>Start a session</h1><button class="plain sm" data-act="tab" data-v="home">Back</button></div>
-  <div class="lbl">Mode</div><div class="chips">${modes.map(m=>`<button class="chip ${cfg.mode===m[0]?'on':''}" data-act="cfgmode" data-v="${m[0]}">${m[1]}</button>`).join('')}</div>
-  <div class="lbl">Questions</div><div class="chips">${ns.map(n=>`<button class="chip ${cfg.n===n?'on':''}" data-act="cfgn" data-v="${n}">${n}</button>`).join('')}<button class="chip ${cfg.n===9999?'on':''}" data-act="cfgn" data-v="9999">All (${pool.length})</button></div>
-  <div class="lbl">Timer</div><div class="chips">${tm.map(m=>`<button class="chip ${cfg.timer===m[0]?'on':''}" data-act="cfgtimer" data-v="${m[0]}">${m[1]}</button>`).join('')}</div>
-  <p class="mut" style="margin-top:-6px">Auto = 1 min per question, 3 min per scenario. ${cfg.mode==='exam'?'Exam pages show English only unless you changed that in Settings.':''}</p>
-  <div class="lbl">Sections (${pool.length} questions)</div>${groups}
-  <div class="bot"><div class="in"><button data-act="begin" ${pool.length?'':'disabled'}>Start</button></div></div>`,false);
+    const ks=Object.keys(p.sections).filter(s=>secOn(p,s));if(!ks.length)return '';
+    const gk=ks.map(x=>secKey(p,x)),sel=gk.filter(k=>cfg.secs.includes(k)),nq=qsIn(sel).length,open=!!SETX[p.id];
+    return `<div class="card sg"><div class="sghead"><div class="sgname">${p.cover?`<img src="${esc(p.cover)}" alt="">`:`<span class="sgic">📚</span>`}<div><b>${esc(p.short==='Book'?'Textbook':p.short)}</b><div class="mut">${sel.length} of ${ks.length} ${p.lab?'chapters':'sections'} · ${nq} questions</div></div></div></div>
+     <div class="seg" style="--n:3;margin-top:10px"><button data-act="cfgonly" data-v="${esc(p.id)}">Only this</button><button data-act="cfgall" data-v="${esc(p.id)}">${sel.length===ks.length?'None':'All'}</button><button data-act="cfgexp" data-v="${esc(p.id)}">${open?'Hide ▴':'Sections ▾'}</button></div>
+     ${open?`<div class="slist">${ks.map(s=>{const k=secKey(p,s),on=cfg.secs.includes(k),n=qsIn([k]).length;
+       return `<button class="srow ${on?'on':''}" data-act="cfgsec" data-v="${esc(k)}" aria-pressed="${on}"><span class="ck">${on?'✓':''}</span><span class="no">${esc(s)}</span><span class="tt">${esc(p.sections[s].en)}</span><span class="nq">${n}</span></button>`}).join('')}</div>`:''}</div>`}).join('');
+  page(`<div class="spread"><h1>Start a session</h1><button class="plain sm" data-act="tab" data-v="exam">Back</button></div>
+  <div class="card"><div class="lbl" style="margin-top:0">Mode</div>${seg(modes,cfg.mode,'cfgmode')}
+   <div class="lbl">Questions</div>${seg(ns,cfg.n,'cfgn')}
+   <div class="lbl">Timer</div>${seg(tm,cfg.timer,'cfgtimer')}
+   <p class="mut" style="margin:10px 0 0">Auto = 1 min per question, 3 min per scenario.${cfg.mode==='exam'?' Exam pages show English only unless you change that in Settings.':''}</p></div>
+  <div class="lbl">Sections</div>${groups}
+  <div class="bot"><div class="in"><button data-act="begin" ${pool.length?'':'disabled'}>Start · ${cfg.n===9999?pool.length:Math.min(cfg.n,pool.length)} questions</button></div></div>`,false,keep===true);
 }
 
 /* ================= Quiz ================= */
@@ -974,13 +979,15 @@ document.addEventListener('click',e=>{
     case 'pal':SET.pal=v;st.set('set',SET);applyLook();renderSettings();break;
     case 'drillsec':startSession({mode:'review',secs:[v],n:15,timer:'off'});break;
     case 'setup':cfg.mode=v;go('setup');break;
-    case 'cfgmode':cfg.mode=v;st.set('cfg',cfg);renderSetup();break;
-    case 'cfgn':cfg.n=+v;st.set('cfg',cfg);renderSetup();break;
-    case 'cfgtimer':cfg.timer=v;st.set('cfg',cfg);renderSetup();break;
+    case 'cfgmode':cfg.mode=v;st.set('cfg',cfg);renderSetup(true);break;
+    case 'cfgn':cfg.n=+v;st.set('cfg',cfg);renderSetup(true);break;
+    case 'cfgtimer':cfg.timer=v;st.set('cfg',cfg);renderSetup(true);break;
+
+    case 'cfgexp':SETX[v]=!SETX[v];renderSetup(true);break;
     case 'cfgonly':case 'cfgall':{const p=PACKS.find(x=>x.id===v);const gk=Object.keys(p.sections).filter(x=>secOn(p,x)).map(x=>secKey(p,x));
       if(a==='cfgonly')cfg.secs=gk;else if(gk.every(k=>cfg.secs.includes(k))){const r=cfg.secs.filter(k=>!gk.includes(k));if(!r.length){toast('Keep at least one section');break}cfg.secs=r}else cfg.secs=[...new Set([...cfg.secs,...gk])];
-      st.set('cfg',cfg);renderSetup();break}
-    case 'cfgsec':{const i=cfg.secs.indexOf(v);i>=0?cfg.secs.splice(i,1):cfg.secs.push(v);if(!cfg.secs.length)cfg.secs=[v];st.set('cfg',cfg);renderSetup();break}
+      st.set('cfg',cfg);renderSetup(true);break}
+    case 'cfgsec':{const i=cfg.secs.indexOf(v);i>=0?cfg.secs.splice(i,1):cfg.secs.push(v);if(!cfg.secs.length)cfg.secs=[v];st.set('cfg',cfg);renderSetup(true);break}
     case 'begin':st.set('cfg',cfg);startSession(cfg);break;
     case 'resume':if(v&&(!S||String(S.id||S.start)!==v)){unpark(v);break}runTimer();renderQuiz();break;
     case 'drop':{if(!confirm('Delete this unfinished session?'))break;if(S&&String(S.id||S.start)===v){S=null;st.del('sess');clearInterval(timerId)}else st.set('paused',pausedL().filter(y=>String(y.id)!==v));go(tab==='home'?'home':'exam');break}
