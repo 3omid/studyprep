@@ -370,7 +370,10 @@ function page(html,bar,keep){const y=window.scrollY,m=$('#main');m.innerHTML=htm
   document.querySelectorAll('body>.bot,body>.qhead').forEach(b=>b.remove());const bb=m.querySelector('.bot');if(bb)document.body.appendChild(bb);
   // the question header is fixed at the top, outside #main for the same reason; #main leaves room for it
   const qh=m.querySelector('.qhead');m.classList.toggle('quiz',!!qh);if(qh){document.body.appendChild(qh);qhH()}
-  window.scrollTo(0,keep?y:0)}
+  skin();window.scrollTo(0,keep?y:0)}
+/* game look: always on the Play pages and in games, everywhere with a game theme */
+function skin(){const b=document.body;if(!b)return;const g=document.documentElement.hasAttribute('data-game');
+  b.classList.toggle('gskin',g||tab==='game'||tab==='base'||(ACT==='quiz'&&!!S&&S.mode==='game'));b.classList.toggle('gall',g)}
 function qhH(){const q=$('body>.qhead');if(q)document.documentElement.style.setProperty('--qh',q.offsetHeight+'px')}
 window.addEventListener('resize',()=>{tabH();qhH()});
 function renderTabs(){
@@ -407,11 +410,13 @@ function applyLook(){
   r.style.setProperty('--fs',SET.size);
   const th=THEMES.find(t=>t[0]===SET.pal);
   let css=$('#palcss');if(!css){css=document.createElement('style');css.id='palcss';document.head.appendChild(css)}
-  css.textContent=th?`:root[data-theme]{${palVars(th[dark?5:4],dark)}}`:'';
+  const sc=(window.SCENES||{})[th&&th[3]==='game'?th[0]:'g-arena']||'none';
+  css.textContent=(th?`:root[data-theme]{${palVars(th[dark?5:4],dark)}}`:'')+`:root{--scene:${sc}}`;
+  r.toggleAttribute('data-game',!!(th&&th[3]==='game'));skin();
   const m=document.querySelector('meta[name=theme-color]');if(m)m.content=th?th[dark?5:4][0]:CLASSIC.bg[dark?'dark':'light'];
   tabH();
 }
-if(darkMQ&&darkMQ.addEventListener)darkMQ.addEventListener('change',()=>{if(SET.theme==='auto'){applyLook();if(tab==='settings')renderSettings()}});
+if(darkMQ&&darkMQ.addEventListener)darkMQ.addEventListener('change',()=>{if(SET.theme==='auto'){applyLook();if(tab==='settings')renderSettings(true)}});
 
 /* ================= Home ================= */
 function renderHome(keep){
@@ -947,10 +952,27 @@ function renderStats(){
 
 /* ================= Settings ================= */
 let deferred=null;
+const THG=[['game','🎮 Game','بازی'],['car','🏎️ Cars','ماشین'],['color','🎨 Colours','رنگی']];
+let thTab=null;
+const thOf=id=>THEMES.find(t=>t[0]===id);
+function thPrev(id){
+  const dark=isDark(),t=thOf(id),c=t?t[dark?5:4]:[CLASSIC.bg[dark?'dark':'light'],dark?'#121a33':'#ffffff',dark?'#27335c':'#d7dcf3',dark?'#eaf0ff':'#101736',dark?'#9aa8c7':'#58638a',...CLASSIC[dark?'dark':'light']];
+  const sc=t&&t[3]==='game'&&window.SCENES?window.SCENES[id]:'';
+  return `<span class="thp" style="background:${sc?sc+' center bottom/cover,':''}${c[0]}"><span style="background:${c[1]};border-color:${c[2]}"><i style="background:${c[3]};opacity:.75"></i><i style="background:${c[4]};width:60%;opacity:.6"></i><em style="background:linear-gradient(180deg,${c[5]},${c[6]})"></em></span></span>`;
+}
+const thName=id=>{const t=thOf(id);return t?t[1]:'StudyPrep'};
 function palGrid(){
-  const dark=isDark(),sw=(id,name,a,b)=>`<button class="pal ${SET.pal===id?'on':''}" data-act="pal" data-v="${esc(id)}"><i style="background:linear-gradient(135deg,${a},${b})"></i><span>${esc(name)}</span></button>`;
-  const grp=g=>THEMES.filter(t=>t[3]===g).map(t=>{const c=t[dark?5:4];return sw(t[0],t[1],c[5],c[6])}).join('');
-  return `<div class="pals">${sw('classic','StudyPrep',...CLASSIC[dark?'dark':'light'])}${grp('car')}</div><div class="lbl">More colours</div><div class="pals">${grp('color')}</div>`;
+  const t=thOf(SET.pal);
+  return `<button class="thcur" data-act="thopen">${thPrev(SET.pal)}<span><b>${esc(thName(SET.pal))}</b><small>${t&&t[3]==='game'?'Game theme · picture background':'Tap to see all '+(THEMES.length+1)+' themes'}</small></span><span class="thgo">Change ▸</span></button>`;
+}
+function thModal(){
+  const cur=thOf(SET.pal);if(!thTab)thTab=cur?cur[3]:'game';
+  const items=(thTab==='color'?[['classic']]:[]).concat(THEMES.filter(t=>t[3]===thTab));
+  const html=`<div class="thsheet"><h3 style="margin:0 0 2px">🎨 Theme · تم</h3><p class="mut" style="margin:0 0 10px">Tap one to try it. Game themes have a picture background and game-style buttons.</p>
+   <div class="seg" style="--n:3;margin-bottom:12px">${THG.map(g=>`<button class="${thTab===g[0]?'on':''}" data-act="thtab" data-v="${g[0]}">${g[1]}</button>`).join('')}</div>
+   <div class="thgrid">${items.map(t=>`<button class="thi ${SET.pal===t[0]?'on':''}" data-act="pal" data-v="${esc(t[0])}">${thPrev(t[0])}<b>${esc(thName(t[0]))}</b>${t[2]&&t[2]!==t[1]?`<small class="fa">${esc(t[2])}</small>`:''}${SET.pal===t[0]?'<i class="thok">✓</i>':''}</button>`).join('')}</div>
+   <button data-act="close">Done · تمام</button></div>`;
+  const sh=$('#ov .thsheet');if(sh){const y=sh.parentNode.scrollTop;sh.parentNode.innerHTML=html;$('#ov .sheet').scrollTop=y}else modal(html);
 }
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;if(tab==='settings')renderSettings()});
 function aiSettings(){
@@ -967,7 +989,7 @@ function aiSettings(){
    <div class="row" style="margin-top:10px"><button class="plain sm" data-act="aitest">Test AI</button></div>
    <p class="mut" id="aist" style="margin:8px 0 0">The key stays on this device only and is not put in backups. Free plans have a daily limit.</p></div>`;
 }
-function renderSettings(){
+function renderSettings(keep){
   const sel=(k,opts)=>`<select data-act="set" data-k="${k}">${opts.map(o=>`<option value="${o[0]}" ${String(SET[k])===String(o[0])?'selected':''}>${o[1]}</option>`).join('')}</select>`;
   page(`<h1>Settings</h1><button class="tile plain" style="margin-bottom:12px" data-act="tab" data-v="courses"><span class="ic">📚</span><span><b>Courses</b><span class="d">Turn courses and sections on or off, add a course</span></span></button><div class="cols">
   <div class="card"><h3>Persian help (practice and review)</h3>${sel('fa',[['off','Off — English only'],['tap','Tap to show per question'],['always','Always show']])}
@@ -1000,7 +1022,7 @@ function renderSettings(){
    <div class="row"><button data-act="export">💾 Save backup file</button><button class="plain" data-act="importfile">📂 Restore from file</button><input type="file" id="bkf" accept=".json,application/json" hidden></div>
    <div class="row" style="margin-top:8px"><button class="plain sm" data-act="exporttxt">Copy as text</button><button class="plain sm" data-act="importui">Paste text</button></div></div>
   <div class="card"><h3>Reset</h3><button class="danger" data-act="reset">Erase all progress</button></div>
-  </div><p class="mut">StudyPrep v5 · scores are practice estimates.</p>`);
+  </div><p class="mut">StudyPrep v5 · scores are practice estimates.</p>`,false,keep===true);
 }
 
 /* ================= Game mode ================= */
@@ -1127,9 +1149,8 @@ function renderGame(keep){
       return `<button class="gnode ${open?'':'lock'} ${stv===3?'gold':''}" data-act="${open?'glevel':'gunlock'}" data-v="${esc(k)}" title="${esc(p.sections[s].en)}"><b>${open?esc(s):'🔒'}</b><span>${[1,2,3].map(j=>j<=stv?'★':'☆').join('')}</span></button>`}).join('');
     const got=ks.reduce((a,s)=>a+(G.stars[secKey(p,s)]||0),0);
     return `<div class="card"><div class="spread"><h2 style="margin:0">🗺️ ${esc(p.short==='Book'?'Textbook':p.short)}</h2><span class="mut">★ ${got} / ${ks.length*3}</span></div><p class="mut" style="margin:4px 0 10px">10 questions per level · 60% = ★ · 80% = ★★ · 100% = ★★★ · a star opens the next level</p><div class="gmap">${nodes}</div></div>`}).join('');
-  page(`${resBar()}${leagueCard()}${chestRow()}${questCard()}${baseCard()}<div class="ghero"><div class="ring" style="--p:${pct(v.cur,v.need)}"><i>${v.L}</i></div><div style="min-width:0"><div class="mut">Level ${v.L}</div><h1 style="margin:0">${rk[1]} ${esc(rk[2])}</h1><div class="fa">${esc(rk[3])}</div>
-   <div class="gxp" style="margin-top:6px"><i style="width:${pct(v.cur,v.need)}%"></i></div><div class="mut" style="font-size:.8rem">${v.cur} / ${v.need} XP to level ${v.L+1}</div></div></div>
-  <div class="stats" style="margin-bottom:12px"><div class="stat"><b>🪙 ${G.coins}</b><span>coins</span></div><div class="stat"><b>🔥 ${G.streak}</b><span>day streak${G.day===dkey()?' ✓':''}</span></div><div class="stat"><b>×${G.best}</b><span>best combo</span></div></div>
+  page(`${playerBar()}${leagueCard()}${chestRow()}${questCard()}${baseCard()}
+  <div class="stats gstats" style="margin-bottom:12px"><div class="stat"><b>🔥 ${G.streak}</b><span>day streak${G.day===dkey()?' ✓':''}</span></div><div class="stat"><b>×${G.best}</b><span>best combo</span></div><div class="stat"><b>🏆 ${G.trMax||G.tr}</b><span>best trophies</span></div></div>
   <button class="tile plain gdaily ${dd?'done':''}" data-act="gplay" data-v="daily"><span class="ic">📅</span><span><b>Daily challenge${dd?' ✓':''}</b><span class="d">${dd?'Done for today — play again for fun':'10 questions · double XP · +20🪙 · چالش امروز'}</span></span></button>
   <div class="tiles">
    <button class="tile plain" data-act="gplay" data-v="quick"><span class="ic">🎮</span><span><b>Quick play</b><span class="d">10 questions · 3 ❤️ · بازی سریع</span></span></button>
@@ -1269,6 +1290,10 @@ function renderBase(keep){
 }
 function baseCard(){const b=G.build;return `<button class="tile plain basetile" data-act="tab" data-v="base"><span class="ic">🏰</span><span><b>Cyber Base · HQ ${G.base.hq}</b><span class="d">${b?'👷 '+esc(BLD[b.id][1])+' · <span data-end="'+b.end+'">'+hms(b.end-now())+'</span>':'👷 Builder is free — upgrade a building!'}</span></span>${b?'':'<span class="badge">!</span>'}</button>`}
 /* ---- league banner and resources ---- */
+/* top bar on the Play page: level shield, rank, XP and resources */
+function playerBar(){const v=lvlOf(G.xp),rk=rankOf(v.L);
+  return `<div class="plbar"><div class="pshield"><span>${v.L}</span></div><div class="pinfo"><b>${rk[1]} ${esc(rk[2])}</b><div class="pxp"><i style="width:${pct(v.cur,v.need)}%"></i><span>${v.cur}/${v.need} XP</span></div></div>
+   <div class="pres"><span><em>🪙</em><b>${G.coins}</b></span><span><em>💎</em><b>${G.gems}</b></span></div></div>`}
 function resBar(sm){return `<div class="res ${sm?'sm':''}"><span>🪙 <b>${G.coins}</b></span><span>💎 <b>${G.gems}</b></span><span>🏆 <b>${G.tr}</b></span></div>`}
 function leagueCard(){
   const i=leagueOf(G.tr),l=LEAGUES[i],nx=LEAGUES[i+1],v=lvlOf(G.xp),rk=rankOf(v.L);
@@ -1296,8 +1321,10 @@ document.addEventListener('click',e=>{
   const a=b.dataset.act,v=b.dataset.v;
   switch(a){
     case 'tab':closeModal();clearInterval(timerId);if(S&&S.done)S=null;if(S)st.set('sess',S);go(v);break;
-    case 'mode':SET.theme=v;st.set('set',SET);applyLook();renderSettings();break;
-    case 'pal':SET.pal=v;st.set('set',SET);applyLook();renderSettings();break;
+    case 'mode':SET.theme=v;st.set('set',SET);applyLook();renderSettings(true);break;
+    case 'pal':SET.pal=v;st.set('set',SET);applyLook();if(tab==='settings')renderSettings(true);if($('#ov .thsheet'))thModal();break;
+    case 'thopen':thTab=null;thModal();break;
+    case 'thtab':thTab=v;thModal();break;
     case 'drillsec':startSession({mode:'review',secs:[v],n:15,timer:'off'});break;
     case 'setup':cfg.mode=v;go('setup');break;
     case 'cfgmode':cfg.mode=v;st.set('cfg',cfg);renderSetup(true);break;
@@ -1407,7 +1434,7 @@ document.addEventListener('change',e=>{
   else if(a==='tog'){const k=t.dataset.k;SET[k]=t.checked;st.set('set',SET);FX.set({[k]:SET[k]});if(k==='mus')FX.music(SET.mus);if((k==='auto'||k==='cues')&&!t.checked)vStop();if(k==='snd'&&t.checked)FX.ok()}
   else if(a==='examfa'){SET.examFa=t.checked;st.set('set',SET)}
   else if(a==='examdate'){SET.examDate=t.value;st.set('set',SET)}
-  else if(a==='aip'||a==='aimodel'||a==='ailang'){const c=aiCfg();if(a==='aip')c.p=t.value;else if(a==='ailang')c.lang=t.value;else c.m[c.p]=t.value.trim();SET.ai=c;st.set('set',SET);if(a==='aip')renderSettings()}
+  else if(a==='aip'||a==='aimodel'||a==='ailang'){const c=aiCfg();if(a==='aip')c.p=t.value;else if(a==='ailang')c.lang=t.value;else c.m[c.p]=t.value.trim();SET.ai=c;st.set('set',SET);if(a==='aip')renderSettings(true)}
   else if(a==='aikey')aiSaveKey(t.value)
 });
 

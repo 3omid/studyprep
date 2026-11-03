@@ -390,3 +390,74 @@ details{border:1px solid var(--line);border-radius:14px;padding:8px 12px;margin-
 .fig .ahp{fill:var(--mut)}
 .fig figcaption{text-align:center;font-size:.82rem;color:var(--mut);margin-top:6px}.fig figcaption .fa{display:inline;margin:0;text-align:center}
 .ga .fa,.bcard .fa,.cd .fa,.chopen .fa,.gres .fa,.qt .fa{text-align:center;margin-top:0}.qt .fa{text-align:right}.league .fa{text-align:left;margin-top:0}
+/* ---- theme picker ---- */
+.thcur{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--sf2);color:var(--ink);border:1.5px solid var(--line);padding:8px 12px 8px 8px;min-height:66px}
+.thcur>span:nth-child(2){flex:1;min-width:0;display:grid}.thcur b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.thcur small{color:var(--mut);font-weight:500;font-size:.8rem}
+.thcur .thp{width:74px;height:50px}.thgo{color:var(--ac);font-size:.85rem;white-space:nowrap}
+.thp{position:relative;display:block;flex:none;width:100%;height:64px;border-radius:12px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
+.thp>span{position:absolute;left:12%;right:12%;bottom:14%;top:30%;border-radius:8px;border:1.5px solid;display:grid;align-content:start;gap:4px;padding:6px 6px 0}
+.thp i{display:block;height:4px;border-radius:9px}.thp em{position:absolute;left:6px;right:6px;bottom:5px;height:9px;border-radius:5px}
+.thgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media(min-width:560px){.thgrid{grid-template-columns:repeat(4,1fr)}}
+.sheet .thi{position:relative;display:grid;align-content:start;gap:3px;margin:0;padding:6px 6px 8px;min-height:0;background:var(--sf2);color:var(--ink);border:2px solid var(--line);border-radius:14px;text-align:center;font-weight:600}
+.thi b{font-size:.78rem;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.thi small.fa{margin:0;text-align:center;font-size:.72rem;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.thi.on{border-color:var(--ac);background:var(--sel)}.thok{position:absolute;top:2px;right:2px;width:22px;height:22px;border-radius:50%;background:var(--ac);color:var(--acink);font:800 .8rem/22px var(--sans);font-style:normal;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.sheet .thsheet .seg button{width:auto;margin:0}
+
+/* ================= game look =================
+   On the Play pages and in games, and on every page when a game theme is picked:
+   a picture background, chunky outlined panels, glossy 3D buttons and a bold display font. */
+:root{--disp:"Lilita One","Arial Rounded MT Bold","Trebuchet MS",system-ui,sans-serif;--scene:none}
+body.gskin{background:var(--bg)}
+body.gskin::before{content:"";position:fixed;inset:0;z-index:-1;background:var(--scene) center bottom/cover no-repeat,var(--bg);pointer-events:none}
+:root[data-theme=dark] body.gskin::before{filter:brightness(.55) saturate(.9)}
+body.gskin{--ol:color-mix(in srgb,var(--line) 45%,#0b1020);--hi:inset 0 2px 0 rgba(255,255,255,.45)}
+:root[data-theme=dark] body.gskin{--hi:inset 0 2px 0 rgba(255,255,255,.08)}
+.gskin h1,.gskin h2,.gskin .gt1,.gskin .lg1 b,.gskin .tile b,.gskin .stat b,.gskin .pinfo b,.gskin .bcard b,.gskin .chopen h3{font-family:var(--disp);font-weight:400;letter-spacing:.01em}
+.gskin #main>h1,.gskin #main>.spread h1,.gskin #main>p.mut{color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.55),0 0 6px rgba(0,0,0,.35)}
+.gskin .card,.gskin .tile,.gskin .ghero,.gskin .hero,.gskin .bcard,.gskin .sheet{border:2.5px solid var(--ol);box-shadow:var(--hi),0 5px 0 rgba(0,0,0,.22),0 10px 18px rgba(0,0,0,.18);border-radius:18px}
+.gskin .card>h2:first-child{display:block;margin:-16px -16px 12px;padding:9px 14px;border-radius:15px 15px 0 0;background:linear-gradient(180deg,color-mix(in srgb,var(--ac) 88%,#fff),var(--ac));color:var(--acink);text-shadow:0 2px 0 rgba(0,0,0,.25);border-bottom:2.5px solid var(--ol)}
+.gskin .card>.spread:first-child:has(>h2){margin:-16px -16px 10px;padding:9px 14px;border-radius:15px 15px 0 0;background:linear-gradient(180deg,color-mix(in srgb,var(--ac) 88%,#fff),var(--ac));border-bottom:2.5px solid var(--ol)}
+.gskin .card>.spread:first-child:has(>h2)>h2,.gskin .card>.spread:first-child:has(>h2)>.mut{color:var(--acink);text-shadow:0 2px 0 rgba(0,0,0,.25);opacity:1}
+.gskin button:not(.plain):not(.ghost):not(.danger):not(.chip):not(.tile):not(.slot):not(.gnode):not(.thi):not(.thcur):not(.freech):not(.rc):not(.srow):not(.qclaim):not(.seg button):not(.tabbar button){
+  background:linear-gradient(180deg,color-mix(in srgb,var(--ac) 70%,#fff) 0,var(--ac) 48%,color-mix(in srgb,var(--ac) 82%,#000) 100%);color:#fff;
+  border:2.5px solid color-mix(in srgb,var(--ac) 45%,#000);box-shadow:inset 0 2px 0 rgba(255,255,255,.5),inset 0 -4px 0 rgba(0,0,0,.22),0 4px 0 rgba(0,0,0,.3);
+  text-shadow:0 2px 0 rgba(0,0,0,.4);font-family:var(--disp);font-weight:400;letter-spacing:.02em;border-radius:14px}
+.gskin button:active{transform:translateY(3px)}
+.gskin button.plain,.gskin .freech{border:2.5px solid var(--ol);box-shadow:var(--hi),0 4px 0 rgba(0,0,0,.2)}
+.gskin .battle{font-family:var(--disp);font-weight:400;font-size:1.5rem;color:#fff!important;letter-spacing:.03em;background:linear-gradient(180deg,#ffe86b 0,#ffc21a 45%,#f08c00 100%)!important;border:3px solid #8a4b00!important;
+  box-shadow:inset 0 3px 0 rgba(255,255,255,.65),inset 0 -5px 0 rgba(150,70,0,.35),0 5px 0 #6b3a00,0 10px 20px rgba(0,0,0,.35)!important;text-shadow:0 2px 0 #7a3d00,0 0 2px #7a3d00!important;min-height:58px}
+.gskin .league{border:3px solid rgba(0,0,0,.45);box-shadow:inset 0 2px 0 rgba(255,255,255,.35),0 6px 0 rgba(0,0,0,.3),0 14px 26px rgba(0,0,0,.3)}
+.gskin .lg1 b{font-size:1.5rem;text-shadow:0 2px 0 rgba(0,0,0,.5)}
+.gskin .lgbar{border:2px solid rgba(0,0,0,.45);height:24px}.gskin .lgbar span{font-family:var(--disp);font-weight:400;font-size:.85rem;letter-spacing:.02em}
+.gskin .slot{border:2.5px solid var(--ol);box-shadow:var(--hi),0 4px 0 rgba(0,0,0,.2);background:linear-gradient(180deg,color-mix(in srgb,var(--ac2) 16%,var(--sf2)),var(--sf2))}
+.gskin .slot.empty{border-style:dashed;box-shadow:none;background:color-mix(in srgb,var(--sf2) 70%,transparent)}
+.gskin .slot.ready{border-color:#b56a00;background:linear-gradient(180deg,#ffe58a,#ffb800)}.gskin .slot.ready b,.gskin .slot.ready span{color:#5a2e00}
+.gskin .stat{border:2.5px solid var(--ol);background:var(--sf);box-shadow:var(--hi),0 4px 0 rgba(0,0,0,.2)}
+.gskin .gnode{border:2.5px solid var(--ol);box-shadow:var(--hi),0 4px 0 rgba(0,0,0,.25);background:linear-gradient(180deg,color-mix(in srgb,var(--ac) 22%,var(--sf)),var(--sf2))}
+.gskin .gnode b{font-family:var(--disp);font-weight:400;font-size:1.25rem}
+.gskin .gnode.gold{background:linear-gradient(180deg,#fff1a8,#ffc21a);border-color:#9a5b00}
+.gskin .tile .ic{border:2px solid var(--ol);box-shadow:var(--hi);background:linear-gradient(180deg,color-mix(in srgb,var(--ac2) 35%,var(--sf)),var(--sf2))}
+.gskin .gdaily{border-color:#b56a00;background:linear-gradient(180deg,color-mix(in srgb,#ffc21a 28%,var(--sf)),var(--sf))}
+.gskin .qbar,.gskin .gxp{border:2px solid var(--ol);height:18px}.gskin .qbar span{font-family:var(--disp);font-weight:400;color:#fff;text-shadow:0 1px 0 rgba(0,0,0,.6)}
+.gskin .ga.on{border:2px solid #b56a00;background:linear-gradient(180deg,color-mix(in srgb,#ffc21a 20%,var(--sf)),var(--sf2))}
+.gskin .sheet{border-radius:22px 22px 0 0}
+/* menu bar: dark game bar with a raised gold tab */
+.gskin .tabbar{background:linear-gradient(180deg,#24385e,#142340);border-top:3px solid #0a1428;box-shadow:0 -2px 0 rgba(255,255,255,.12) inset}
+.gskin .tabbar button{color:#b9c8e6;font-family:var(--disp);font-weight:400;letter-spacing:.02em;text-shadow:0 1px 0 #000}
+.gskin .tabbar button.on{color:#fff;background:linear-gradient(180deg,#5f8fd9,#2f5fae);border-radius:14px 14px 0 0;box-shadow:inset 0 2px 0 rgba(255,255,255,.35),inset 0 0 0 2px #0a1428}
+.gskin .tabbar button.on .i{transform:translateY(-4px) scale(1.22)}
+.gskin .tabbar .dot{border-color:#142340}
+/* top player bar */
+.plbar{display:flex;align-items:center;gap:10px;margin:0 0 12px;padding:8px 10px;border-radius:18px;background:linear-gradient(180deg,rgba(10,20,45,.82),rgba(10,20,45,.68));border:2.5px solid rgba(0,0,0,.5);box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 4px 0 rgba(0,0,0,.25);color:#fff}
+.pshield{flex:none;width:46px;height:52px;display:grid;place-items:center;background:linear-gradient(180deg,#6fb2ff,#2a62d6);clip-path:polygon(50% 0,100% 16%,100% 62%,50% 100%,0 62%,0 16%);filter:drop-shadow(0 2px 0 rgba(0,0,0,.5))}
+.pshield span{font:400 1.35rem var(--disp);text-shadow:0 2px 0 rgba(0,0,0,.5);margin-top:-4px}
+.pinfo{flex:1;min-width:0}.pinfo b{display:block;font-size:1.02rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 2px 0 rgba(0,0,0,.5)}
+.pxp{position:relative;height:18px;border-radius:99px;background:rgba(0,0,0,.45);border:2px solid rgba(0,0,0,.5);overflow:hidden;margin-top:2px}.pxp i{display:block;height:100%;background:linear-gradient(180deg,#9bf06b,#3fb52a);border-radius:99px}
+.pxp span{position:absolute;inset:0;display:grid;place-items:center;font:400 .72rem var(--disp);letter-spacing:.03em;text-shadow:0 1px 0 #000}
+.pres{display:grid;gap:4px}.pres span{display:flex;align-items:center;gap:4px;min-width:84px;padding:1px 10px 1px 2px;border-radius:99px;background:rgba(0,0,0,.45);border:1.5px solid rgba(255,255,255,.15)}
+.pres em{font-style:normal;font-size:1rem;width:22px;text-align:center}.pres b{font:400 .95rem var(--disp);letter-spacing:.02em;margin-left:auto}
+.gskin .res span{background:rgba(10,20,45,.75);color:#fff;border:2px solid rgba(0,0,0,.45);font-family:var(--disp)}.gskin .res b{font-family:var(--disp);font-weight:400}
+/* in-game header: the same dark game bar as the menu */
+.gskin .qhead{background:linear-gradient(180deg,#24385e,#142340);color:#fff;border-bottom:3px solid #0a1428;box-shadow:0 4px 12px rgba(0,0,0,.25)}
+.gskin .qhead .mut,.gskin .qhead span{color:#dbe5f7}.gskin .qhead .gch{background:rgba(0,0,0,.35);border-color:rgba(255,255,255,.18);color:#fff}
