@@ -362,7 +362,12 @@ function modal(html){closeModal();const o=document.createElement('div');o.classN
 function closeModal(){const o=$('#ov');if(o)o.remove()}
 function page(html,bar,keep){const y=window.scrollY,m=$('#main');m.innerHTML=html;
   // the action bar must sit outside #main: its animation would make the bar scroll with the page
-  document.querySelectorAll('body>.bot').forEach(b=>b.remove());const bb=m.querySelector('.bot');if(bb)document.body.appendChild(bb);window.scrollTo(0,keep?y:0)}
+  document.querySelectorAll('body>.bot,body>.qhead').forEach(b=>b.remove());const bb=m.querySelector('.bot');if(bb)document.body.appendChild(bb);
+  // the question header is fixed at the top, outside #main for the same reason; #main leaves room for it
+  const qh=m.querySelector('.qhead');m.classList.toggle('quiz',!!qh);if(qh){document.body.appendChild(qh);qhH()}
+  window.scrollTo(0,keep?y:0)}
+function qhH(){const q=$('body>.qhead');if(q)document.documentElement.style.setProperty('--qh',q.offsetHeight+'px')}
+window.addEventListener('resize',()=>{tabH();qhH()});
 function renderTabs(){
   const T=[['home','🏠','Home'],['learn','📖','Learn'],['exam','⏱️','Exam'],['courses','📚','Courses'],['stats','📈','Stats'],['settings','⚙️','Settings']];
   $('#tabs').innerHTML=T.map(t=>`<button data-act="tab" data-v="${t[0]}" class="${tab===t[0]?'on':''}"><span class="i">${t[1]}</span>${t[2]}</button>`).join('');
@@ -635,6 +640,7 @@ function renderQuiz(keep){
   const it=cur(),q=Q[it.id];
   if(!q){S.items.splice(S.i,1);if(!S.items.length){finish();return}return renderQuiz()}
   const exam=S.mode==='exam',n=S.items.length;
+  const base=S.items.filter(x=>!x.re).length,pos=S.items.slice(0,S.i+1).filter(x=>!x.re).length,doneN=S.items.filter(x=>!x.re&&x.ck).length;
   ACT='quiz';
   if(!keep&&SET.auto&&!it.ck){const tx=q.k==='m'?q.q:q.title;setTimeout(()=>{if(ACT==='quiz'&&cur()===it)speak(tx,{quiet:true})},450)}
   let body='';
@@ -670,9 +676,9 @@ function renderQuiz(keep){
   if(exam)bar=`<button class="plain" data-act="prev" ${S.i===0?'disabled':''}>←</button><button class="plain" data-act="nav">${S.i+1}/${n}</button>${last?`<button data-act="finishask">Finish</button>`:`<button data-act="next">Next →</button>`}`;
   else bar=!it.ck?`<button data-act="check" ${ready?'':'disabled'}>Check</button>`:`<button data-act="${last?'finishask':'next'}">${last?'Finish':'Next →'}</button>`;
   page(`<div class="qhead"><div class="spread"><button class="plain sm" data-act="exit">✕ Menu</button>
-    <span class="mut">${exam?'Exam':S.mode==='review'?'Review':'Practice'} · ${S.i+1} / ${n}${(S.streak||0)>=2&&!exam?` · <span class="streak">🔥 ${S.streak}</span>`:''}</span>
+    <span class="mut">${exam?'Exam':S.mode==='review'?'Review':'Practice'} · ${it.re?'↻ retry':pos+' / '+base}${(S.streak||0)>=2&&!exam?` · <span class="streak">🔥 ${S.streak}</span>`:''}</span>
     <span class="row" style="gap:6px;flex-wrap:nowrap"><button class="plain sm" data-act="mus" aria-label="Music" title="Music">${FX.isMusic()?'🎵':'🔇'}</button>${S.left!=null?`<span class="timer ${S.left<300?'low':''}" id="tm">${fmt(S.left)}</span>`:''}</span></div>
-    <div class="pbar"><i style="width:${Math.round(100*(S.i+(it.ck?1:0))/n)}%"></i></div></div>
+    <div class="pbar"><i style="width:${Math.round(100*(exam?S.i+(it.ck?1:0):doneN)/(exam?n:base))}%"></i></div></div>
     <div class="card">${body}<div class="row" style="margin-top:10px">${faBtn}${hintBtn}${exam?`<button class="plain sm" data-act="flag">${it.fl?'⚑ Flagged':'⚐ Flag'}</button>`:''}</div></div>
     <div class="bot"><div class="in">${bar}</div></div>`,false,keep===true);
 }
