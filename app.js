@@ -345,7 +345,7 @@ function renderTabs(){
 /* the menu bar is on every page; bars at the bottom of a page sit just above it */
 function tabH(){const t=$('#tabs');if(t)document.documentElement.style.setProperty('--tabh',t.offsetHeight+'px')}
 window.addEventListener('resize',tabH);
-function go(t){ACT=null;vStop();tab=t;renderTabs();({home:renderHome,learn:renderLearn,courses:renderCourses,stats:renderStats,settings:renderSettings,setup:renderSetup})[t]()}
+function go(t){ACT=null;RV.on=false;RV.tok++;vStop();tab=t;renderTabs();({home:renderHome,learn:renderLearn,courses:renderCourses,stats:renderStats,settings:renderSettings,setup:renderSetup})[t]()}
 /* ---- colour themes (themes.js, copied from Shift Priority) ---- */
 const hexN=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
 const mixC=(a,b,t)=>'#'+hexN(a).map((v,i)=>Math.round(v*(1-t)+hexN(b)[i]*t).toString(16).padStart(2,'0')).join('');
@@ -495,9 +495,9 @@ function aiSaveKey(v){v=String(v||'').trim();const k=aiKeys();k[aiCfg().p]=v;st.
   const ok=aiKeys()[aiCfg().p]===v,s=$('#aiks');
   if(s)s.textContent=!v?'No key saved yet · هنوز کلیدی ذخیره نشده':ok?`✅ Key saved on this device (…${v.slice(-4)}) · کلید ذخیره شد`:'⚠️ This browser would not save the key (private mode?) · مرورگر اجازه‌ی ذخیره نداد';
   return ok&&!!v}
-// Free models are often "busy" (503/429). Then try again, moving to a lighter Gemini model,
-// so one busy model does not stop the tutor.
-const AIBUSY=[429,500,502,503,504],AIFALL=['gemini-flash-lite-latest','gemini-2.5-flash'];
+// Free models are often "busy" (503/429) or hang without answering (408 = our own time limit).
+// Then try again, moving to a lighter Gemini model, so one busy model does not stop the tutor.
+const AIBUSY=[408,429,500,502,503,504],AIFALL=['gemini-flash-lite-latest','gemini-2.5-flash'];
 function aiCall(sys,msgs,onPart){
   const c=aiCfg(),key=aiKeys()[c.p],model=aiModel(c);
   if(!key)return Promise.reject(new Error('Add your AI key in Settings first.'));
@@ -514,7 +514,9 @@ function aiCall(sys,msgs,onPart){
 const AINOTHINK=st.get('ainothink',{});
 const noThink=x=>x.replace(/<think>[\s\S]*?(<\/think>|$)/g,'').trim();
 function aiOnce(c,key,model,sys,msgs,onPart){
-  const ctl=new AbortController();let t=setTimeout(()=>ctl.abort(),60000);
+  // a model that has not started answering in 20 s is usually stuck; giving up early lets aiCall move to the next model
+  const ctl=new AbortController();let t=setTimeout(()=>ctl.abort(),20000);
+  const slow=()=>Object.assign(new Error('The AI took too long. Try again. · پاسخ هوش مصنوعی خیلی طول کشید؛ دوباره امتحان کنید.'),{status:408});
   const lv=AINOTHINK[c.p+model]|0,think=lv<2;
   let req;
   if(c.p==='gemini')req=fetch('https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent(model)+':streamGenerateContent?alt=sse',{method:'POST',signal:ctl.signal,
@@ -541,9 +543,11 @@ function aiOnce(c,key,model,sys,msgs,onPart){
       clearTimeout(t);t=setTimeout(()=>ctl.abort(),30000);
       buf+=dec.decode(value||new Uint8Array(),{stream:!done});const ls=buf.split('\n');buf=done?'':ls.pop();ls.forEach(line);
       if(done){if(buf)line(buf);clearTimeout(t);const v=noThink(out);if(!v)throw new Error('The AI sent an empty answer. Try again or pick another model.');return v}
-      return pump()});
+      return pump()},e=>{clearTimeout(t);if(e.name!=='AbortError')throw e;
+        // stalled mid-answer: keep what already arrived rather than throwing it away
+        const v=noThink(out);if(v)return v;throw slow()});
     return pump();
-  },e=>{clearTimeout(t);throw new Error(e.name==='AbortError'?'The AI took too long. Try again.':'No connection to the AI. Check the internet.')});
+  },e=>{clearTimeout(t);throw e.name==='AbortError'?slow():new Error('No connection to the AI. Check the internet.')});
 }
 // light markdown: bold, inline code, bullets; a line with any Persian reads right-to-left; everything else escaped
 const aiMd=s=>esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`([^`]+)`/g,'<code>$1</code>').replace(/^\s*[-*•]\s+/gm,'• ').replace(/^#+\s*/gm,'').split('\n').map(l=>l.trim()?`<div dir="${/[\u0600-\u06FF]/.test(l)?'rtl':'ltr'}">${l}</div>`:'').join('');
@@ -699,17 +703,22 @@ function renderLearn(){
   const cont=rlt?`<div class="card" style="border-color:var(--ac)"><b>Continue reading</b><div class="mut">${esc((rlt.t||[''])[0])}</div><div class="row" style="margin-top:10px"><button data-act="rdresume">Continue</button></div></div>`:'';
   page(`<h1>Learn</h1>${cont}<p class="sub">Read the key points first, then practice the questions. Notes are in English and Persian.</p>${cards||'<div class="card empty">No study notes for the courses that are on.</div>'}`);
 }
-function blockHTML(b,lang){
+/* the lines "Listen" reads in a section, in order; audio/n1.txt has a recording of each */
+const nclean=x=>String(x||'').replace(/\s+/g,' ').trim();
+const nrow=r=>r.map(c=>nclean(c[0]).replace(/[.;:,]+$/,'')).filter(Boolean).join('. ')+'.';
+function noteLines(d,t){const L=[nclean(t)];d.b.forEach(b=>{if(b.k==='ul')b.en.forEach(x=>L.push(nclean(x)));else if(b.k==='tbl')b.r.forEach(r=>L.push(nrow(r)));else L.push(nclean(b.en))});return L}
+function blockHTML(b,lang,ln){
   const both=lang==='both',en=lang!=='fa',fa=lang!=='en';
+  const V=()=>ln?` data-vl="${ln.n++}"`:'';
   const E=t=>en?W(t):'';
   const pair=(e,f)=>{const h=(en?`<div>${E(e)}</div>`:'')+(fa?`<div class="fa${both?'':' only'}">${FA(f)}</div>`:'');return both?`<div class="pair">${h}</div>`:h};
-  if(b.k==='h')return `<h3 class="rh">${en?esc(b.en):''}${both?' <span class="fa">· '+FA(b.fa)+'</span>':fa?FA(b.fa):''}</h3>`;
-  if(b.k==='p')return `<div class="rp">${pair(b.en,b.fa)}</div>`;
-  if(b.k==='tip')return `<div class="rtip"><b>${fa&&!en?'نکته‌ی امتحان':'Exam tip'}</b>${pair(b.en,b.fa)}</div>`;
-  if(b.k==='ul')return `<ul class="rl">${b.en.map((x,i)=>`<li>${pair(x,b.fa[i]||'')}</li>`).join('')}</ul>`;
+  if(b.k==='h')return `<h3 class="rh"${V()}>${en?esc(b.en):''}${both?' <span class="fa">· '+FA(b.fa)+'</span>':fa?FA(b.fa):''}</h3>`;
+  if(b.k==='p')return `<div class="rp"${V()}>${pair(b.en,b.fa)}</div>`;
+  if(b.k==='tip')return `<div class="rtip"${V()}><b>${fa&&!en?'نکته‌ی امتحان':'Exam tip'}</b>${pair(b.en,b.fa)}</div>`;
+  if(b.k==='ul')return `<ul class="rl">${b.en.map((x,i)=>`<li${V()}>${pair(x,b.fa[i]||'')}</li>`).join('')}</ul>`;
   if(b.k==='tbl'){
     const cell=c=>`${en?`<div>${W(c[0])}</div>`:''}${fa&&!(en&&c[1]===c[0])?`<div class="fa${both?'':' only'}">${FA(c[1]||'')}</div>`:''}`;
-    return `<div class="rtw"><table class="rt"><thead><tr>${b.h.map(c=>`<th>${cell(c)}</th>`).join('')}</tr></thead><tbody>${b.r.map(r=>`<tr>${r.map(c=>`<td>${cell(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+    return `<div class="rtw"><table class="rt"><thead><tr>${b.h.map(c=>`<th>${cell(c)}</th>`).join('')}</tr></thead><tbody>${b.r.map(r=>`<tr${V()}>${r.map(c=>`<td>${cell(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
   }
   return '';
 }
@@ -717,15 +726,47 @@ function renderReader(sk,keep){
   TX=[];
   const [pid,sec]=sk.split(':');const p=PACKS.find(x=>x.id===pid);if(!p||!p.study||!p.study[sec]){go('learn');return}
   const d=p.study[sec],t=d.t||[p.sections[sec].en,p.sections[sec].fa],rd=readSt(),lang=SET.rl||'both';
-  window._rk=sk;ACT='read';lastAct({mode:'Reading',what:' · '+p.short+' · '+(t[0]||'')});{const rp=st.get('rpos',{});st.set('rlast',sk);if(!keep&&rp[sk]>40)setTimeout(()=>window.scrollTo(0,rp[sk]),60)}
+  if(window._rk!==sk){RV.on=false;RV.tok++;vStop()}
+  window._rk=sk;window._rl=noteLines(d,t[0]);ACT='read';lastAct({mode:'Reading',what:' · '+p.short+' · '+(t[0]||'')});{const rp=st.get('rpos',{});st.set('rlast',sk);if(!keep&&rp[sk]>40)setTimeout(()=>window.scrollTo(0,rp[sk]),60)}
   const lg=[['en','English'],['both','English + فارسی'],['fa','فارسی']];
   page(`<div class="spread"><button class="plain sm" data-act="tab" data-v="learn">← Learn</button><span class="mut">${esc(p.short)}</span></div>
-   <h1 style="margin-top:10px"${lang==='fa'?' class="fah" dir="rtl"':''}>${lang==='fa'?FA(t[1]):esc(t[0])}</h1>${lang==='both'?`<div class="fa" style="margin:-2px 0 8px;font-size:1.05rem">${FA(t[1])}</div>`:''}
+   <h1 style="margin-top:10px" data-vl="0"${lang==='fa'?' class="fah" dir="rtl"':''}>${lang==='fa'?FA(t[1]):esc(t[0])}</h1>${lang==='both'?`<div class="fa" style="margin:-2px 0 8px;font-size:1.05rem">${FA(t[1])}</div>`:''}
    <div class="chips">${lg.map(x=>`<button class="chip ${lang===x[0]?'on':''}" data-act="rlang" data-v="${x[0]}">${x[1]}</button>`).join('')}</div>
    ${lang==='fa'?'':'<p class="hint">Tap any English word to see its meaning.</p>'}
-   <div class="card read${lang==='fa'?' rtl" dir="rtl':''}">${d.b.map(b=>blockHTML(b,lang)).join('')}</div>
+   <div class="row" style="margin:0 0 10px"><button class="sm" data-act="raloud">${aloudLbl(sk)}</button>${(st.get('rvoice',{})[sk]||0)>0?`<button class="plain sm" data-act="rafresh">↺ ${lang==='fa'?'از اول':'From the start'}</button>`:''}</div>
+   <div class="card read${lang==='fa'?' rtl" dir="rtl':''}">${(ln=>d.b.map(b=>blockHTML(b,lang,ln)).join(''))({n:1})}</div>
    <div class="bot"><div class="in"><button class="plain" data-act="markread">${rd[sk]?(lang==='fa'?'✅ خواندم':'✅ Read'):(lang==='fa'?'خواندم ✓':'Mark as read')}</button><button data-act="readprac">${lang==='fa'?'تمرین این بخش ←':'Practice this section →'}</button></div></div>`,false,keep);
+  if(RV.on)aloudMark(st.get('rvoice',{})[sk]||0);
 }
+
+/* ---- Listen: reads the notes aloud with the app voice and remembers where it stopped ---- */
+const RV={on:false,tok:0};
+function aloudLbl(sk){return RV.on?'⏸ Pause':(st.get('rvoice',{})[sk]||0)>0?'▶ Continue listening':'🔊 Listen'}
+function aloudPos(sk,i){const r=st.get('rvoice',{});r[sk]=i;st.set('rvoice',r)}
+function aloudBtn(){const b=$('[data-act=raloud]');if(b)b.textContent=aloudLbl(window._rk)}
+/* resolves with true when the line finished, false when it was stopped */
+function speakWait(t){return speak(t).then(()=>new Promise(res=>{
+  const a=VX.el;
+  if(a){if(a.ended)return res(true);a.addEventListener('ended',()=>res(true),{once:true});a.addEventListener('pause',()=>res(a.ended),{once:true});return}
+  let n=0;const iv=setInterval(()=>{n++;let sp=false;try{sp=speechSynthesis.speaking}catch(e){}if(!sp&&n>2){clearInterval(iv);res(true)}},250);
+}))}
+function aloudMark(i){
+  document.querySelectorAll('.vl-on').forEach(e=>e.classList.remove('vl-on'));
+  const el=document.querySelector(`[data-vl="${i}"]`);if(el){el.classList.add('vl-on');el.scrollIntoView({block:'center',behavior:'smooth'})}
+}
+function aloudStart(){
+  const sk=window._rk,L=window._rl||[];let i=st.get('rvoice',{})[sk]||0;if(i>=L.length)i=0;
+  RV.on=true;const tok=++RV.tok;aloudBtn();
+  const step=()=>{
+    if(!RV.on||RV.tok!==tok||ACT!=='read'||window._rk!==sk)return;
+    while(i<L.length&&!L[i])i++;
+    if(i>=L.length){RV.on=false;aloudPos(sk,0);aloudBtn();document.querySelectorAll('.vl-on').forEach(e=>e.classList.remove('vl-on'));toast('Finished this section');return}
+    aloudPos(sk,i);aloudMark(i);
+    speakWait(L[i]).then(done=>{if(RV.tok!==tok)return;if(done){i++;aloudPos(sk,i);step()}else{RV.on=false;aloudBtn()}});
+  };
+  step();
+}
+function aloudStop(){RV.on=false;RV.tok++;vStop();aloudBtn()}
 
 /* ================= Courses ================= */
 function renderCourses(){
@@ -904,6 +945,8 @@ document.addEventListener('click',e=>{
     case 'aiset':closeModal();clearInterval(timerId);if(S)st.set('sess',S);go('settings');break;
     case 'rdresume':readSess();break;
     case 'read':renderReader(v);break;
+    case 'raloud':RV.on?aloudStop():aloudStart();break;
+    case 'rafresh':aloudStop();aloudPos(window._rk,0);renderReader(window._rk,true);window.scrollTo(0,0);aloudStart();break;
     case 'rlang':SET.rl=v;st.set('set',SET);renderReader(window._rk,true);break;
     case 'markread':{const r=readSt();r[window._rk]=!r[window._rk];st.set('read',r);renderReader(window._rk,true);break}
     case 'readprac':{cfg.mode='practice';cfg.n=20;cfg.timer='off';cfg.secs=[window._rk];st.set('cfg',cfg);startSession(cfg);break}
