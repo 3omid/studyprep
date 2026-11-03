@@ -275,10 +275,17 @@ function build(c){
 function startSession(c){
   const s=build(c);
   if(!s){toast('No questions in the selected sections. Turn a course or section on in Courses.');return}
-  S=s;st.set('sess',S);runTimer();renderQuiz();
   const sn=c.what||((c.secs&&c.secs.length===1)?(()=>{const[pid,sec]=c.secs[0].split(':');const p=PACKS.find(x=>x.id===pid);return p&&p.sections[sec]?' · '+p.short+' · '+secTitle(p,sec):''})():'');
+  s.id=now();s.what=(sn||'').replace(/^ · /,'')||(c.ids?'':((c.secs||activeKeys()).length+' sections'));
+  park();S=s;st.set('sess',S);runTimer();renderQuiz();
   lastAct({mode:{practice:'Practice',exam:'Exam',review:'Smart review'}[S.mode]||S.mode,what:sn});
 }
+/* unfinished sessions other than the open one wait in 'paused', newest first, so none is lost */
+const pausedL=()=>st.get('paused',[]);
+function park(){if(S&&!S.done&&S.items&&S.items.length){clearInterval(timerId);S.id=S.id||S.start||now();const l=pausedL().filter(x=>x.id!==S.id);l.unshift(S);st.set('paused',l.slice(0,8))}S=null;st.del('sess')}
+function unpark(id){const l=pausedL(),x=l.find(y=>String(y.id)===String(id));if(!x)return;park();st.set('paused',pausedL().filter(y=>String(y.id)!==String(id)));S=x;st.set('sess',S);runTimer();renderQuiz()}
+const openSess=()=>[...(S&&!S.done?[S]:[]),...pausedL()];
+const sessLbl=x=>({practice:'Practice',exam:'Exam',review:'Smart review'}[x.mode]||x.mode)+(x.what?' · '+x.what:'');
 const lastAct=o=>st.set('lastact',Object.assign({t:now()},o));
 const ago=t=>{const d=Math.floor((now()-t)/DAY);return d<=0?'today':d===1?'yesterday':d+' days ago'};
 function runTimer(){
@@ -357,14 +364,14 @@ function page(html,bar,keep){const y=window.scrollY,m=$('#main');m.innerHTML=htm
   // the action bar must sit outside #main: its animation would make the bar scroll with the page
   document.querySelectorAll('body>.bot').forEach(b=>b.remove());const bb=m.querySelector('.bot');if(bb)document.body.appendChild(bb);window.scrollTo(0,keep?y:0)}
 function renderTabs(){
-  const T=[['home','🏠','Home'],['learn','📖','Learn'],['courses','📚','Courses'],['stats','📈','Stats'],['settings','⚙️','Settings']];
+  const T=[['home','🏠','Home'],['learn','📖','Learn'],['exam','⏱️','Exam'],['courses','📚','Courses'],['stats','📈','Stats'],['settings','⚙️','Settings']];
   $('#tabs').innerHTML=T.map(t=>`<button data-act="tab" data-v="${t[0]}" class="${tab===t[0]?'on':''}"><span class="i">${t[1]}</span>${t[2]}</button>`).join('');
   tabH();
 }
 /* the menu bar is on every page; bars at the bottom of a page sit just above it */
 function tabH(){const t=$('#tabs');if(t)document.documentElement.style.setProperty('--tabh',t.offsetHeight+'px')}
 window.addEventListener('resize',tabH);
-function go(t){ACT=null;RV.on=false;RV.tok++;vStop();tab=t;renderTabs();({home:renderHome,learn:renderLearn,courses:renderCourses,stats:renderStats,settings:renderSettings,setup:renderSetup})[t]()}
+function go(t){ACT=null;RV.on=false;RV.tok++;vStop();tab=t;renderTabs();({home:renderHome,learn:renderLearn,exam:renderExams,courses:renderCourses,stats:renderStats,settings:renderSettings,setup:renderSetup})[t]()}
 /* ---- colour themes (themes.js, copied from Shift Priority) ---- */
 const hexN=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
 const mixC=(a,b,t)=>'#'+hexN(a).map((v,i)=>Math.round(v*(1-t)+hexN(b)[i]*t).toString(16).padStart(2,'0')).join('');
@@ -402,21 +409,20 @@ function renderHome(){
   const att=ids.reduce((a,i)=>a+(P[i]?P[i].c+P[i].w:0),0),cor=ids.reduce((a,i)=>a+(P[i]?P[i].c:0),0);
   const mas=ids.filter(mastered).length;
   const active=PACKS.filter(packOn).map(p=>p.short).join(', ')||'none';
-  const res=S&&!S.done;
+  const res=S&&!S.done,np=pausedL().length;
   const mp=pct(mas,pool.length);
   page(`<div class="hero"><div class="ring" style="--p:${mp}"><i>${mp}%</i></div><div><h1>StudyPrep</h1>
   <p class="sub">Active: ${esc(active)} · ${keys.length} sections · ${pool.length} questions<br>${mas} mastered${(S&&S.best)?'':''}</p></div></div>
   ${res?`<div class="card" style="border-color:var(--ac)"><div class="spread"><div><b>Continue where you stopped</b><div class="mut">${esc(S.mode)} · question ${Math.min(S.i+1,S.items.length)} of ${S.items.length}${S.left!=null?' · '+fmt(S.left)+' left':''}</div></div></div>
-  <div class="row" style="margin-top:10px"><button data-act="resume">Resume</button><button class="plain" data-act="discard">Discard</button></div></div>`:''}
+  <div class="row" style="margin-top:10px"><button data-act="resume">Resume</button><button class="plain" data-act="tab" data-v="exam">All sessions</button></div></div>`:np?`<div class="card" style="border-color:var(--ac)"><div class="spread"><div><b>${np} unfinished session${np>1?'s':''}</b><div class="mut">${esc(sessLbl(pausedL()[0]))}</div></div><button class="sm" data-act="tab" data-v="exam">Open</button></div></div>`:''}
   ${(!res&&st.get('rlast')&&PACKS.some(p=>p.study&&p.study[(st.get('rlast')||'').split(':')[1]]))?`<div class="card"><div class="spread"><div><b>Continue reading</b><div class="mut">Pick up your notes where you left off</div></div><button class="sm" data-act="rdresume">Open</button></div></div>`:''}
   ${pool.length?coachCard(pool,ids,weak,due,seen):''}
   ${bkDue()?`<div class="card"><div class="spread"><div><b>💾 Back up your progress</b><div class="mut">${st.get('bkat')?'Last backup '+ago(st.get('bkat')):'You have not saved a backup yet'} · keeps your progress safe</div></div><button class="sm" data-act="export">Save</button></div></div>`:''}
   ${pool.length?`<div class="tiles">
    <button class="tile plain" data-act="tab" data-v="learn"><span class="ic">📖</span><span><b>Learn</b><span class="d">Read the key points of a section first</span></span></button>
    <button class="tile plain" data-act="setup" data-v="practice"><span class="ic">🎓</span><span><b>Practice</b><span class="d">Answer, see why, retry what you miss</span></span></button>
-   <button class="tile plain" data-act="setup" data-v="exam"><span class="ic">⏱️</span><span><b>Exam</b><span class="d">Timed, no feedback until the end</span></span></button>
+   <button class="tile plain" data-act="tab" data-v="exam"><span class="ic">⏱️</span><span><b>Exam</b><span class="d">Mock exam, timed tests, saved sessions</span></span></button>
    <button class="tile plain" data-act="setup" data-v="review"><span class="ic">🎯</span><span><b>Smart review</b><span class="d">Weak and due questions first</span></span>${weak+due?`<span class="badge">${weak+due}</span>`:''}</button>
-   ${qsIn(mockKeys()).length?`<button class="tile plain" data-act="mock"><span class="ic">🏁</span><span><b>Security+ mock exam</b><span class="d">90 questions · 90 min · course + book, like the real test</span></span></button>`:''}
   </div>
   <div class="card"><h2>Progress</h2><div class="stats">
    <div class="stat"><b>${pct(seen,pool.length)}%</b><span>seen</span></div>
@@ -460,7 +466,7 @@ function coachCard(pool,ids,weak,due,seen){
 }
 
 /* ================= Backup ================= */
-const BK=['prog','hist','day','read','rpos','rvoice','rlast','sess','last','set','cfg','userpacks','lastact'];
+const BK=['prog','hist','day','read','rpos','rvoice','rlast','sess','paused','last','set','cfg','userpacks','lastact'];
 function backupData(){const d={app:'StudyPrep',v:5,at:new Date().toISOString()};BK.forEach(k=>{const v=st.get(k,undefined);if(v!==undefined)d[k]=v});d.prog=P;d.set=SET;d.day=DAYS;if(S&&!S.done)d.sess=S;return d}
 function saveBackup(){
   const b=new Blob([JSON.stringify(backupData())],{type:'application/json'}),a=document.createElement('a');
@@ -647,14 +653,15 @@ function renderQuiz(keep){
     ${it.ck?fbBlock(it,q):''}`;
   }else{
     const sf=sf0;
-    const zs=sf&&q.zf.length?q.zf:q.zones;
     body=`<div class="tag spread"><span>${esc(secName(q))} · scenario${it.re?' · ↻ retry':''}</span><button class="plain sm spk" data-act="speakq" aria-label="Read the question aloud">🔊</button></div><p class="q">${W(q.title)}</p>
     ${sf&&q.tf?`<div class="fabox">${FA(q.tf)}</div>`:''}
+    ${it.ck?'':`<p class="hint">Tap one answer for each line · tap it again to clear</p>`}
     <div class="opts">${it.ord.map(ii=>{const x=q.items[ii];const a=it.ans[ii];
       const rc=it.ck?(a===x[1]?' rk':' rn'):'';
       return `<div class="pbq${rc}"><div>${W(x[0])}</div>${sf&&x[2]?`<div class="fa">${FA(x[2])}</div>`:''}
-      <select data-act="ans" data-v="${ii}" ${it.ck?'disabled':''}><option value="">Choose…</option>${zs.map((z,zi)=>`<option value="${zi}" ${a===zi?'selected':''}>${esc(z)}</option>`).join('')}</select>
-      ${it.ck&&a!==x[1]?`<div class="mut" style="margin-top:4px">Correct: <b>${W(q.zones[x[1]])}</b></div>`:''}</div>`}).join('')}</div>
+      <div class="zch">${q.zones.map((z,zi)=>{let c='zc';if(it.ck){if(zi===x[1])c+=' right';else if(a===zi)c+=' wrong'}else if(a===zi)c+=' on';
+        return `<button class="${c}" data-act="zpick" data-v="${ii}:${zi}" ${it.ck?'disabled':''} aria-pressed="${a===zi}">${esc(z)}${sf&&q.zf[zi]&&q.zf[zi]!==z?`<span class="fa">${esc(q.zf[zi])}</span>`:''}</button>`}).join('')}</div>
+</div>`}).join('')}</div>
     ${it.ck?fbBlock(it,q):''}`;
   }
   const ready=q.k==='m'?it.pick!=null:Object.keys(it.ans).length>0;
@@ -684,7 +691,26 @@ function finishAsk(){
 }
 function exitMenu(){
   modal(`<h3>Leave this session?</h3><button data-act="saveexit">Save and exit (resume later)</button>
-   <button class="plain" data-act="finish">End now and see results</button><button class="danger" data-act="discard">Discard session</button><button class="plain" data-act="close">Cancel</button>`);
+   <button class="plain" data-act="finish">End now and see results</button><button class="danger" data-act="discard">Discard session</button><p class="mut" style="margin:8px 0 0">Saved sessions wait in the <b>Exam</b> tab.</p><button class="plain" data-act="close">Cancel</button>`);
+}
+
+/* ================= Exam tab ================= */
+/* every unfinished session, ways to start one, and past scores */
+function sessCard(x){const n=x.items.length,a=x.items.filter(i=>Q[i.id]&&(Q[i.id].k==='m'?i.pick!=null:Object.keys(i.ans||{}).length)).length,id=String(x.id||x.start);
+  return `<div class="sess"><div class="spread"><div><b>${esc(sessLbl(x))}</b><div class="mut">Question ${Math.min(x.i+1,n)} of ${n} · ${a} answered${x.left!=null?' · '+fmt(x.left)+' left':''} · started ${ago(x.start)}</div></div></div>
+   <div class="pbar" style="margin:8px 0"><i style="width:${pct(a,n)}%"></i></div>
+   <div class="row"><button class="sm" data-act="resume" data-v="${esc(id)}">▶ Continue</button><button class="plain sm" data-act="drop" data-v="${esc(id)}">Delete</button></div></div>`}
+function renderExams(){
+  const open=openSess(),hist=st.get('hist',[]).slice().reverse(),L=st.get('last',null),mk=qsIn(mockKeys()).length;
+  page(`<h1>Exam</h1><p class="sub">Unfinished sessions are saved here until you finish or delete them.</p>
+  <div class="card"><h2>Continue</h2>${open.length?open.map(sessCard).join(''):'<p class="mut" style="margin:0">No unfinished sessions.</p>'}</div>
+  <div class="card"><h2>Start</h2><div class="tiles" style="margin:0">
+   ${mk?`<button class="tile plain" data-act="mock"><span class="ic">🏁</span><span><b>Security+ mock exam</b><span class="d">90 questions · 90 min · course + book</span></span></button>`:''}
+   <button class="tile plain" data-act="setup" data-v="exam"><span class="ic">⏱️</span><span><b>Custom exam</b><span class="d">Pick sections, size and timer</span></span></button>
+   <button class="tile plain" data-act="setup" data-v="practice"><span class="ic">🎓</span><span><b>Practice</b><span class="d">Feedback after every question</span></span></button>
+   <button class="tile plain" data-act="setup" data-v="review"><span class="ic">🎯</span><span><b>Smart review</b><span class="d">Weak and due questions first</span></span></button></div></div>
+  <div class="card"><div class="spread"><h2 style="margin:0">Past results</h2>${L&&L.result?'<button class="plain sm" data-act="lastres">Open last result</button>':''}</div>
+   ${hist.length?hist.slice(0,10).map(h=>`<div class="spread hrow"><div><b>${({practice:'Practice',exam:'Exam',review:'Review'})[h.mode]||h.mode}</b><div class="mut">${new Date(h.t).toLocaleDateString()} · ${h.right}/${h.total} correct · ${fmt(h.used||0)}</div></div><span class="badge ${h.score>=750?'ok':''}" style="margin:0">${h.score}</span></div>`).join(''):'<p class="mut">No finished sessions yet.</p>'}</div>`);
 }
 
 /* ================= Results ================= */
@@ -950,8 +976,11 @@ document.addEventListener('click',e=>{
       st.set('cfg',cfg);renderSetup();break}
     case 'cfgsec':{const i=cfg.secs.indexOf(v);i>=0?cfg.secs.splice(i,1):cfg.secs.push(v);if(!cfg.secs.length)cfg.secs=[v];st.set('cfg',cfg);renderSetup();break}
     case 'begin':st.set('cfg',cfg);startSession(cfg);break;
-    case 'resume':runTimer();renderQuiz();break;
-    case 'discard':closeModal();S=null;st.del('sess');clearInterval(timerId);go('home');break;
+    case 'resume':if(v&&(!S||String(S.id||S.start)!==v)){unpark(v);break}runTimer();renderQuiz();break;
+    case 'drop':{if(!confirm('Delete this unfinished session?'))break;if(S&&String(S.id||S.start)===v){S=null;st.del('sess');clearInterval(timerId)}else st.set('paused',pausedL().filter(y=>String(y.id)!==v));go(tab==='home'?'home':'exam');break}
+    case 'lastres':{const L=st.get('last',null);if(L&&L.result){S=L;renderResult()}break}
+    case 'discard':closeModal();S=null;st.del('sess');clearInterval(timerId);go('exam');break;
+    case 'zpick':{const it=cur();if(it.ck)break;const [ii,zi]=v.split(':').map(Number);if(it.ans[ii]===zi)delete it.ans[ii];else it.ans[ii]=zi;st.set('sess',S);FX.tap();renderQuiz(true);break}
     case 'pick':{const it=cur();if(it.ck)break;it.pick=+v;st.set('sess',S);FX.tap();renderQuiz(true);break}
     case 'check':checkItem();renderQuiz(true);break;
     case 'next':if(S.i<S.items.length-1)S.i++;st.set('sess',S);renderQuiz();break;
@@ -985,7 +1014,7 @@ document.addEventListener('click',e=>{
     case 'finishask':finishAsk();break;
     case 'finish':closeModal();finish();break;
     case 'exit':exitMenu();break;
-    case 'saveexit':closeModal();st.set('sess',S);clearInterval(timerId);go('home');break;
+    case 'saveexit':closeModal();st.set('sess',S);clearInterval(timerId);go('exam');break;
     case 'lpack':st.set('lpack',v);renderLearn();break;
     case 'mock':{startSession({mode:'exam',n:90,timer:'90',secs:mockKeys(),what:' · Security+ mock exam'});break}
     case 'drillwrong':{const ids=S._wrong;S=null;startSession({mode:'review',ids,timer:'off',n:ids.length});break}
@@ -1002,7 +1031,7 @@ document.addEventListener('click',e=>{
     case 'copy':{const t=$('#ex');t.select();try{navigator.clipboard.writeText(t.value).then(()=>toast('Copied'),()=>document.execCommand('copy'))}catch(_){document.execCommand('copy')}break}
     case 'importui':modal(`<h3>Import progress</h3><textarea id="im" placeholder="Paste exported progress here"></textarea><button data-act="doimport">Import</button><button class="plain" data-act="close">Cancel</button>`);break;
     case 'doimport':try{restoreBackup($('#im').value);closeModal()}catch(_){toast('That is not valid progress data')}break;
-    case 'reset':if(confirm('Erase ALL progress and history on this device?')){P={};['prog','hist','sess','last'].forEach(st.del);S=null;toast('Progress erased');go('home')}break;
+    case 'reset':if(confirm('Erase ALL progress and history on this device?')){P={};['prog','hist','sess','last','paused'].forEach(st.del);S=null;toast('Progress erased');go('home')}break;
   }
 });
 document.addEventListener('change',e=>{
