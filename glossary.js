@@ -385,5 +385,23 @@ window.GLOSS=[
 ['\\bSOC ?[12]\\b','','SOC 2','Independent attestation report on a service provider\'s controls.','گزارش گواهی مستقل درباره‌ی کنترل‌های یک ارائه‌دهنده‌ی خدمات.'],
 ['\\bpurple team(ing)?\\b','i','Purple team','Red (attack) and blue (defense) teams working together.','تیم حمله و دفاع با هم کار می‌کنند.'],
 ['\\bpassive reconnaissance\\b','i','Passive reconnaissance','Gathering info without touching the target.','جمع‌آوری اطلاعات بدون تماس با هدف.'],
-['\\bactive reconnaissance\\b','i','Active reconnaissance','Gathering info by directly probing the target.','جمع‌آوری اطلاعات با تماس مستقیم، مثل port scan.']
+['\\bactive reconnaissance\\b','i','Active reconnaissance','Gathering info by directly probing the target.','جمع‌آوری اطلاعات با تماس مستقیم، مثل port scan.'],
+/* Section 13 practice set */
+['\\bAppArmor\\b','i','AppArmor','Linux tool that confines programs with per-application, path-based profiles.','ابزار لینوکس که هر برنامه را با یک پروفایل مبتنی بر مسیر فایل محدود می‌کند.'],
+['\\bDKIM\\b','','DKIM','Digital signature on email; proves the signed content was not changed.','امضای دیجیتال ایمیل؛ ثابت می‌کند محتوای امضاشده تغییر نکرده.'],
+['\\bSPF\\b','','SPF','DNS record listing which servers may send email for a domain.','رکورد DNS که می‌گوید کدام سرورها اجازه دارند از طرف دامنه ایمیل بفرستند.'],
+['\\bDMARC\\b','','DMARC','Email policy telling receivers what to do when SPF/DKIM fail.','سیاست ایمیل که می‌گوید اگر SPF/DKIM رد شد گیرنده چه کند.'],
+['\\bWMI\\b','','WMI','Windows Management Instrumentation: remote management and info on Windows.','ابزار مدیریتی ویندوز برای گرفتن اطلاعات و مدیریت از راه دور.'],
+['\\bTACACS\\+?','i','TACACS+','Cisco protocol for authenticating and authorizing admins of network devices.','پروتکل احراز هویت و کنترل دسترسی مدیران تجهیزات شبکه.'],
+['\\bKerberos\\b','i','Kerberos','Ticket-based network authentication used by Active Directory.','احراز هویت شبکه با Ticket، مثل Active Directory.'],
+['\\bTelnet\\b','i','Telnet','Old remote access on TCP 23 that sends everything in plaintext.','دسترسی از راه دور قدیمی روی پورت ۲۳ که همه چیز را بدون رمز می‌فرستد.'],
+['\\bfile integrity monitoring\\b|\\bFIM\\b','i','File integrity monitoring','Watches file hashes and alerts on unauthorized changes.','Hash فایل‌ها را پایش می‌کند و تغییر غیرمجاز را گزارش می‌دهد.'],
+['\\bsomething you have\\b','i','Something you have','MFA factor: a physical item like a token or smart card.','عامل MFA: چیزی فیزیکی مثل توکن یا کارت هوشمند.'],
+['\\bsomething you know\\b','i','Something you know','MFA factor: a password or PIN.','عامل MFA: رمز عبور یا PIN.'],
+['\\bsomething you are\\b','i','Something you are','MFA factor: biometrics like fingerprint or face.','عامل MFA: بیومتریک مثل اثر انگشت یا چهره.'],
+['\\bsomewhere you are\\b','i','Somewhere you are','MFA factor: your location (GPS, IP).','عامل MFA: مکان تو (GPS، IP).'],
+['\\b(password )?entropy\\b','i','Password entropy','How unpredictable a password is; higher is harder to guess.','اینکه رمز چقدر غیرقابل‌پیش‌بینی است؛ بیشتر یعنی سخت‌تر حدس زده می‌شود.'],
+['\\benvironmental (variables?|metrics?|factors?)\\b','i','Environmental variable','Your real setting (production, isolated, exposed) that changes actual risk.','شرایط واقعی سیستم (عملیاتی، جدا، در معرض) که ریسک واقعی را تغییر می‌دهد.'],
+['\\brisk transfer(ence)?\\b','i','Risk transference','Moving the cost of a risk to someone else, such as an insurer.','انتقال هزینه‌ی ریسک به دیگری، مثل شرکت بیمه.'],
+['\\brule-based\\b','i','Rule-based access control','Access decided by preset rules, such as time of day.','دسترسی بر اساس قانون‌های از پیش تعیین‌شده، مثل ساعت کاری.']
 ];
