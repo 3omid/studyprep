@@ -16,6 +16,7 @@
   --grad:linear-gradient(135deg,#0f9b8e,#5b6df0);--glow1:rgba(15,155,142,.12);--glow2:rgba(91,109,240,.12);--shadow:0 8px 24px rgba(30,40,100,.12);color-scheme:light}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{font-size:calc(17.5px*var(--fs))}
+html{--tb:3.9rem}
 body{margin:0;color:var(--ink);font-family:var(--sans);line-height:1.55;
   background:radial-gradient(900px 480px at 8% -8%,var(--glow1),transparent 60%),radial-gradient(800px 480px at 105% 4%,var(--glow2),transparent 60%),var(--bg);
   background-attachment:fixed;
@@ -55,10 +56,12 @@ button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-vis
 .lbl{font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin:12px 0 6px}
 .tabbar{position:fixed;left:0;right:0;bottom:0;background:color-mix(in srgb,var(--sf) 86%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);display:flex;
   padding-bottom:env(safe-area-inset-bottom);z-index:20}
-.tabbar{justify-content:center}.tabbar button{flex:1;max-width:160px;background:transparent;color:var(--mut);border-radius:0;font-size:.82rem;font-weight:600;display:flex;flex-direction:column;gap:2px;align-items:center;padding:8px 4px;min-height:58px}
+.tabbar{justify-content:center}.tabbar button{flex:1;max-width:160px;background:transparent;color:var(--mut);border-radius:0;font-size:.82rem;font-weight:600;display:flex;flex-direction:column;gap:2px;align-items:center;padding:6px 4px;height:var(--tb);min-height:0;box-sizing:border-box}
 .tabbar button.on{color:var(--ac)}.tabbar button.on .i{transform:scale(1.12)}.tabbar .i{font-size:1.4rem;line-height:1}
-.qhead{position:sticky;top:env(safe-area-inset-top);z-index:10;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:8px 0}
+.qhead{position:fixed;left:0;right:0;top:0;padding:calc(env(safe-area-inset-top) + 8px) 14px 8px;z-index:18;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 .qhead .spread{margin-bottom:6px}
+.qhead>*{max-width:732px;margin-left:auto;margin-right:auto}
+#main.quiz{animation:none;padding-top:calc(var(--qh,92px) - env(safe-area-inset-top) + 10px)}
 .timer{font:600 1.05rem var(--mono)}.timer.low{color:var(--bad)}
 .streak{font-weight:700;color:var(--warn);font-size:.9rem}
 .pbar{height:8px;background:var(--line);border-radius:6px;overflow:hidden}.pbar i{display:block;height:100%;background:var(--grad);border-radius:6px}
@@ -86,7 +89,7 @@ button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-vis
 .gl{padding:8px 0;border-top:1px dashed var(--line)}.gl:first-of-type{border-top:0}
 .gl b{color:var(--ac)}.gl .m{color:var(--mut);font-size:.88rem}
 .gl .mk{display:inline-block;min-width:20px;font-weight:700}.gl .mk.g{color:var(--good)}.gl .mk.r{color:var(--bad)}
-.bot{position:fixed;left:0;right:0;bottom:var(--tabh,66px);background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:10px 14px;z-index:19}
+.bot{position:fixed;left:0;right:0;bottom:calc(var(--tb) + 1px + env(safe-area-inset-bottom));background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:10px 14px;z-index:19}
 .bot .in{max-width:760px;margin:0 auto;display:flex;gap:8px}.bot button{flex:1}
 .pbq{padding:10px 0;border-bottom:1px solid var(--line)}.pbq:last-child{border:0}
 select{font:inherit;width:100%;margin-top:6px;background:var(--sf2);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:10px;min-height:46px}
@@ -205,8 +208,10 @@ details{border:1px solid var(--line);border-radius:14px;padding:8px 12px;margin-
   html{font-size:calc(15px*var(--fs))}
   #main{max-width:1500px;padding:22px 32px calc(var(--tabh,60px) + 90px)}
   .tiles{grid-template-columns:repeat(4,1fr)}
-  .tabbar button{min-height:52px;max-width:180px}
+  .tabbar button{max-width:180px}
+  :root{--tb:3.5rem}
   .bot .in{max-width:1500px;padding:0 18px}
+  .qhead>*{max-width:1436px}
   .ov{align-items:center}.sheet{border-radius:24px;max-width:620px}
   /* reading: English on the left, Persian on the right, so the whole width is used */
   .pair{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start}
