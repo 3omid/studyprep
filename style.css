@@ -91,6 +91,18 @@ button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-vis
 .pbq{padding:10px 0;border-bottom:1px solid var(--line)}.pbq:last-child{border:0}
 select{font:inherit;width:100%;margin-top:6px;background:var(--sf2);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:10px;min-height:46px}
 .pbq.rk select{border-color:var(--good)}.pbq.rn select{border-color:var(--bad)}
+/* scenario choices: tappable buttons instead of a dropdown */
+.zch{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.zc{background:var(--sf2);color:var(--ink);border:1.5px solid var(--line);border-radius:12px;padding:9px 14px;min-height:44px;font-weight:600;text-align:left;display:flex;flex-direction:column;gap:2px}
+.zc .fa{font-size:.85rem;font-weight:400;color:var(--mut)}
+.zc.on{background:var(--sel);border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 22%,transparent)}
+.zc.right{background:var(--gbg);border-color:var(--good)}.zc.wrong{background:var(--bbg);border-color:var(--bad)}
+.zc:disabled{opacity:1;cursor:default}
+.pbq.rk{border-left:4px solid var(--good);padding-left:10px}.pbq.rn{border-left:4px solid var(--bad);padding-left:10px}
+/* Exam tab */
+.sess{border:1px solid var(--line);border-radius:16px;padding:12px;margin:10px 0;background:var(--sf2)}
+.hrow{padding:10px 0;border-bottom:1px solid var(--line)}.hrow:last-child{border:0}
+.badge.ok{background:var(--good);color:#04210f}
 .big{font:700 3rem/1.1 var(--mono);background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 .bar2{display:grid;grid-template-columns:minmax(0,1fr) 90px 44px;gap:8px;align-items:center;margin:8px 0;font-size:.88rem}
 .bar2 .t{height:8px;background:var(--line);border-radius:4px;overflow:hidden}.bar2 .t i{display:block;height:100%;background:var(--ac)}
