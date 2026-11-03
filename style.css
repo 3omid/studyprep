@@ -255,22 +255,39 @@ details{border:1px solid var(--line);border-radius:14px;padding:8px 12px;margin-
 .srow .nq{font:600 .82rem var(--mono);color:var(--mut);background:var(--sf);border:1px solid var(--line);border-radius:99px;padding:2px 8px;min-width:2.4rem;text-align:center}
 
 /* ---- exam status panel in the question header ---- */
-.xp{display:flex;align-items:center;gap:12px;background:var(--sf);border:1px solid var(--line);border-radius:18px;padding:8px 12px;margin-top:4px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
-.xring{position:relative;width:74px;height:74px;flex:none}
+.xp{display:flex;align-items:center;gap:12px;margin-top:4px;padding:10px 12px;border-radius:20px;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--ac) 20%,var(--sf)),color-mix(in srgb,var(--ac2) 22%,var(--sf)));
+  border:1.5px solid color-mix(in srgb,var(--ac) 45%,transparent);box-shadow:0 6px 20px color-mix(in srgb,var(--ac2) 22%,transparent)}
+.xring{position:relative;width:88px;height:88px;flex:none;border-radius:50%;background:var(--sf);box-shadow:inset 0 0 0 1px var(--line),0 3px 10px color-mix(in srgb,var(--ac) 25%,transparent)}
 .xring svg{width:100%;height:100%;transform:rotate(-90deg)}
-.xring circle{fill:none;stroke-width:6}
-.xring .bg{stroke:var(--sf2)}
-.xring .fg{stroke:var(--ac);stroke-linecap:round;transition:stroke-dashoffset 1s linear}
-.xring.low .fg{stroke:var(--bad)}
-.xring>div{position:absolute;inset:0;display:grid;place-content:center;text-align:center;line-height:1.05}
-.xring b{font:700 .78rem var(--mono);letter-spacing:-.02em}
-.xring.low b{color:var(--bad)}
-.xring span{font-size:.6rem;color:var(--mut);text-transform:uppercase;letter-spacing:.05em}
-.xinfo{flex:1;min-width:0;display:grid;gap:7px}
-.xrow{display:flex;justify-content:space-between;gap:8px;font-size:.85rem;color:var(--mut);white-space:nowrap}
-.xrow b{color:var(--ink);font-family:var(--mono)}
-.xbar{height:9px;background:var(--sf2);border-radius:99px;overflow:hidden}
+.xring circle{fill:none;stroke-width:8}
+.xring .bg{stroke:color-mix(in srgb,var(--ac) 14%,var(--sf2))}
+.xring .fg{stroke:url(#xgr);stroke-linecap:round;transition:stroke-dashoffset 1s linear}
+.xring .s1{stop-color:var(--ac)}.xring .s2{stop-color:var(--ac2)}
+.xring>div{position:absolute;inset:12px;display:grid;place-content:center;text-align:center;line-height:1.05}
+.xring b{font:800 1.05rem var(--mono);letter-spacing:-.03em;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.xring span{font-size:.56rem;color:var(--mut);text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+.xp.low{border-color:var(--bad);box-shadow:0 6px 20px color-mix(in srgb,var(--bad) 30%,transparent)}
+.xp.low .s1,.xp.low .s2{stop-color:var(--bad)}
+.xp.low .xring b{background:none;color:var(--bad)}
+.xp.low .xring{animation:xpulse 1.2s ease-in-out infinite}
+@keyframes xpulse{50%{box-shadow:inset 0 0 0 1px var(--line),0 0 0 6px color-mix(in srgb,var(--bad) 25%,transparent)}}
+.xinfo{flex:1;min-width:0;display:grid;gap:8px}
+.xrow{display:flex;justify-content:space-between;gap:6px}
+.xpill{background:var(--sf);border:1px solid var(--line);border-radius:99px;padding:3px 10px;font-size:.8rem;color:var(--mut);white-space:nowrap}
+.xpill b{color:var(--ink);font-family:var(--mono)}
+.xbar{height:10px;background:color-mix(in srgb,var(--sf) 70%,transparent);border-radius:99px;overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,.08)}
 .xbar i{display:block;height:100%;background:var(--grad);border-radius:99px;transition:width .3s}
-.xstats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;font-size:.7rem;color:var(--mut);text-align:center}
-.xstats span{background:var(--sf2);border-radius:8px;padding:3px 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.xstats b{display:block;font:700 .9rem var(--mono);color:var(--ink)}
+.xstats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;font-size:.68rem;text-align:center}
+.xstats span{border-radius:10px;padding:4px 1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600;letter-spacing:-.01em}
+.xstats b{display:block;font:800 1rem var(--mono);text-transform:none}
+.xstats .c1{background:color-mix(in srgb,var(--ac2) 18%,var(--sf));color:var(--ac2)}
+.xstats .c2{background:color-mix(in srgb,var(--good) 18%,var(--sf));color:var(--good)}
+.xstats .c3{background:color-mix(in srgb,var(--warn) 18%,var(--sf));color:var(--warn)}
+.xstats .c4{background:color-mix(in srgb,var(--bad) 16%,var(--sf));color:var(--bad)}
+/* ---- new version banner ---- */
+.upd{position:fixed;left:12px;right:12px;top:calc(env(safe-area-inset-top) + 10px);z-index:60;max-width:560px;margin:0 auto;display:flex;align-items:center;gap:10px;
+  padding:10px 10px 10px 14px;border-radius:18px;background:var(--sf);border:1.5px solid color-mix(in srgb,var(--ac) 50%,transparent);
+  box-shadow:0 10px 30px rgba(0,0,0,.2);animation:rise .3s ease both}
+.upd .ui{font-size:1.5rem}.upd>div{flex:1;min-width:0;line-height:1.25}.upd b{display:block}.upd span{font-size:.8rem;color:var(--mut)}
+.upd button[data-act=updnow]{flex:none;min-height:42px;padding:0 16px}

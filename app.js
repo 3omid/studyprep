@@ -691,25 +691,27 @@ function renderQuiz(keep){
 /* exam status panel: time ring, clock, end time, answered / left / flagged, percent done */
 const hm=d=>d.toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
 const answeredN=()=>S.items.filter(i=>!i.re&&Q[i.id]&&(Q[i.id].k==='m'?i.pick!=null:Object.keys(i.ans||{}).length)).length;
+const mmss=x=>{x=Math.max(0,Math.round(x));return Math.floor(x/60)+':'+String(x%60).padStart(2,'0')};
 function examPanel(){
   const n=S.items.filter(i=>!i.re).length,a=answeredN(),fl=S.items.filter(i=>i.fl).length,timed=S.left!=null;
-  const R=30,C=2*Math.PI*R,frac=timed&&S.total?Math.max(0,S.left)/S.total:1;
-  return `<div class="xp">
-   <div class="xring ${timed&&S.left<300?'low':''}"><svg viewBox="0 0 72 72"><circle cx="36" cy="36" r="${R}" class="bg"/><circle cx="36" cy="36" r="${R}" class="fg" id="xrg" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C*(1-frac)).toFixed(1)}"/></svg>
-    <div><b id="xtm">${fmt(timed?S.left:S.used)}</b><span>${timed?'left':'used'}</span></div></div>
+  const R=34,C=2*Math.PI*R,frac=timed&&S.total?Math.max(0,S.left)/S.total:1,low=timed&&S.left<300;
+  return `<div class="xp ${low?'low':''}">
+   <div class="xring"><svg viewBox="0 0 84 84"><defs><linearGradient id="xgr" x1="0" y1="0" x2="1" y2="1"><stop offset="0" class="s1"/><stop offset="1" class="s2"/></linearGradient></defs>
+    <circle cx="42" cy="42" r="${R}" class="bg"/><circle cx="42" cy="42" r="${R}" class="fg" id="xrg" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C*(1-frac)).toFixed(1)}"/></svg>
+    <div><b id="xtm">${mmss(timed?S.left:S.used)}</b><span>${timed?'min left':'min used'}</span></div></div>
    <div class="xinfo">
-    <div class="xrow"><span>🕒 <b id="xclk">${hm(new Date())}</b></span>${timed?`<span>Ends <b id="xend">${hm(new Date(now()+S.left*1000))}</b></span>`:''}</div>
+    <div class="xrow"><span class="xpill">🕒 <b id="xclk">${hm(new Date())}</b></span>${timed?`<span class="xpill">🏁 <b id="xend">${hm(new Date(now()+S.left*1000))}</b></span>`:''}</div>
     <div class="xbar"><i style="width:${pct(a,n)}%"></i></div>
-    <div class="xstats"><span><b>${pct(a,n)}%</b>progress</span><span><b>${a}</b>done</span><span><b>${n-a}</b>left</span><span><b>${fl}</b>flagged</span></div>
+    <div class="xstats"><span class="c1"><b>${pct(a,n)}%</b>progress</span><span class="c2"><b>${a}</b>done</span><span class="c3"><b>${n-a}</b>left</span><span class="c4"><b>${fl}</b>flagged</span></div>
    </div></div>`;
 }
 function examTick(){
   if(!S||S.mode!=='exam')return;const t=$('#xtm');if(!t)return;
-  const timed=S.left!=null;t.textContent=fmt(timed?S.left:S.used);
+  const timed=S.left!=null;t.textContent=mmss(timed?S.left:S.used);
   const c=$('#xclk');if(c)c.textContent=hm(new Date());
   if(timed){const e=$('#xend');if(e)e.textContent=hm(new Date(now()+S.left*1000));
     const r=$('#xrg');if(r){const C=+r.getAttribute('stroke-dasharray');r.setAttribute('stroke-dashoffset',(C*(1-Math.max(0,S.left)/S.total)).toFixed(1))}
-    const w=$('.xring');if(w)w.classList.toggle('low',S.left<300)}
+    const w=$('.xp');if(w)w.classList.toggle('low',S.left<300)}
 }
 function nav(){
   const n=S.items.length;
@@ -1053,6 +1055,8 @@ document.addEventListener('click',e=>{
     case 'exit':exitMenu();break;
     case 'saveexit':closeModal();st.set('sess',S);clearInterval(timerId);go('exam');break;
     case 'lpack':st.set('lpack',v);renderLearn();break;
+    case 'updnow':if(S&&!S.done)st.set('sess',S);location.reload();break;
+    case 'updlater':{const u=$('#upd');if(u)u.remove();break}
     case 'mock':{startSession({mode:'exam',n:90,timer:'90',secs:mockKeys(),what:' · Security+ mock exam'});break}
     case 'drillwrong':{const ids=S._wrong;S=null;startSession({mode:'review',ids,timer:'off',n:ids.length});break}
     case 'answers':renderAnswers();break;
@@ -1098,5 +1102,20 @@ function dlAudio(){
   set('Downloading voice files… keep this page open.');
   vIdx().then(ix=>{if(!ix.b||!ix.b.length)throw 0;let n=0;return Promise.all(ix.b.map(b=>fetch(b).then(r=>{if(!r.ok)throw 0;return r.arrayBuffer()}).then(()=>{n++;set('Downloaded '+n+' of '+ix.b.length+'…')})))}).then(()=>set('✅ Done. The human voice now works offline.')).catch(()=>set('Voice files are not available in this version (the Claude preview). Install the full app from the ZIP to use them.'));
 }
-if('serviceWorker' in navigator&&/^https?:/.test(location.protocol)){navigator.serviceWorker.register('sw.js').catch(()=>{})}
+/* updates: the browser checks for a new version on start, whenever the app comes back to the screen and every 15 minutes;
+   when one is installed a banner asks to refresh (the current session is saved first) */
+function updBanner(){if($('#upd'))return;const d=document.createElement('div');d.id='upd';d.className='upd';
+  d.innerHTML='<span class="ui">✨</span><div><b>New version available</b><span>Tap Refresh to update</span></div><button data-act="updnow">Refresh</button><button class="plain sm" data-act="updlater" aria-label="Later">✕</button>';
+  document.body.appendChild(d)}
+if('serviceWorker' in navigator&&/^https?:/.test(location.protocol)){
+  const hadCtrl=!!navigator.serviceWorker.controller;
+  navigator.serviceWorker.register('sw.js').then(reg=>{
+    const chk=()=>{try{reg.update()}catch(_){}};
+    document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk()});
+    setInterval(chk,15*60*1000);
+    if(reg.waiting&&hadCtrl)updBanner();
+  }).catch(()=>{});
+  navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.type==='new-version'&&hadCtrl)updBanner()});
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{if(hadCtrl)updBanner()});
+}
 })();
