@@ -495,9 +495,9 @@ function aiSaveKey(v){v=String(v||'').trim();const k=aiKeys();k[aiCfg().p]=v;st.
   const ok=aiKeys()[aiCfg().p]===v,s=$('#aiks');
   if(s)s.textContent=!v?'No key saved yet · هنوز کلیدی ذخیره نشده':ok?`✅ Key saved on this device (…${v.slice(-4)}) · کلید ذخیره شد`:'⚠️ This browser would not save the key (private mode?) · مرورگر اجازه‌ی ذخیره نداد';
   return ok&&!!v}
-// Free models are often "busy" (503/429). Then try again, moving to a lighter Gemini model,
-// so one busy model does not stop the tutor.
-const AIBUSY=[429,500,502,503,504],AIFALL=['gemini-flash-lite-latest','gemini-2.5-flash'];
+// Free models are often "busy" (503/429) or hang without answering (408 = our own time limit).
+// Then try again, moving to a lighter Gemini model, so one busy model does not stop the tutor.
+const AIBUSY=[408,429,500,502,503,504],AIFALL=['gemini-flash-lite-latest','gemini-2.5-flash'];
 function aiCall(sys,msgs,onPart){
   const c=aiCfg(),key=aiKeys()[c.p],model=aiModel(c);
   if(!key)return Promise.reject(new Error('Add your AI key in Settings first.'));
@@ -514,7 +514,9 @@ function aiCall(sys,msgs,onPart){
 const AINOTHINK=st.get('ainothink',{});
 const noThink=x=>x.replace(/<think>[\s\S]*?(<\/think>|$)/g,'').trim();
 function aiOnce(c,key,model,sys,msgs,onPart){
-  const ctl=new AbortController();let t=setTimeout(()=>ctl.abort(),60000);
+  // a model that has not started answering in 20 s is usually stuck; giving up early lets aiCall move to the next model
+  const ctl=new AbortController();let t=setTimeout(()=>ctl.abort(),20000);
+  const slow=()=>Object.assign(new Error('The AI took too long. Try again. · پاسخ هوش مصنوعی خیلی طول کشید؛ دوباره امتحان کنید.'),{status:408});
   const lv=AINOTHINK[c.p+model]|0,think=lv<2;
   let req;
   if(c.p==='gemini')req=fetch('https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent(model)+':streamGenerateContent?alt=sse',{method:'POST',signal:ctl.signal,
@@ -541,9 +543,11 @@ function aiOnce(c,key,model,sys,msgs,onPart){
       clearTimeout(t);t=setTimeout(()=>ctl.abort(),30000);
       buf+=dec.decode(value||new Uint8Array(),{stream:!done});const ls=buf.split('\n');buf=done?'':ls.pop();ls.forEach(line);
       if(done){if(buf)line(buf);clearTimeout(t);const v=noThink(out);if(!v)throw new Error('The AI sent an empty answer. Try again or pick another model.');return v}
-      return pump()});
+      return pump()},e=>{clearTimeout(t);if(e.name!=='AbortError')throw e;
+        // stalled mid-answer: keep what already arrived rather than throwing it away
+        const v=noThink(out);if(v)return v;throw slow()});
     return pump();
-  },e=>{clearTimeout(t);throw new Error(e.name==='AbortError'?'The AI took too long. Try again.':'No connection to the AI. Check the internet.')});
+  },e=>{clearTimeout(t);throw e.name==='AbortError'?slow():new Error('No connection to the AI. Check the internet.')});
 }
 // light markdown: bold, inline code, bullets; a line with any Persian reads right-to-left; everything else escaped
 const aiMd=s=>esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`([^`]+)`/g,'<code>$1</code>').replace(/^\s*[-*•]\s+/gm,'• ').replace(/^#+\s*/gm,'').split('\n').map(l=>l.trim()?`<div dir="${/[\u0600-\u06FF]/.test(l)?'rtl':'ltr'}">${l}</div>`:'').join('');
