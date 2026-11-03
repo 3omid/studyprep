@@ -1,6 +1,6 @@
 // Offline cache. App files are fetched fresh when online (so an update shows up the next
 // time the app is opened) and come from the cache when offline. Audio stays cache-first.
-const VERSION='studyprep-v21';
+const VERSION='studyprep-v22';
 const AUDIO='sp-audio3'; // new name drops the old cache that still held the Kokoro bundles
 const FILES=['./','index.html','style.css','app.js','manifest.webmanifest','packs/secplus.js','packs/secplus-m7-m8.js','packs/secplus-study.js','packs/secplus-m9.js','packs/secplus-r78.js','packs/secplus-m10.js','packs/secplus-m11.js','packs/secplus-m12.js','packs/secplus-q20.js','glossary.js','glossx.js','glossx2.js','glossx3.js','dict.js','fx.js','themes.js',
   'icons/icon-192.png','icons/icon-512.png','icons/maskable-512.png','icons/apple-touch-icon.png'];
