@@ -192,7 +192,7 @@ function normPack(p,user){
   /* built-in ids that already name a pack ("secplus:b3_1" in the book pack) are kept, so moving questions keeps progress */
   const fixId=i=>String(i).startsWith(pre)||(!user&&String(i).includes(':'))?String(i):pre+i;
   const secs={};Object.keys(p.sections||{}).forEach(k=>{const s=p.sections[k];secs[k]=typeof s==='string'?{en:s,fa:''}:{en:s.en||k,fa:s.fa||''}});
-  return{id,name:p.name||id,short:p.short||p.name||id,lab:p.lab||'',defOff:!!p.defOff,user:!!user,sections:secs,study:p.study||{},
+  return{id,name:p.name||id,short:p.short||p.name||id,lab:p.lab||'',cover:p.cover||'',defOff:!!p.defOff,user:!!user,sections:secs,study:p.study||{},
     mcq:(p.mcq||[]).map(q=>({...q,id:fixId(q.id),sec:String(q.sec),o:q.o,of:q.of||[],en:q.en||'',fa:q.fa||'',qf:q.qf||'',hf:q.hf||'',t:q.t||''})),
     pbq:(p.pbq||[]).map(q=>({...q,id:fixId(q.id),sec:String(q.sec),tf:q.tf||'',zf:q.zf||[],zd:q.zd||[],en:q.en||'',fa:q.fa||'',t:q.t||''}))};
 }
@@ -721,7 +721,7 @@ function renderLearn(){
   const sw=ps.length>1?`<div class="chips" style="margin:0 0 12px">${ps.map(p=>`<button class="chip ${p.id===sel?'on':''}" data-act="lpack" data-v="${esc(p.id)}">${p.id==='secbook'?'📕':'📚'} ${esc(p.short)}</button>`).join('')}</div>`:'';
   const cards=ps.filter(p=>p.id===sel).map(p=>{
     const ks=Object.keys(p.sections).filter(k=>p.study&&p.study[k]);const nr=ks.filter(k=>rd[secKey(p,k)]).length;
-    return `<div class="card"><div class="spread"><h2 style="margin:0">${esc(p.name)}</h2><span class="mut">${nr} / ${ks.length} read</span></div><div class="lgrid" style="margin-top:10px">${ks.map(k=>{const sk=secKey(p,k);const t=p.study[k].t||[p.sections[k].en,p.sections[k].fa];
+    return `<div class="card"><div class="spread"><div style="display:flex;align-items:center;gap:12px">${p.cover?`<img src="${esc(p.cover)}" alt="" style="width:56px;height:70px;object-fit:cover;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.25);flex:none">`:''}<h2 style="margin:0">${esc(p.name)}</h2></div><span class="mut">${nr} / ${ks.length} read</span></div><div class="lgrid" style="margin-top:10px">${ks.map(k=>{const sk=secKey(p,k);const t=p.study[k].t||[p.sections[k].en,p.sections[k].fa];
       return `<button class="tile plain ltile" data-act="read" data-v="${esc(sk)}"><span class="ic">${rd[sk]?'✅':'📘'}</span><span><b>${esc(secNo(p,k)?secNo(p,k)+' · ':'')}${esc(t[0])}</b><span class="d">${esc(t[1]||'')}</span></span></button>`}).join('')}</div></div>`}).join('');
   const rl=st.get('rlast'),rlp=rl&&PACKS.find(x=>x.id===rl.split(':')[0]),rls=rl&&rl.split(':')[1],rlt=rlp&&rlp.study&&rlp.study[rls];
   const cont=rlt?`<div class="card" style="border-color:var(--ac)"><div class="spread"><div><b>Continue reading</b><div class="mut">${esc(rlp.short+' · '+(secNo(rlp,rls)?secNo(rlp,rls)+' · ':'')+(rlt.t||[''])[0])}</div></div><button class="sm" data-act="rdresume">Continue</button></div></div>`:'';
@@ -797,7 +797,7 @@ function renderCourses(){
   page(`<h1>Courses</h1><p class="sub">Turn whole courses or single sections on and off. Practice, exams and review only use what is on.</p>
   <div class="cols">${PACKS.map(p=>{
     const ids=Object.keys(Q).filter(i=>Q[i].pack===p);const seen=ids.filter(i=>P[i]).length;
-    return `<div class="card"><div class="sw"><div><b>${esc(p.name)}</b><div class="mut">${ids.length} questions · ${pct(seen,ids.length)}% seen${p.user?' · imported':''}</div></div>
+    return `<div class="card"><div class="sw"><div style="display:flex;align-items:center;gap:12px">${p.cover?`<img src="${esc(p.cover)}" alt="" style="width:44px;height:55px;object-fit:cover;border-radius:5px;flex:none">`:''}<div><b>${esc(p.name)}</b><div class="mut">${ids.length} questions · ${pct(seen,ids.length)}% seen${p.user?' · imported':''}</div></div></div>
       <input type="checkbox" data-act="packtog" data-v="${esc(p.id)}" ${packOn(p)?'checked':''} aria-label="Enable ${esc(p.name)}"></div>
       <div class="sec" style="${packOn(p)?'':'opacity:.45'}">${Object.keys(p.sections).map(s=>{
         const sid=ids.filter(i=>Q[i].sec===s),m=sid.filter(mastered).length;
