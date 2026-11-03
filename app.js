@@ -294,7 +294,8 @@ function runTimer(){
   timerId=setInterval(()=>{
     if(document.hidden||!S||S.done)return;
     S.used++;
-    if(S.left!=null){S.left--;const t=$('#tm');if(t){t.textContent=fmt(S.left);t.classList.toggle('low',S.left<300)}
+    if(S.left!=null){S.left--;const t=$('#tm');if(t){t.textContent=fmt(S.left);t.classList.toggle('low',S.left<300)}}examTick();
+    if(S.left!=null){
       if(S.left<=0){toast("Time's up");finish();return}}
     if(++n%5===0)st.set('sess',S);
   },1000);
@@ -681,11 +682,34 @@ function renderQuiz(keep){
   if(exam)bar=`<button class="plain" data-act="prev" ${S.i===0?'disabled':''}>←</button><button class="plain" data-act="nav">${S.i+1}/${n}</button>${last?`<button data-act="finishask">Finish</button>`:`<button data-act="next">Next →</button>`}`;
   else bar=!it.ck?`<button data-act="check" ${ready?'':'disabled'}>Check</button>`:`<button data-act="${last?'finishask':'next'}">${last?'Finish':'Next →'}</button>`;
   page(`<div class="qhead"><div class="spread"><button class="plain sm" data-act="exit">✕ Menu</button>
-    <span class="mut">${exam?'Exam':S.mode==='review'?'Review':'Practice'} · ${it.re?'↻ retry':pos+' / '+base}${(S.streak||0)>=2&&!exam?` · <span class="streak">🔥 ${S.streak}</span>`:''}</span>
-    <span class="row" style="gap:6px;flex-wrap:nowrap"><button class="plain sm" data-act="mus" aria-label="Music" title="Music">${FX.isMusic()?'🎵':'🔇'}</button>${S.left!=null?`<span class="timer ${S.left<300?'low':''}" id="tm">${fmt(S.left)}</span>`:''}</span></div>
-    <div class="pbar"><i style="width:${Math.round(100*(exam?S.i+(it.ck?1:0):doneN)/(exam?n:base))}%"></i></div></div>
+    <span class="mut">${exam?'Question '+(S.i+1)+' of '+n:(S.mode==='review'?'Review':'Practice')+' · '+(it.re?'↻ retry':pos+' / '+base)}${(S.streak||0)>=2&&!exam?` · <span class="streak">🔥 ${S.streak}</span>`:''}</span>
+    <span class="row" style="gap:6px;flex-wrap:nowrap"><button class="plain sm" data-act="mus" aria-label="Music" title="Music">${FX.isMusic()?'🎵':'🔇'}</button>${S.left!=null&&!exam?`<span class="timer ${S.left<300?'low':''}" id="tm">${fmt(S.left)}</span>`:''}</span></div>
+    ${exam?examPanel():`<div class="pbar"><i style="width:${Math.round(100*doneN/base)}%"></i></div>`}</div>
     <div class="card">${body}<div class="row" style="margin-top:10px">${faBtn}${hintBtn}${exam?`<button class="plain sm" data-act="flag">${it.fl?'⚑ Flagged':'⚐ Flag'}</button>`:''}</div></div>
     <div class="bot"><div class="in">${bar}</div></div>`,false,keep===true);
+}
+/* exam status panel: time ring, clock, end time, answered / left / flagged, percent done */
+const hm=d=>d.toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
+const answeredN=()=>S.items.filter(i=>!i.re&&Q[i.id]&&(Q[i.id].k==='m'?i.pick!=null:Object.keys(i.ans||{}).length)).length;
+function examPanel(){
+  const n=S.items.filter(i=>!i.re).length,a=answeredN(),fl=S.items.filter(i=>i.fl).length,timed=S.left!=null;
+  const R=30,C=2*Math.PI*R,frac=timed&&S.total?Math.max(0,S.left)/S.total:1;
+  return `<div class="xp">
+   <div class="xring ${timed&&S.left<300?'low':''}"><svg viewBox="0 0 72 72"><circle cx="36" cy="36" r="${R}" class="bg"/><circle cx="36" cy="36" r="${R}" class="fg" id="xrg" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C*(1-frac)).toFixed(1)}"/></svg>
+    <div><b id="xtm">${fmt(timed?S.left:S.used)}</b><span>${timed?'left':'used'}</span></div></div>
+   <div class="xinfo">
+    <div class="xrow"><span>🕒 <b id="xclk">${hm(new Date())}</b></span>${timed?`<span>Ends <b id="xend">${hm(new Date(now()+S.left*1000))}</b></span>`:''}</div>
+    <div class="xbar"><i style="width:${pct(a,n)}%"></i></div>
+    <div class="xstats"><span><b>${pct(a,n)}%</b>progress</span><span><b>${a}</b>done</span><span><b>${n-a}</b>left</span><span><b>${fl}</b>flagged</span></div>
+   </div></div>`;
+}
+function examTick(){
+  if(!S||S.mode!=='exam')return;const t=$('#xtm');if(!t)return;
+  const timed=S.left!=null;t.textContent=fmt(timed?S.left:S.used);
+  const c=$('#xclk');if(c)c.textContent=hm(new Date());
+  if(timed){const e=$('#xend');if(e)e.textContent=hm(new Date(now()+S.left*1000));
+    const r=$('#xrg');if(r){const C=+r.getAttribute('stroke-dasharray');r.setAttribute('stroke-dashoffset',(C*(1-Math.max(0,S.left)/S.total)).toFixed(1))}
+    const w=$('.xring');if(w)w.classList.toggle('low',S.left<300)}
 }
 function nav(){
   const n=S.items.length;
