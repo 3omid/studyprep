@@ -215,3 +215,6 @@ details{border:1px solid var(--line);border-radius:14px;padding:8px 12px;margin-
 .sheet .chips .chip{width:auto;margin:0}
 
 .aik{display:flex;gap:8px;align-items:stretch}.aik .inp{flex:1;min-width:0}.aik button{flex:none;min-height:44px;padding:8px 14px}
+
+/* the line being read aloud */
+.vl-on{background:color-mix(in srgb,var(--ac) 16%,transparent);border-radius:10px;box-shadow:0 0 0 6px color-mix(in srgb,var(--ac) 16%,transparent);transition:background .2s}
