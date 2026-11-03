@@ -285,7 +285,7 @@ const pausedL=()=>st.get('paused',[]);
 function park(){if(S&&!S.done&&S.items&&S.items.length){clearInterval(timerId);S.id=S.id||S.start||now();const l=pausedL().filter(x=>x.id!==S.id);l.unshift(S);st.set('paused',l.slice(0,8))}S=null;st.del('sess')}
 function unpark(id){const l=pausedL(),x=l.find(y=>String(y.id)===String(id));if(!x)return;park();st.set('paused',pausedL().filter(y=>String(y.id)!==String(id)));S=x;st.set('sess',S);runTimer();renderQuiz()}
 const openSess=()=>[...(S&&!S.done?[S]:[]),...pausedL()];
-const sessLbl=x=>({practice:'Practice',exam:'Exam',review:'Smart review'}[x.mode]||x.mode)+(x.what?' · '+x.what:'');
+const sessLbl=x=>({practice:'Practice',exam:'Exam',review:'Smart review',game:'🎮 Game'}[x.mode]||x.mode)+(x.what?' · '+x.what:'');
 const lastAct=o=>st.set('lastact',Object.assign({t:now()},o));
 const ago=t=>{const d=Math.floor((now()-t)/DAY);return d<=0?'today':d===1?'yesterday':d+' days ago'};
 function runTimer(){
@@ -316,8 +316,9 @@ function checkItem(){
   if(q.k==='m'){it.ok=it.pick!=null&&it.ord[it.pick]===0;it.frac=it.ok?1:0}
   else{let c=0;q.items.forEach((x,i)=>{if(it.ans[i]===x[1])c++});it.frac=c/q.items.length;it.ok=c===q.items.length}
   it.ck=true;rec(it.id,it.ok);savP();
+  if(S.mode==='game')gameAnswer(it,q);
   if(it.ok){S.streak=(S.streak||0)+1;S.best=Math.max(S.best||0,S.streak);const big=S.streak%5===0;big?FX.streak():FX.ok();praise(true,big?S.streak:0);cue(big?'streak':'ok')}else{S.streak=0;FX.bad();praise(false);cue('bad')}
-  if(!it.ok&&(it.tries||0)<2&&S.mode!=='exam'){
+  if(!it.ok&&(it.tries||0)<2&&S.mode!=='exam'&&!(S.mode==='game'&&(S.g.type==='lightning'||S.g.h===0))){
     const rem=S.items.length-1-S.i,at=S.i+1+Math.min(3,rem);
     S.items.splice(at,0,{...mkItem(q),re:true,tries:(it.tries||0)+1});
   }
@@ -325,6 +326,7 @@ function checkItem(){
 }
 function finish(){
   if(!S||S.done)return;
+  if(S.mode==='game')return gameFinish();
   clearInterval(timerId);S.done=true;
   const real=S.items.filter(i=>!i.re);
   if(S.mode==='exam'){real.forEach(it=>{if(!it.ck){const q=Q[it.id];
@@ -377,7 +379,7 @@ function renderTabs(){
 /* the menu bar is on every page; bars at the bottom of a page sit just above it */
 function tabH(){const t=$('#tabs');if(t)document.documentElement.style.setProperty('--tabh',t.offsetHeight+'px')}
 window.addEventListener('resize',tabH);
-function go(t){ACT=null;RV.on=false;RV.tok++;vStop();tab=t;renderTabs();({home:renderHome,learn:renderLearn,exam:renderExams,courses:renderCourses,stats:renderStats,settings:renderSettings,setup:renderSetup})[t]()}
+function go(t){ACT=null;RV.on=false;RV.tok++;vStop();tab=t;renderTabs();({home:renderHome,learn:renderLearn,exam:renderExams,courses:renderCourses,stats:renderStats,settings:renderSettings,setup:renderSetup,game:renderGame})[t]()}
 /* ---- colour themes (themes.js, copied from Shift Priority) ---- */
 const hexN=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
 const mixC=(a,b,t)=>'#'+hexN(a).map((v,i)=>Math.round(v*(1-t)+hexN(b)[i]*t).toString(16).padStart(2,'0')).join('');
@@ -421,6 +423,7 @@ function renderHome(){
   <p class="sub">Active: ${esc(active)} · ${keys.length} sections · ${pool.length} questions<br>${mas} mastered${(S&&S.best)?'':''}</p></div></div>
   ${res?`<div class="card" style="border-color:var(--ac)"><div class="spread"><div><b>Continue where you stopped</b><div class="mut">${esc(S.mode)} · question ${Math.min(S.i+1,S.items.length)} of ${S.items.length}${S.left!=null?' · '+fmt(S.left)+' left':''}</div></div></div>
   <div class="row" style="margin-top:10px"><button data-act="resume">Resume</button><button class="plain" data-act="tab" data-v="exam">All sessions</button></div></div>`:np?`<div class="card" style="border-color:var(--ac)"><div class="spread"><div><b>${np} unfinished session${np>1?'s':''}</b><div class="mut">${esc(sessLbl(pausedL()[0]))}</div></div><button class="sm" data-act="tab" data-v="exam">Open</button></div></div>`:''}
+  ${pool.length?gameHomeCard():''}
   ${(!res&&st.get('rlast')&&PACKS.some(p=>p.study&&p.study[(st.get('rlast')||'').split(':')[1]]))?`<div class="card"><div class="spread"><div><b>Continue reading</b><div class="mut">Pick up your notes where you left off</div></div><button class="sm" data-act="rdresume">Open</button></div></div>`:''}
   ${pool.length?coachCard(pool,ids,weak,due,seen):''}
   ${bkDue()?`<div class="card"><div class="spread"><div><b>💾 Back up your progress</b><div class="mut">${st.get('bkat')?'Last backup '+ago(st.get('bkat')):'You have not saved a backup yet'} · keeps your progress safe</div></div><button class="sm" data-act="export">Save</button></div></div>`:''}
@@ -429,6 +432,7 @@ function renderHome(){
    <button class="tile plain" data-act="setup" data-v="practice"><span class="ic">🎓</span><span><b>Practice</b><span class="d">Answer, see why, retry what you miss</span></span></button>
    <button class="tile plain" data-act="tab" data-v="exam"><span class="ic">⏱️</span><span><b>Exam</b><span class="d">Mock exam, timed tests, saved sessions</span></span></button>
    <button class="tile plain" data-act="setup" data-v="review"><span class="ic">🎯</span><span><b>Smart review</b><span class="d">Weak and due questions first</span></span>${weak+due?`<span class="badge">${weak+due}</span>`:''}</button>
+   <button class="tile plain" data-act="tab" data-v="game"><span class="ic">🎮</span><span><b>Game</b><span class="d">Hearts, combos, levels and stars · یادگیری با بازی</span></span></button>
   </div>
   <div class="card"><h2>Progress</h2><div class="stats">
    <div class="stat"><b>${pct(seen,pool.length)}%</b><span>seen</span></div>
@@ -472,8 +476,8 @@ function coachCard(pool,ids,weak,due,seen){
 }
 
 /* ================= Backup ================= */
-const BK=['prog','hist','day','read','rpos','rvoice','rlast','sess','paused','last','set','cfg','userpacks','lastact'];
-function backupData(){const d={app:'StudyPrep',v:5,at:new Date().toISOString()};BK.forEach(k=>{const v=st.get(k,undefined);if(v!==undefined)d[k]=v});d.prog=P;d.set=SET;d.day=DAYS;if(S&&!S.done)d.sess=S;return d}
+const BK=['game','prog','hist','day','read','rpos','rvoice','rlast','sess','paused','last','set','cfg','userpacks','lastact'];
+function backupData(){const d={app:'StudyPrep',v:5,at:new Date().toISOString()};BK.forEach(k=>{const v=st.get(k,undefined);if(v!==undefined)d[k]=v});d.prog=P;d.set=SET;d.game=G;d.day=DAYS;if(S&&!S.done)d.sess=S;return d}
 function saveBackup(){
   const b=new Blob([JSON.stringify(backupData())],{type:'application/json'}),a=document.createElement('a');
   a.href=URL.createObjectURL(b);a.download='studyprep-backup-'+dkey()+'.json';document.body.appendChild(a);a.click();
@@ -492,17 +496,17 @@ function renderSetup(keep){
   const keys=activeKeys();
   if(!cfg.secs)cfg.secs=keys.slice();
   cfg.secs=cfg.secs.filter(k=>keys.includes(k));
-  if(!cfg.secs.length)cfg.secs=keys.slice();
-  const pool=qsIn(cfg.secs);
+  const pool=qsIn(cfg.secs),none=!cfg.secs.length;
   const seg=(items,cur,act)=>`<div class="seg" style="--n:${items.length}">${items.map(m=>`<button class="${String(cur)===String(m[0])?'on':''}" data-act="${act}" data-v="${m[0]}">${m[1]}</button>`).join('')}</div>`;
-  const modes=[['practice','Practice'],['exam','Exam'],['review','Review']];
+  const modes=[['practice','Practice'],['exam','Exam'],['review','Review'],['game','🎮 Game']];
   const ns=[[10,'10'],[20,'20'],[30,'30'],[60,'60'],[90,'90'],[9999,'All']];
   const tm=[['off','Off'],['auto','Auto'],['15','15m'],['30','30m'],['60','60m'],['90','90m']];
   const groups=PACKS.filter(packOn).map(p=>{
     const ks=Object.keys(p.sections).filter(s=>secOn(p,s));if(!ks.length)return '';
     const gk=ks.map(x=>secKey(p,x)),sel=gk.filter(k=>cfg.secs.includes(k)),nq=qsIn(sel).length,open=!!SETX[p.id];
     return `<div class="card sg"><div class="sghead"><div class="sgname">${p.cover?`<img src="${esc(p.cover)}" alt="">`:`<span class="sgic">📚</span>`}<div><b>${esc(p.short==='Book'?'Textbook':p.short)}</b><div class="mut">${sel.length} of ${ks.length} ${p.lab?'chapters':'sections'} · ${nq} questions</div></div></div></div>
-     <div class="seg" style="--n:3;margin-top:10px"><button data-act="cfgonly" data-v="${esc(p.id)}">Only this</button><button data-act="cfgall" data-v="${esc(p.id)}">${sel.length===ks.length?'None':'All'}</button><button data-act="cfgexp" data-v="${esc(p.id)}">${open?'Hide ▴':'Sections ▾'}</button></div>
+     <div class="seg seg4" style="--n:4;margin-top:10px"><button class="${sel.length===ks.length?'on':''}" data-act="cfgall" data-v="${esc(p.id)}">All</button><button class="${sel.length?'':'on'}" data-act="cfgnone" data-v="${esc(p.id)}">None</button><button data-act="cfgonly" data-v="${esc(p.id)}">Only this</button><button data-act="cfgexp" data-v="${esc(p.id)}">${open?'Hide ▴':'Pick ▾'}</button></div>
+     ${open&&!sel.length?`<p class="mut" style="margin:8px 2px 0">Tick the ${p.lab?'chapters':'sections'} you want.</p>`:''}
      ${open?`<div class="slist">${ks.map(s=>{const k=secKey(p,s),on=cfg.secs.includes(k),n=qsIn([k]).length;
        return `<button class="srow ${on?'on':''}" data-act="cfgsec" data-v="${esc(k)}" aria-pressed="${on}"><span class="ck">${on?'✓':''}</span><span class="no">${esc(s)}</span><span class="tt">${esc(p.sections[s].en)}</span><span class="nq">${n}</span></button>`}).join('')}</div>`:''}</div>`}).join('');
   page(`<div class="spread"><h1>Start a session</h1><button class="plain sm" data-act="tab" data-v="exam">Back</button></div>
@@ -510,8 +514,8 @@ function renderSetup(keep){
    <div class="lbl">Questions</div>${seg(ns,cfg.n,'cfgn')}
    <div class="lbl">Timer</div>${seg(tm,cfg.timer,'cfgtimer')}
    <p class="mut" style="margin:10px 0 0">Auto = 1 min per question, 3 min per scenario.${cfg.mode==='exam'?' Exam pages show English only unless you change that in Settings.':''}</p></div>
-  <div class="lbl">Sections</div>${groups}
-  <div class="bot"><div class="in"><button data-act="begin" ${pool.length?'':'disabled'}>Start · ${cfg.n===9999?pool.length:Math.min(cfg.n,pool.length)} questions</button></div></div>`,false,keep===true);
+  <div class="lbl">Sections · ${cfg.secs.length} selected</div><div class="seg" style="--n:2;margin-bottom:12px"><button class="${cfg.secs.length===keys.length?'on':''}" data-act="cfgevery">✓ Select all</button><button class="${none?'on':''}" data-act="cfgclear">✕ Select none</button></div>${groups}
+  <div class="bot"><div class="in"><button data-act="begin" ${pool.length?'':'disabled'}>${none?'Pick at least one section':cfg.mode==='game'?'▶ Play · '+Math.min(cfg.n,pool.length)+' questions':'Start · '+(cfg.n===9999?pool.length:Math.min(cfg.n,pool.length))+' questions'}</button></div></div>`,false,keep===true);
 }
 
 /* ================= Quiz ================= */
@@ -645,7 +649,8 @@ function renderQuiz(keep){
   if(S.i>=S.items.length)S.i=S.items.length-1;
   const it=cur(),q=Q[it.id];
   if(!q){S.items.splice(S.i,1);if(!S.items.length){finish();return}return renderQuiz()}
-  const exam=S.mode==='exam',n=S.items.length;
+  const exam=S.mode==='exam',game=S.mode==='game',n=S.items.length;
+  if(!it.ck&&!it.t0)it.t0=now();
   const base=S.items.filter(x=>!x.re).length,pos=S.items.slice(0,S.i+1).filter(x=>!x.re).length,doneN=S.items.filter(x=>!x.re&&x.ck).length;
   ACT='quiz';
   if(!keep&&SET.auto&&!it.ck){const tx=q.k==='m'?q.q:q.title;setTimeout(()=>{if(ACT==='quiz'&&cur()===it)speak(tx,{quiet:true})},450)}
@@ -660,7 +665,7 @@ function renderQuiz(keep){
     ${sf&&q.qf?`<div class="fabox">${FA(q.qf)}${it.hint&&q.hf&&!it.ck?`<hr style="border:0;border-top:1px dashed var(--line)"><b>💡 ${FA(q.hf)}</b>`:''}</div>`:''}
     ${it.ck?'':`<p class="hint">Tap the circle to choose · tap any word to see its meaning</p>`}
     <div class="opts">${it.ord.map((oi,d)=>{
-      let c='opt2';if(it.ck){if(oi===0)c+=' right';else if(it.pick===d)c+=' wrong'}else if(it.pick===d)c+=' sel';
+      let c='opt2';if(it.ck){if(oi===0)c+=' right';else if(it.pick===d)c+=' wrong'}else if(it.pick===d)c+=' sel';else if(it.hide&&it.hide.includes(d))c+=' gone';
       return `<div class="${c}"><button class="rc" data-act="pick" data-v="${d}" aria-label="Choose option ${'ABCDEFGH'[d]}" aria-pressed="${it.pick===d}">${'ABCDEFGH'[d]}</button><div class="t">${W(q.o[oi])}${sf&&q.of[oi]?`<div class="fa">${FA(q.of[oi])}</div>`:''}</div></div>`}).join('')}</div>
     ${it.ck?fbBlock(it,q):''}`;
   }else{
@@ -680,12 +685,13 @@ function renderQuiz(keep){
   const last=S.i===n-1;
   let bar;
   if(exam)bar=`<button class="plain" data-act="prev" ${S.i===0?'disabled':''}>←</button><button class="plain" data-act="nav">${S.i+1}/${n}</button>${last?`<button data-act="finishask">Finish</button>`:`<button data-act="next">Next →</button>`}`;
+  else if(game)bar=!it.ck?`<button data-act="check" ${ready?'':'disabled'}>Check</button>`:gOut()?`<button data-act="gover">💀 Out of hearts</button>`:`<button data-act="${last?'finish':'next'}">${last?'🏁 Finish':'Next →'}</button>`;
   else bar=!it.ck?`<button data-act="check" ${ready?'':'disabled'}>Check</button>`:`<button data-act="${last?'finishask':'next'}">${last?'Finish':'Next →'}</button>`;
   page(`<div class="qhead"><div class="spread"><button class="plain sm" data-act="exit">✕ Menu</button>
-    <span class="mut">${exam?'Question '+(S.i+1)+' of '+n:(S.mode==='review'?'Review':'Practice')+' · '+(it.re?'↻ retry':pos+' / '+base)}${(S.streak||0)>=2&&!exam?` · <span class="streak">🔥 ${S.streak}</span>`:''}</span>
+    <span class="mut">${exam?'Question '+(S.i+1)+' of '+n:game?GT[S.g.type][0]+' '+(it.re?'↻ retry':S.g.type==='survival'||S.g.type==='lightning'?'#'+pos:pos+' / '+base):(S.mode==='review'?'Review':'Practice')+' · '+(it.re?'↻ retry':pos+' / '+base)}${(S.streak||0)>=2&&!exam&&!game?` · <span class="streak">🔥 ${S.streak}</span>`:''}</span>
     <span class="row" style="gap:6px;flex-wrap:nowrap"><button class="plain sm" data-act="mus" aria-label="Music" title="Music">${FX.isMusic()?'🎵':'🔇'}</button>${S.left!=null&&!exam?`<span class="timer ${S.left<300?'low':''}" id="tm">${fmt(S.left)}</span>`:''}</span></div>
-    ${exam?examPanel():`<div class="pbar"><i style="width:${Math.round(100*doneN/base)}%"></i></div>`}</div>
-    <div class="card">${body}<div class="row" style="margin-top:10px">${faBtn}${hintBtn}${exam?`<button class="plain sm" data-act="flag">${it.fl?'⚑ Flagged':'⚐ Flag'}</button>`:''}</div></div>
+    ${exam?examPanel():game?gameHead()+(S.g.type==='quick'||S.g.type==='daily'||S.g.type==='level'?`<div class="pbar"><i style="width:${Math.round(100*doneN/base)}%"></i></div>`:''):`<div class="pbar"><i style="width:${Math.round(100*doneN/base)}%"></i></div>`}</div>
+    <div class="card">${body}${game?gamePowers(it,q):''}<div class="row" style="margin-top:10px">${faBtn}${hintBtn}${exam?`<button class="plain sm" data-act="flag">${it.fl?'⚑ Flagged':'⚐ Flag'}</button>`:''}</div></div>
     <div class="bot"><div class="in">${bar}</div></div>`,false,keep===true);
 }
 /* exam status panel: time ring, clock, end time, answered / left / flagged, percent done */
@@ -763,10 +769,10 @@ function renderResult(){
   S._wrong=wrong;
 }
 function renderAnswers(){
-  const L=st.get('last',S);
+  const L=S&&S.done?S:st.get('last',S);
   page(`<div class="spread"><h1>Answers</h1><button class="plain sm" data-act="tab" data-v="home">Home</button></div>
   ${L.items.filter(i=>!i.re).map((it,n)=>{const q=Q[it.id];if(!q)return'';
-    const st_=!it.ck?'– skipped':it.ok?'✔':'✘';
+    const st_=!it.ck||it.sk?'– skipped':it.ok?'✔':'✘';
     const mine=q.k==='m'?(it.pick!=null?q.o[it.ord[it.pick]]:'No answer'):'';
     return `<details><summary>${n+1}. ${st_} ${esc((q.k==='m'?q.q:q.title).slice(0,90))}</summary>
     <p>${q.k==='m'?`<b>Correct:</b> ${esc(q.o[0])}<br>${it.ok?'':`<b>You chose:</b> ${esc(mine)}`}`:q.items.map((x,i)=>`${esc(x[0])} → <b>${esc(q.zones[x[1]])}</b>${it.ans[i]===x[1]?' ✔':' ✘'}`).join('<br>')}</p>
@@ -992,6 +998,137 @@ function renderSettings(){
   </div><p class="mut">StudyPrep v5 · scores are practice estimates.</p>`);
 }
 
+/* ================= Game mode ================= */
+/* Learning as a game: hearts, combo multiplier, points, XP and levels, coins, power-ups, a daily challenge,
+   a chapter map with stars, a daily streak and achievements. Every answer still counts toward normal progress. */
+let G=Object.assign({xp:0,coins:30,streak:0,day:'',best:0,games:0,ach:{},stars:{},unl:{},daily:'',earned:0,lt:0,sv:0,perfect:0},st.get('game',{}));
+const saveG=()=>st.set('game',G);
+const lvlOf=xp=>{let L=1,need=100;while(xp>=need){xp-=need;L++;need=100+50*(L-1)}return{L,cur:xp,need}};
+const RANKS=[[1,'🐣','Trainee','کارآموز'],[3,'🎧','Help Desk','پشتیبان'],[5,'🔍','Junior Analyst','تحلیلگر تازه‌کار'],[8,'🛡️','SOC Analyst','تحلیلگر SOC'],[12,'🕵️','Pentester','تست نفوذگر'],[16,'⚙️','Security Engineer','مهندس امنیت'],[20,'🏛️','Security Architect','معمار امنیت'],[25,'👑','CISO','مدیر ارشد امنیت']];
+const rankOf=L=>RANKS.filter(r=>L>=r[0]).pop();
+const GT={quick:['🎮','Quick play','بازی سریع'],survival:['❤️','Survival','بقا'],lightning:['⚡','Lightning','رعد و برق'],daily:['📅','Daily challenge','چالش روزانه'],level:['🗺️','Level','مرحله']};
+const multOf=c=>c>=10?4:c>=6?3:c>=3?2:1;
+const yday=()=>{const d=new Date(now()-DAY);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const totalStars=()=>Object.values(G.stars).reduce((a,b)=>a+b,0);
+const ACH=[
+  ['first','🎉','First game','اولین بازی',()=>G.games>=1],
+  ['combo5','🔥','Combo ×5','۵ تا پشت سر هم',()=>G.best>=5],
+  ['combo10','💥','Combo ×10','۱۰ تا پشت سر هم',()=>G.best>=10],
+  ['combo20','🌋','Combo ×20','۲۰ تا پشت سر هم',()=>G.best>=20],
+  ['perfect','💎','Perfect game','بازی بی‌اشتباه',()=>G.perfect>=1],
+  ['daily','📅','Daily challenge','چالش روزانه',()=>!!G.daily],
+  ['streak3','📆','3-day streak','۳ روز پشت سر هم',()=>G.streak>=3],
+  ['streak7','🏅','7-day streak','۷ روز پشت سر هم',()=>G.streak>=7],
+  ['lvl5','⭐','Level 5','سطح ۵',()=>lvlOf(G.xp).L>=5],
+  ['lvl10','🌟','Level 10','سطح ۱۰',()=>lvlOf(G.xp).L>=10],
+  ['star3','👑','3 stars on a level','۳ ستاره در یک مرحله',()=>Object.values(G.stars).some(x=>x>=3)],
+  ['stars20','🗺️','20 stars','۲۰ ستاره',()=>totalStars()>=20],
+  ['light15','⚡','15 in Lightning','۱۵ درست در رعد و برق',()=>G.lt>=15],
+  ['surv25','🛡️','25 in Survival','۲۵ درست در بقا',()=>G.sv>=25],
+  ['rich','💰','500 coins earned','۵۰۰ سکه',()=>G.earned>=500]
+];
+/* the same 10 questions for everyone on the same day */
+function seeded(a,seed){let h=0;for(const c of seed)h=Math.imul(h^c.charCodeAt(0),2654435761);const r=()=>{h+=0x6D2B79F5;let t=h;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296};
+  a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+const gameKeys=()=>cfg.secs&&cfg.secs.length?cfg.secs.filter(k=>activeKeys().includes(k)):activeKeys();
+function gameStart(type,o){
+  o=o||{};const keys=o.secs||(type==='daily'?activeKeys():gameKeys());const pool=qsIn(keys);
+  let chosen,hearts=3,total=null;
+  if(type==='survival')chosen=shuffle(smart(pool,200));
+  else if(type==='lightning'){chosen=shuffle(pool.filter(q=>q.k==='m')).slice(0,150);hearts=null;total=90}
+  else if(type==='daily')chosen=seeded(pool,dkey()).slice(0,10);
+  else chosen=shuffle(smart(pool,o.n||10));
+  if(!chosen.length){toast('No questions in the selected sections.');return}
+  const items=chosen.map(mkItem);
+  const s={mode:'game',items,i:0,total,left:total,used:0,start:now(),done:false,
+    g:{type,h:hearts,pts:0,combo:0,best:0,right:0,wrong:0,skip:0,rev:0,key:o.key||null,secs:o.secs||null,n:o.n||10}};
+  s.id=now();s.what=GT[type][1]+(o.key?' · '+(()=>{const[pid,sec]=o.key.split(':');const p=PACKS.find(x=>x.id===pid);return p?p.short+' · '+secTitle(p,sec):''})():'');
+  park();S=s;st.set('sess',S);runTimer();renderQuiz();lastAct({mode:'Game',what:' · '+s.what});
+}
+/* points after each answer: 10 (scenario 30) × combo multiplier, +5 when fast, half for a retry */
+function gameAnswer(it,q){
+  const g=S.g;
+  if(it.ok){g.combo++;g.best=Math.max(g.best,g.combo);g.right++;
+    const m=multOf(g.combo),fast=(now()-(it.t0||now()))/1000<(q.k==='p'?45:15);
+    let p=(q.k==='p'?30:10)*m+(fast?5:0);if(it.re)p=Math.ceil(p/2);g.pts+=p;
+    if(g.type==='lightning'&&S.left!=null)S.left+=3;
+    gpop('+'+p+(m>1?' ×'+m:'')+(fast?' ⚡':''),'good');
+    if([3,6,10].includes(g.combo))setTimeout(()=>gpop('Combo ×'+m+'!','combo'),500);
+  }else{const lost=g.combo>=3;g.combo=0;g.wrong++;if(g.h!=null){g.h=Math.max(0,g.h-1);gpop(g.h?'💔 −1':'💀','bad')}else gpop(lost?'Combo lost':'✘','bad')}
+}
+function gpop(t,k){const d=document.createElement('div');d.className='gpop '+(k||'');d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),1500)}
+const gOut=()=>S&&S.mode==='game'&&S.g.h===0;
+const revCost=()=>30*(S.g.rev+1);
+function gameHead(){
+  const g=S.g,m=multOf(g.combo);
+  const hearts=g.h==null?'':`<span class="ghearts" aria-label="${g.h} hearts">${'❤️'.repeat(g.h)}${'🤍'.repeat(Math.max(0,3-g.h))}</span>`;
+  return `<div class="ghud">${hearts}<span class="gch ${m>1?'hot':''}">${m>1?'🔥 ×'+m:'×1'}</span><span class="gch">⭐ <b>${g.pts}</b></span><span class="gch">🪙 <b>${G.coins}</b></span></div>`;
+}
+function gamePowers(it,q){
+  if(it.ck)return '';const c=G.coins,g=S.g;
+  return `<div class="gpw">${q.k==='m'&&!it.hide?`<button class="plain sm" data-act="g5050" ${c<15?'disabled':''}>✂️ 50/50 · 15🪙</button>`:''}<button class="plain sm" data-act="gskip" ${c<10?'disabled':''}>⏭ Skip · 10🪙</button>${g.h!=null&&g.h<5?`<button class="plain sm" data-act="gheart" ${c<25?'disabled':''}>❤️ +1 · 25🪙</button>`:''}</div>`;
+}
+function gameFinish(){
+  clearInterval(timerId);S.done=true;const g=S.g,lv0=lvlOf(G.xp).L,had=Object.assign({},G.ach);
+  const ans=g.right+g.wrong,acc=ans?g.right/ans:0,perfect=g.wrong===0&&g.right>=5&&g.type!=='lightning';
+  let xp=g.pts,coins=g.right+(perfect?10:0),bonus=[];
+  if(perfect){G.perfect++;bonus.push('💎 Perfect +10🪙')}
+  if(g.type==='daily'&&G.daily!==dkey()){xp*=2;coins+=20;G.daily=dkey();bonus.push('📅 Daily ×2 XP · +20🪙')}
+  let stars=null;
+  if(g.type==='level'&&g.key){stars=g.h>0?(acc>=1?3:acc>=.8?2:acc>=.6?1:0):0;const was=G.stars[g.key]||0;if(stars>was){coins+=(stars-was)*5;G.stars[g.key]=stars;bonus.push('⭐ New stars +'+(stars-was)*5+'🪙')}}
+  if(G.day!==dkey()){G.streak=G.day===yday()?G.streak+1:1;G.day=dkey();const b=5*Math.min(G.streak,7);coins+=b;bonus.push('🔥 Day '+G.streak+' streak +'+b+'🪙')}
+  if(g.type==='lightning')G.lt=Math.max(G.lt,g.right);if(g.type==='survival')G.sv=Math.max(G.sv,g.right);
+  const xp0=G.xp;G.xp+=xp;G.coins+=coins;G.earned+=coins;G.games++;G.best=Math.max(G.best,g.best);
+  ACH.forEach(a=>{if(!G.ach[a[0]]&&a[4]())G.ach[a[0]]=now()});
+  saveG();
+  S.gres={xp,coins,bonus,stars,acc,ans,perfect,xp0,lvUp:lvlOf(G.xp).L>lv0,newA:ACH.filter(a=>G.ach[a[0]]&&!had[a[0]])};
+  S._wrong=S.items.filter(i=>!i.re&&i.ck&&i.ok===false).map(i=>i.id);
+  st.del('sess');renderGameResult();FX.done(acc>=.6);if(acc>=.6||S.gres.lvUp)confetti();
+}
+function renderGameResult(){
+  const g=S.g,r=S.gres,t=GT[g.type],a=lvlOf(r.xp0),b=lvlOf(G.xp),rk=rankOf(b.L);
+  const head=g.type==='lightning'?'⚡ Time!':g.h===0?'💀 Game over':r.acc>=.8?'🏆 Great game!':'👍 Well played';
+  const fa=g.type==='lightning'?'وقت تموم شد!':g.h===0?'قلب‌ها تموم شد — دوباره امتحان کن!':r.acc>=.8?'عالی بازی کردی!':'خوب بود، ادامه بده!';
+  page(`<div class="gres"><div class="gt1">${head}</div><div class="fa" style="text-align:center">${fa}</div>
+   ${r.stars!=null?`<div class="gstars">${[1,2,3].map(i=>`<span class="${i<=r.stars?'on':''}" style="--d:${i*.25}s">★</span>`).join('')}</div>`:''}
+   <div class="gbig">${g.pts}<span>points</span></div></div>
+  <div class="card"><div class="stats"><div class="stat"><b>${g.right}/${r.ans}</b><span>correct</span></div><div class="stat"><b>${Math.round(r.acc*100)}%</b><span>accuracy</span></div><div class="stat"><b>🔥${g.best}</b><span>best combo</span></div></div></div>
+  <div class="card"><h2>Rewards · جایزه‌ها</h2>
+   <div class="row" style="gap:8px"><span class="gch lg">✨ +${r.xp} XP</span><span class="gch lg">🪙 +${r.coins}</span></div>
+   ${r.bonus.length?`<div class="mut" style="margin-top:8px">${r.bonus.map(esc).join('<br>')}</div>`:''}
+   ${r.lvUp?`<div class="glvup">⬆️ Level up! Level ${b.L} · ${rk[1]} ${esc(rk[2])} <span class="fa">${esc(rk[3])}</span></div>`:''}
+   <div class="spread" style="margin-top:12px"><b>Level ${b.L}</b><span class="mut">${b.cur} / ${b.need} XP</span></div>
+   <div class="gxp"><i id="gxpb" style="width:${r.lvUp?0:pct(a.cur,a.need)}%"></i></div></div>
+  ${r.newA.length?`<div class="card"><h2>🏅 New achievements</h2><div class="gach">${r.newA.map(x=>`<div class="ga on new"><span>${x[1]}</span><b>${esc(x[2])}</b><small class="fa">${esc(x[3])}</small></div>`).join('')}</div></div>`:''}
+  <div class="row"><button data-act="gagain">▶ Play again</button>${S._wrong.length?`<button class="plain" data-act="drillwrong">Practise my ${S._wrong.length} mistake${S._wrong.length>1?'s':''}</button>`:''}<button class="plain" data-act="answers">Review answers</button><button class="plain" data-act="tab" data-v="game">🎮 Game hub</button></div>`);
+  setTimeout(()=>{const x=$('#gxpb');if(x)x.style.width=pct(b.cur,b.need)+'%'},300);
+}
+function renderGame(){
+  const v=lvlOf(G.xp),rk=rankOf(v.L),gk=gameKeys(),nq=qsIn(gk).length,dd=G.daily===dkey();
+  const map=PACKS.filter(packOn).map(p=>{const ks=Object.keys(p.sections).filter(s=>secOn(p,s)&&qsIn([secKey(p,s)]).length);if(!ks.length)return '';
+    const nodes=ks.map((s,i)=>{const k=secKey(p,s),stv=G.stars[k]||0,open=i<3||G.unl[k]||(G.stars[secKey(p,ks[i-1])]||0)>0||stv>0;
+      return `<button class="gnode ${open?'':'lock'} ${stv===3?'gold':''}" data-act="${open?'glevel':'gunlock'}" data-v="${esc(k)}" title="${esc(p.sections[s].en)}"><b>${open?esc(s):'🔒'}</b><span>${[1,2,3].map(j=>j<=stv?'★':'☆').join('')}</span></button>`}).join('');
+    const got=ks.reduce((a,s)=>a+(G.stars[secKey(p,s)]||0),0);
+    return `<div class="card"><div class="spread"><h2 style="margin:0">🗺️ ${esc(p.short==='Book'?'Textbook':p.short)}</h2><span class="mut">★ ${got} / ${ks.length*3}</span></div><p class="mut" style="margin:4px 0 10px">10 questions per level · 60% = ★ · 80% = ★★ · 100% = ★★★ · a star opens the next level</p><div class="gmap">${nodes}</div></div>`}).join('');
+  page(`<div class="ghero"><div class="ring" style="--p:${pct(v.cur,v.need)}"><i>${v.L}</i></div><div style="min-width:0"><div class="mut">Level ${v.L}</div><h1 style="margin:0">${rk[1]} ${esc(rk[2])}</h1><div class="fa">${esc(rk[3])}</div>
+   <div class="gxp" style="margin-top:6px"><i style="width:${pct(v.cur,v.need)}%"></i></div><div class="mut" style="font-size:.8rem">${v.cur} / ${v.need} XP to level ${v.L+1}</div></div></div>
+  <div class="stats" style="margin-bottom:12px"><div class="stat"><b>🪙 ${G.coins}</b><span>coins</span></div><div class="stat"><b>🔥 ${G.streak}</b><span>day streak${G.day===dkey()?' ✓':''}</span></div><div class="stat"><b>×${G.best}</b><span>best combo</span></div></div>
+  <button class="tile plain gdaily ${dd?'done':''}" data-act="gplay" data-v="daily"><span class="ic">📅</span><span><b>Daily challenge${dd?' ✓':''}</b><span class="d">${dd?'Done for today — play again for fun':'10 questions · double XP · +20🪙 · چالش امروز'}</span></span></button>
+  <div class="tiles">
+   <button class="tile plain" data-act="gplay" data-v="quick"><span class="ic">🎮</span><span><b>Quick play</b><span class="d">10 questions · 3 ❤️ · بازی سریع</span></span></button>
+   <button class="tile plain" data-act="gplay" data-v="survival"><span class="ic">❤️</span><span><b>Survival</b><span class="d">Go until your hearts run out · best ${G.sv}</span></span></button>
+   <button class="tile plain" data-act="gplay" data-v="lightning"><span class="ic">⚡</span><span><b>Lightning</b><span class="d">90 seconds · +3 s per right answer · best ${G.lt}</span></span></button>
+  </div>
+  <div class="card"><div class="spread"><div><b>Questions from</b><div class="mut">${gk.length} section${gk.length===1?'':'s'} · ${nq} questions</div></div><button class="plain sm" style="white-space:nowrap;flex:none" data-act="setup" data-v="game">Choose sections</button></div></div>
+  <div class="card"><h2>How to score · امتیاز</h2><p class="mut" style="margin:0">✅ 10 points (scenario 30) · 🔥 3 in a row ×2, 6 ×3, 10 ×4 · ⚡ answer fast +5 · 💔 a wrong answer costs a heart · 🪙 coins buy 50/50, skip, extra hearts and locked levels · you always see the explanation, so every game teaches.</p></div>
+  ${map}
+  <div class="card"><h2>🏅 Achievements · ${Object.keys(G.ach).length}/${ACH.length}</h2><div class="gach">${ACH.map(x=>`<div class="ga ${G.ach[x[0]]?'on':''}"><span>${x[1]}</span><b>${esc(x[2])}</b><small class="fa">${esc(x[3])}</small></div>`).join('')}</div></div>`);
+}
+function gameHomeCard(){
+  const v=lvlOf(G.xp),rk=rankOf(v.L);
+  return `<button class="gcard" data-act="tab" data-v="game"><span class="gcl"><span class="glv">${v.L}</span><span><b>🎮 Game · ${rk[1]} ${esc(rk[2])}</b><span class="d">🪙 ${G.coins} · 🔥 ${G.streak} day${G.streak===1?'':'s'}${G.daily===dkey()?'':' · 📅 daily challenge waiting'}</span><span class="gxp sm"><i style="width:${pct(v.cur,v.need)}%"></i></span></span></span><span class="gplay">Play ▶</span></button>`;
+}
+
 /* ================= events ================= */
 document.addEventListener('click',e=>{
   FX.unlock();vUnlock();
@@ -1010,17 +1147,33 @@ document.addEventListener('click',e=>{
     case 'cfgtimer':cfg.timer=v;st.set('cfg',cfg);renderSetup(true);break;
 
     case 'cfgexp':SETX[v]=!SETX[v];renderSetup(true);break;
-    case 'cfgonly':case 'cfgall':{const p=PACKS.find(x=>x.id===v);const gk=Object.keys(p.sections).filter(x=>secOn(p,x)).map(x=>secKey(p,x));
-      if(a==='cfgonly')cfg.secs=gk;else if(gk.every(k=>cfg.secs.includes(k))){const r=cfg.secs.filter(k=>!gk.includes(k));if(!r.length){toast('Keep at least one section');break}cfg.secs=r}else cfg.secs=[...new Set([...cfg.secs,...gk])];
+    /* All = every section of this course, None = clear it (and open the list to tick by hand), Only this = just this course */
+    case 'cfgonly':case 'cfgall':case 'cfgnone':{const p=PACKS.find(x=>x.id===v);const gk=Object.keys(p.sections).filter(x=>secOn(p,x)).map(x=>secKey(p,x));
+      if(a==='cfgonly')cfg.secs=gk;else if(a==='cfgall')cfg.secs=[...new Set([...cfg.secs,...gk])];else{cfg.secs=cfg.secs.filter(k=>!gk.includes(k));SETX[v]=true}
       st.set('cfg',cfg);renderSetup(true);break}
-    case 'cfgsec':{const i=cfg.secs.indexOf(v);i>=0?cfg.secs.splice(i,1):cfg.secs.push(v);if(!cfg.secs.length)cfg.secs=[v];st.set('cfg',cfg);renderSetup(true);break}
-    case 'begin':st.set('cfg',cfg);startSession(cfg);break;
+    case 'cfgevery':cfg.secs=activeKeys();st.set('cfg',cfg);renderSetup(true);break;
+    case 'cfgclear':cfg.secs=[];PACKS.filter(packOn).forEach(p=>SETX[p.id]=true);st.set('cfg',cfg);renderSetup(true);break;
+    case 'cfgsec':{const i=cfg.secs.indexOf(v);i>=0?cfg.secs.splice(i,1):cfg.secs.push(v);st.set('cfg',cfg);renderSetup(true);break}
+    case 'gplay':gameStart(v);break;
+    case 'glevel':gameStart('level',{secs:[v],key:v,n:10});break;
+    case 'gunlock':modal(`<h3>🔒 Locked level</h3><p>Get at least one ★ on the level before it, or unlock it now for <b>30🪙</b> (you have ${G.coins}).</p><button data-act="gbuy" data-v="${esc(v)}" ${G.coins<30?'disabled':''}>Unlock · 30🪙</button><button class="plain" data-act="close">Not now</button>`);break;
+    case 'gbuy':if(G.coins>=30){G.coins-=30;G.unl[v]=1;saveG();closeModal();FX.streak();renderGame(true)}break;
+    case 'gagain':{const g=S.g;gameStart(g.type,{secs:g.secs,key:g.key,n:g.n});break}
+    case 'g5050':{const it=cur(),q=Q[it.id];if(it.ck||it.hide||G.coins<15)break;G.coins-=15;saveG();
+      it.pick=null;it.hide=shuffle(it.ord.map((oi,d)=>oi===0?-1:d).filter(d=>d>=0)).slice(0,Math.max(0,q.o.length-2));st.set('sess',S);FX.tap();renderQuiz(true);break}
+    case 'gheart':if(G.coins>=25&&S.g.h!=null&&S.g.h<5){G.coins-=25;S.g.h++;saveG();st.set('sess',S);gpop('❤️ +1','good');renderQuiz(true)}break;
+    case 'gskip':{const it=cur();if(it.ck||G.coins<10)break;G.coins-=10;saveG();it.ck=true;it.sk=true;it.ok=null;it.frac=0;S.g.skip++;st.set('sess',S);
+      if(S.i>=S.items.length-1)finish();else{S.i++;renderQuiz()}break}
+    case 'gover':modal(`<h3>💀 Out of hearts</h3><p>Keep your ${S.g.pts} points and continue with one heart for <b>${revCost()}🪙</b> (you have ${G.coins}), or end the game.</p><button data-act="grevive" ${G.coins<revCost()?'disabled':''}>❤️ Revive · ${revCost()}🪙</button><button class="plain" data-act="finish">End game · see my score</button>`);break;
+    case 'grevive':if(G.coins>=revCost()){G.coins-=revCost();S.g.rev++;S.g.h=1;saveG();closeModal();gpop('❤️ Revived!','good');
+      if(S.i<S.items.length-1){S.i++;st.set('sess',S);renderQuiz()}else finish()}break;
+    case 'begin':if(!cfg.secs||!cfg.secs.length){toast('Pick at least one section');break}st.set('cfg',cfg);if(cfg.mode==='game'){gameStart('quick',{secs:cfg.secs,n:cfg.n===9999?50:cfg.n});break}startSession(cfg);break;
     case 'resume':if(v&&(!S||String(S.id||S.start)!==v)){unpark(v);break}runTimer();renderQuiz();break;
     case 'drop':{if(!confirm('Delete this unfinished session?'))break;if(S&&String(S.id||S.start)===v){S=null;st.del('sess');clearInterval(timerId)}else st.set('paused',pausedL().filter(y=>String(y.id)!==v));go(tab==='home'?'home':'exam');break}
     case 'lastres':{const L=st.get('last',null);if(L&&L.result){S=L;renderResult()}break}
     case 'discard':closeModal();S=null;st.del('sess');clearInterval(timerId);go('exam');break;
     case 'zpick':{const it=cur();if(it.ck)break;const [ii,zi]=v.split(':').map(Number);if(it.ans[ii]===zi)delete it.ans[ii];else it.ans[ii]=zi;st.set('sess',S);FX.tap();renderQuiz(true);break}
-    case 'pick':{const it=cur();if(it.ck)break;it.pick=+v;st.set('sess',S);FX.tap();renderQuiz(true);break}
+    case 'pick':{const it=cur();if(it.ck||(it.hide&&it.hide.includes(+v)))break;it.pick=+v;st.set('sess',S);FX.tap();renderQuiz(true);break}
     case 'check':checkItem();renderQuiz(true);break;
     case 'next':if(S.i<S.items.length-1)S.i++;st.set('sess',S);renderQuiz();break;
     case 'prev':if(S.i>0)S.i--;renderQuiz();break;
