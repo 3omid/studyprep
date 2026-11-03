@@ -253,3 +253,24 @@ details{border:1px solid var(--line);border-radius:14px;padding:8px 12px;margin-
 .srow .no{font-weight:700;font-size:.8rem;color:var(--ac);background:color-mix(in srgb,var(--ac) 12%,transparent);border-radius:8px;height:1.9rem;display:grid;place-items:center;white-space:nowrap}
 .srow .tt{line-height:1.25;min-width:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .srow .nq{font:600 .82rem var(--mono);color:var(--mut);background:var(--sf);border:1px solid var(--line);border-radius:99px;padding:2px 8px;min-width:2.4rem;text-align:center}
+
+/* ---- exam status panel in the question header ---- */
+.xp{display:flex;align-items:center;gap:12px;background:var(--sf);border:1px solid var(--line);border-radius:18px;padding:8px 12px;margin-top:4px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.xring{position:relative;width:74px;height:74px;flex:none}
+.xring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.xring circle{fill:none;stroke-width:6}
+.xring .bg{stroke:var(--sf2)}
+.xring .fg{stroke:var(--ac);stroke-linecap:round;transition:stroke-dashoffset 1s linear}
+.xring.low .fg{stroke:var(--bad)}
+.xring>div{position:absolute;inset:0;display:grid;place-content:center;text-align:center;line-height:1.05}
+.xring b{font:700 .78rem var(--mono);letter-spacing:-.02em}
+.xring.low b{color:var(--bad)}
+.xring span{font-size:.6rem;color:var(--mut);text-transform:uppercase;letter-spacing:.05em}
+.xinfo{flex:1;min-width:0;display:grid;gap:7px}
+.xrow{display:flex;justify-content:space-between;gap:8px;font-size:.85rem;color:var(--mut);white-space:nowrap}
+.xrow b{color:var(--ink);font-family:var(--mono)}
+.xbar{height:9px;background:var(--sf2);border-radius:99px;overflow:hidden}
+.xbar i{display:block;height:100%;background:var(--grad);border-radius:99px;transition:width .3s}
+.xstats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;font-size:.7rem;color:var(--mut);text-align:center}
+.xstats span{background:var(--sf2);border-radius:8px;padding:3px 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.xstats b{display:block;font:700 .9rem var(--mono);color:var(--ink)}
