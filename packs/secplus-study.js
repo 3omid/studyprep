@@ -260,6 +260,13 @@
   ]);
 
   S('7','Data protection & resilience','حفاظت از داده و تاب‌آوری',[
+    H('Module overview','نگاه کلی به این بخش'),
+    P('Protecting data is not only about keeping it secret. It must also stay available, accurate and recoverable when it matters. This module has two connected goals: data protection (classify data, then protect it with encryption, hashing, masking, tokenization and segmentation) and resilience (backups, redundancy, high availability and tested recovery plans).',
+      'حفاظت از داده فقط مخفی نگه داشتنش نیست. داده باید وقتی لازمش داری در دسترس، درست و قابل برگرداندن باشد. این بخش دو هدف به هم وصل دارد: حفاظت از داده (اول دسته‌بندی‌اش کن، بعد با رمزگذاری، hashing، پوشاندن یا masking، tokenization و بخش‌بندی از آن محافظت کن) و تاب‌آوری (نسخه‌ی پشتیبان، دستگاه یدکی، همیشه روشن ماندن سیستم، و برنامه‌ی بازیابی‌ای که امتحانش کرده‌ای).'),
+    L([['Exam domains: 3.3 Compare and contrast concepts and strategies to protect data. 3.4 Explain the importance of resilience and recovery in security architecture.','حوزه‌های امتحان: 3.3 مقایسه‌ی روش‌های حفاظت از داده. 3.4 اهمیت تاب‌آوری و بازیابی در طراحی امنیت.'],
+       ['Key questions: What types and classifications of data exist and why do they matter? Which protection fits each data state (at rest, in transit, in use)? How do backups, redundancy and recovery planning build resilience?','سؤال‌های اصلی: داده چه نوع‌ها و چه برچسب‌هایی دارد و چرا مهم است؟ برای هر حالت داده (ذخیره‌شده، در حال انتقال، در حال استفاده) کدام محافظت مناسب است؟ نسخه‌ی پشتیبان، دستگاه یدکی و برنامه‌ی بازیابی چطور سازمان را مقاوم می‌کنند؟'],
+       ['Objectives: tell data types and classifications apart; apply encryption, hashing, masking and segmentation; explain data states; plan backup, redundancy and recovery; judge high availability and site resilience.','بعد از این بخش باید بتوانی: نوع‌ها و برچسب‌های داده را از هم جدا کنی؛ رمزگذاری، hashing، masking و بخش‌بندی را درست به کار ببری؛ حالت‌های داده را توضیح بدهی؛ برای پشتیبان‌گیری، یدکی و بازیابی برنامه بریزی؛ و همیشه‌روشن بودن (high availability) و سایت یدکی را بسنجی.'],
+       ['Extra reading (optional): Chapple & Seidl (2024), CompTIA Security+ Study Guide, chapters 1, 9, 10, 13 and 17. End-of-chapter questions have answers in the appendix.','خواندن اضافه (اختیاری): کتاب Chapple و Seidl (2024)، فصل‌های ۱، ۹، ۱۰، ۱۳ و ۱۷. آخر هر فصل سؤال تمرینی هست و جواب‌ها در پیوست آخر کتاب است.']]),
     H('Data types and classification','انواع داده و برچسب زدن به آن‌ها'),
     L([['Types: regulated (HIPAA, GDPR, PHIPA), trade secret, intellectual property, legal, financial.','انواع داده: داده‌ای که قانون برایش تعیین تکلیف کرده (مثل پرونده‌ی پزشکی با قانون‌های HIPAA و PHIPA، یا اطلاعات شخصی با GDPR)، راز تجاری (مثل دستور پخت مخفی کوکاکولا)، اختراع‌ها، اسناد حقوقی، اطلاعات مالی.'],
        ['Classification levels: Public < Private < Sensitive < Confidential < Critical.','سطح‌ها از کم‌اهمیت به خیلی مهم: Public (همه ببینند) < Private < Sensitive < Confidential < Critical (فوق‌العاده مهم).'],
@@ -292,6 +299,12 @@
   ]);
 
   S('8','Endpoints, mobile & applications','Endpoint، موبایل و برنامه‌ها',[
+    H('Module overview','نگاه کلی به این بخش'),
+    P('Endpoints are not only laptops and desktops. Phones, IoT devices, embedded systems and industrial controllers are all doors into the company, and attackers go for the weakest one at the edge. This module covers secure baselines, hardening (servers, cloud, IoT), mobile and wireless security (WPA3, MDM, BYOD, COPE), application defenses (input validation, code signing, sandboxing) and the asset lifecycle from purchase to secure disposal.',
+      'Endpoint فقط لپ‌تاپ و کامپیوتر نیست. گوشی، وسایل هوشمند (IoT)، سیستم‌های توکار و کنترل‌کننده‌های صنعتی هم هر کدام یک «در» به داخل شرکت هستند، و هکر سراغ ضعیف‌ترین در می‌رود. این بخش درباره‌ی این‌هاست: تنظیمات امن استاندارد (baseline)، محکم‌کاری (hardening) سرور و ابر و IoT، امنیت موبایل و وای‌فای (WPA3، MDM، BYOD، COPE)، دفاع در برنامه‌ها (بررسی ورودی، امضای کد، sandbox) و چرخه‌ی عمر دارایی‌ها از خرید تا دور انداختن امن.'),
+    L([['Exam domains: 4.1 Apply common security techniques to computing resources. 4.2 Explain the security implications of proper hardware, software and data asset management.','حوزه‌های امتحان: 4.1 به کار بردن روش‌های امنیتی روی منابع کامپیوتری. 4.2 اهمیت امنیتی مدیریت درست سخت‌افزار، نرم‌افزار و داده.'],
+       ['Asset lifecycle: procurement, inventory, assigning an owner, classification, secure decommissioning, data retention.','چرخه‌ی عمر دارایی: خرید، ثبت در فهرست، تعیین صاحب، برچسب زدن، کنار گذاشتن امن، و نگه‌داری داده به مدت لازم.'],
+       ['Before the session: try the 3 self-assessment questions and complete Domain Knowledge Test 4 before its due date.','قبل از جلسه: ۳ سؤال خودسنجی را جواب بده و آزمون Domain Knowledge Test 4 را قبل از مهلتش تمام کن.']]),
     H('Secure baselines','Baseline امن (تنظیمات استاندارد)'),
     P('A baseline is the standard "safe settings" checklist every computer must match, like a school uniform rule.',
       'Baseline یعنی یک چک‌لیست از تنظیمات امن که همه‌ی کامپیوترها باید مثل آن باشند. مثل فرم مدرسه که همه باید یکسان بپوشند.'),
