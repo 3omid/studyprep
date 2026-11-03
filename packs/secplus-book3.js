@@ -3,12 +3,12 @@
    objective 2.4 (malware attacks); no text or review questions from the book are copied.
    The correct option is always first in o/of; the app shuffles the options. */
 (function(){
-  var pack=(window.PACKS||[]).find(function(p){return p.id==='secplus'});
+  var pack=(window.PACKS||[]).find(function(p){return p.id==='secbook'});
   if(!pack)return;
-  pack.sections['B3']={en:'Book Ch. 3: Malicious code',fa:'فصل ۳ کتاب: کد مخرب'};
+  pack.sections['3']={en:'Malicious code',fa:'کد مخرب'};
   var n=0;
   function M(t,q,qf,hf,o,of,en,fa){
-    pack.mcq.push({id:'secplus:b3_'+(++n),sec:'B3',t:t,q:q,qf:qf,hf:hf,o:o,of:of,en:en,fa:fa});
+    pack.mcq.push({id:'secplus:b3_'+(++n),sec:'3',t:t,q:q,qf:qf,hf:hf,o:o,of:of,en:en,fa:fa});
   }
   var T1='Malware types',T2='Indicators (IoCs)',T3='Defense & removal';
 
@@ -207,7 +207,7 @@
   var L=function(items){return{k:'ul',en:items.map(function(x){return x[0]}),fa:items.map(function(x){return x[1]})}};
   var TB=function(h,r){return{k:'tbl',h:h,r:r}};
 
-  pack.study['B3']={t:['Book Ch. 3: Malicious code','فصل ۳ کتاب: کد مخرب'],b:[
+  pack.study['3']={t:['Malicious code','کد مخرب'],b:[
     PP('Matched to Chapter 3 of the course textbook (objective 2.4, malware attacks). Short review notes in our own words; read the chapter for the full explanation.',
       'این بخش با فصل ۳ کتاب درس جور است (سرفصل 2.4، حمله‌های بدافزاری). یادداشت‌های کوتاه مرور به زبان خودمان؛ توضیح کامل را در کتاب بخوان.'),
 

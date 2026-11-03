@@ -3,12 +3,12 @@
    for the chapter's objectives (2.1, 2.2, 2.3, 4.3); no text or review questions from the book are copied.
    The correct option is always first in o/of; the app shuffles the options. */
 (function(){
-  var pack=(window.PACKS||[]).find(function(p){return p.id==='secplus'});
+  var pack=(window.PACKS||[]).find(function(p){return p.id==='secbook'});
   if(!pack)return;
-  pack.sections['B2']={en:'Book Ch. 2: Threat landscape',fa:'فصل ۲ کتاب: چشم‌انداز تهدیدها'};
+  pack.sections['2']={en:'Threat landscape',fa:'چشم‌انداز تهدیدها'};
   var n=0;
   function M(t,q,qf,hf,o,of,en,fa){
-    pack.mcq.push({id:'secplus:b2_'+(++n),sec:'B2',t:t,q:q,qf:qf,hf:hf,o:o,of:of,en:en,fa:fa});
+    pack.mcq.push({id:'secplus:b2_'+(++n),sec:'2',t:t,q:q,qf:qf,hf:hf,o:o,of:of,en:en,fa:fa});
   }
   var T1='Threat actors',T2='Motivations & hats',T3='Threat vectors',T4='Threat intelligence';
 
@@ -280,7 +280,7 @@
   var L=function(items){return{k:'ul',en:items.map(function(x){return x[0]}),fa:items.map(function(x){return x[1]})}};
   var TB=function(h,r){return{k:'tbl',h:h,r:r}};
 
-  pack.study['B2']={t:['Book Ch. 2: Threat landscape','فصل ۲ کتاب: چشم‌انداز تهدیدها'],b:[
+  pack.study['2']={t:['Threat landscape','چشم‌انداز تهدیدها'],b:[
     PP('Matched to Chapter 2 of the course textbook (objectives 2.1, 2.2, 2.3 and 4.3). These are short review notes in our own words; read the chapter itself for the full explanation.',
       'این بخش با فصل ۲ کتاب درس جور است (سرفصل‌های 2.1، 2.2، 2.3 و 4.3). این‌ها یادداشت‌های کوتاه مرور به زبان خودمان است؛ توضیح کامل را در خود کتاب بخوان.'),
 

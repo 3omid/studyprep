@@ -3,12 +3,12 @@
    objectives 2.3, 2.4, 4.1, 4.3, 4.7 and 5.1; no text or review questions from the book are copied.
    The correct option is always first in o/of; the app shuffles the options. */
 (function(){
-  var pack=(window.PACKS||[]).find(function(p){return p.id==='secplus'});
+  var pack=(window.PACKS||[]).find(function(p){return p.id==='secbook'});
   if(!pack)return;
-  pack.sections['B6']={en:'Book Ch. 6: Application security',fa:'فصل ۶ کتاب: امنیت برنامه‌ها'};
+  pack.sections['6']={en:'Application security',fa:'امنیت برنامه‌ها'};
   var n=0;
   function M(t,q,qf,hf,o,of,en,fa){
-    pack.mcq.push({id:'secplus:b6_'+(++n),sec:'B6',t:t,q:q,qf:qf,hf:hf,o:o,of:of,en:en,fa:fa});
+    pack.mcq.push({id:'secplus:b6_'+(++n),sec:'6',t:t,q:q,qf:qf,hf:hf,o:o,of:of,en:en,fa:fa});
   }
   var T1='SDLC & DevSecOps',T2='Testing code',T3='Injection & web attacks',T4='Memory & race conditions',T5='Defenses & code security',T6='Automation';
 
@@ -322,7 +322,7 @@
   var L=function(items){return{k:'ul',en:items.map(function(x){return x[0]}),fa:items.map(function(x){return x[1]})}};
   var TB=function(h,r){return{k:'tbl',h:h,r:r}};
 
-  pack.study['B6']={t:['Book Ch. 6: Application security','فصل ۶ کتاب: امنیت برنامه‌ها'],b:[
+  pack.study['6']={t:['Application security','امنیت برنامه‌ها'],b:[
     PP('Matched to Chapter 6 of the course textbook (objectives 2.3, 2.4, 4.1, 4.3, 4.7 and 5.1). Short review notes in our own words; read the chapter for the full explanation.',
       'این بخش با فصل ۶ کتاب درس جور است (سرفصل‌های 2.3، 2.4، 4.1، 4.3، 4.7 و 5.1). یادداشت‌های کوتاه مرور به زبان خودمان؛ توضیح کامل را در کتاب بخوان.'),
 

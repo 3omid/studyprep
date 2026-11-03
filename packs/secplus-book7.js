@@ -3,12 +3,12 @@
    for objectives 1.4, 2.3 and 2.4; no text or review questions from the book are copied.
    The correct option is always first in o/of; the app shuffles the options. */
 (function(){
-  var pack=(window.PACKS||[]).find(function(p){return p.id==='secplus'});
+  var pack=(window.PACKS||[]).find(function(p){return p.id==='secbook'});
   if(!pack)return;
-  pack.sections['B7']={en:'Book Ch. 7: Cryptography & PKI',fa:'فصل ۷ کتاب: رمزنگاری و PKI'};
+  pack.sections['7']={en:'Cryptography & PKI',fa:'رمزنگاری و PKI'};
   var n=0;
   function M(t,q,qf,hf,o,of,en,fa){
-    pack.mcq.push({id:'secplus:b7_'+(++n),sec:'B7',t:t,q:q,qf:qf,hf:hf,o:o,of:of,en:en,fa:fa});
+    pack.mcq.push({id:'secplus:b7_'+(++n),sec:'7',t:t,q:q,qf:qf,hf:hf,o:o,of:of,en:en,fa:fa});
   }
   var T1='Goals & basics',T2='Symmetric & asymmetric',T3='Hashing & signatures',T4='PKI & certificates',T5='Attacks & emerging';
 
@@ -337,9 +337,9 @@
   var L=function(items){return{k:'ul',en:items.map(function(x){return x[0]}),fa:items.map(function(x){return x[1]})}};
   var TB=function(h,r){return{k:'tbl',h:h,r:r}};
 
-  pack.study['B7']={t:['Book Ch. 7: Cryptography & PKI','فصل ۷ کتاب: رمزنگاری و PKI'],b:[
-    PP('Matched to Chapter 7 of the course textbook (objectives 1.4, 2.3 and 2.4). Short review notes in our own words; read the chapter for the full explanation. Key escrow, OCSP stapling and Diffie-Hellman are also practiced in section 14.',
-      'این بخش با فصل ۷ کتاب درس جور است (سرفصل‌های 1.4، 2.3 و 2.4). یادداشت‌های کوتاه مرور به زبان خودمان؛ توضیح کامل را در کتاب بخوان. Key escrow، OCSP stapling و Diffie-Hellman در بخش ۱۴ هم تمرین شده‌اند.'),
+  pack.study['7']={t:['Cryptography & PKI','رمزنگاری و PKI'],b:[
+    PP('Matched to Chapter 7 of the course textbook (objectives 1.4, 2.3 and 2.4). Short review notes in our own words; read the chapter for the full explanation. Key escrow, OCSP stapling and Diffie-Hellman are also practiced in the Security+ course, section 14.',
+      'این بخش با فصل ۷ کتاب درس جور است (سرفصل‌های 1.4، 2.3 و 2.4). یادداشت‌های کوتاه مرور به زبان خودمان؛ توضیح کامل را در کتاب بخوان. Key escrow، OCSP stapling و Diffie-Hellman در بخش ۱۴ دوره‌ی Security+ هم تمرین شده‌اند.'),
 
     H('Basics','پایه‌ها'),
     L([['Goals: confidentiality, integrity, authentication, non-repudiation (availability is not a crypto goal).','هدف‌ها: محرمانگی، یکپارچگی، احراز هویت، عدم انکار (دسترس‌پذیری هدف رمزنگاری نیست).'],

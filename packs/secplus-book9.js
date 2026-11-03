@@ -3,12 +3,12 @@
    for the chapter's objectives (1.2, 2.4, 3.1, 3.4); no text or review questions from the book are copied.
    The correct option is always first in o/of; the app shuffles the options. */
 (function(){
-  var pack=(window.PACKS||[]).find(function(p){return p.id==='secplus'});
+  var pack=(window.PACKS||[]).find(function(p){return p.id==='secbook'});
   if(!pack)return;
-  pack.sections['B9']={en:'Book Ch. 9: Resilience and physical security',fa:'فصل ۹ کتاب: تاب‌آوری و امنیت فیزیکی'};
+  pack.sections['9']={en:'Resilience and physical security',fa:'تاب‌آوری و امنیت فیزیکی'};
   var n=0;
   function M(t,q,qf,hf,o,of,en,fa){
-    pack.mcq.push({id:'secplus:b9_'+(++n),sec:'B9',t:t,q:q,qf:qf,hf:hf,o:o,of:of,en:en,fa:fa});
+    pack.mcq.push({id:'secplus:b9_'+(++n),sec:'9',t:t,q:q,qf:qf,hf:hf,o:o,of:of,en:en,fa:fa});
   }
   var T1='Resilient design',T2='Backups & storage',T3='Recovery sites, power & testing',T4='Physical security';
 
@@ -304,7 +304,7 @@
   var L=function(items){return{k:'ul',en:items.map(function(x){return x[0]}),fa:items.map(function(x){return x[1]})}};
   var TB=function(h,r){return{k:'tbl',h:h,r:r}};
 
-  pack.study['B9']={t:['Book Ch. 9: Resilience and physical security','فصل ۹ کتاب: تاب‌آوری و امنیت فیزیکی'],b:[
+  pack.study['9']={t:['Resilience and physical security','تاب‌آوری و امنیت فیزیکی'],b:[
     PP('Matched to Chapter 9 of the course textbook (objectives 1.2, 2.4, 3.1 and 3.4). These are short review notes in our own words; read the chapter itself for the full explanation.',
       'این بخش با فصل ۹ کتاب درس جور است (سرفصل‌های 1.2، 2.4، 3.1 و 3.4). این‌ها یادداشت‌های کوتاه مرور به زبان خودمان است؛ توضیح کامل را در خود کتاب بخوان.'),
 

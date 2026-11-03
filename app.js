@@ -178,12 +178,21 @@ function whatsWhat(q,it,fa){
 /* ================= packs ================= */
 let SET=Object.assign({vspeed:1,vboost:0,rl:'both',fa:'tap',faExp:'tap',examFa:false,theme:'auto',pal:'classic',size:1,examDate:'',goal:30,snd:true,mus:false,vib:true,vol:0.6,cues:true,auto:true,off:{packs:[],secs:[]}},st.get('set',{}));
 SET.off=SET.off||{packs:[],secs:[]};
+/* The textbook chapters moved from the Security+ pack (sections B1..B14) to their own pack 'secbook' (sections 1..14).
+   Carry over reading marks, reading/listening positions and section switches saved under the old keys. */
+(function(){if(st.get('migbook'))return;const m=k=>typeof k==='string'?k.replace(/^secplus:B(\d+)$/,'secbook:$1'):k;
+  ['read','rpos','rvoice'].forEach(n=>{const o=st.get(n,null);if(o&&typeof o==='object'){const r={};Object.keys(o).forEach(k=>r[m(k)]=o[k]);st.set(n,r)}});
+  const rl=st.get('rlast');if(rl)st.set('rlast',m(rl));
+  SET.off.secs=SET.off.secs.map(m);st.set('set',SET);
+  const c=st.get('cfg',null);if(c&&c.secs){c.secs=c.secs.map(m);st.set('cfg',c)}
+  st.set('migbook',1)})();
 let P=st.get('prog',{}),PACKS=[],Q={};
 function normPack(p,user){
   const id=String(p.id);const pre=id+':';
-  const fixId=i=>String(i).startsWith(pre)?String(i):pre+i;
+  /* built-in ids that already name a pack ("secplus:b3_1" in the book pack) are kept, so moving questions keeps progress */
+  const fixId=i=>String(i).startsWith(pre)||(!user&&String(i).includes(':'))?String(i):pre+i;
   const secs={};Object.keys(p.sections||{}).forEach(k=>{const s=p.sections[k];secs[k]=typeof s==='string'?{en:s,fa:''}:{en:s.en||k,fa:s.fa||''}});
-  return{id,name:p.name||id,short:p.short||p.name||id,user:!!user,sections:secs,study:p.study||{},
+  return{id,name:p.name||id,short:p.short||p.name||id,lab:p.lab||'',defOff:!!p.defOff,user:!!user,sections:secs,study:p.study||{},
     mcq:(p.mcq||[]).map(q=>({...q,id:fixId(q.id),sec:String(q.sec),o:q.o,of:q.of||[],en:q.en||'',fa:q.fa||'',qf:q.qf||'',hf:q.hf||'',t:q.t||''})),
     pbq:(p.pbq||[]).map(q=>({...q,id:fixId(q.id),sec:String(q.sec),tf:q.tf||'',zf:q.zf||[],zd:q.zd||[],en:q.en||'',fa:q.fa||'',t:q.t||''}))};
 }
@@ -195,6 +204,10 @@ function loadPacks(){
     p.mcq.forEach(q=>{Q[q.id]={...q,k:'m',pack:p}});
     p.pbq.forEach(q=>{Q[q.id]={...q,k:'p',pack:p}});
   });
+  /* a built-in course marked defOff starts switched off the first time this device sees it */
+  const kn=SET.known||[];let ch=false;
+  PACKS.forEach(p=>{if(!p.user&&!kn.includes(p.id)){kn.push(p.id);ch=true;if(p.defOff&&!SET.off.packs.includes(p.id))SET.off.packs.push(p.id)}});
+  if(ch){SET.known=kn;st.set('set',SET)}
 }
 const secKey=(p,s)=>p.id+':'+s;
 const packOn=p=>!SET.off.packs.includes(p.id);
@@ -202,7 +215,13 @@ const secOn=(p,s)=>packOn(p)&&!SET.off.secs.includes(secKey(p,s));
 const qIn=(q,keys)=>keys.includes(secKey(q.pack,q.sec));
 function activeKeys(){const k=[];PACKS.forEach(p=>Object.keys(p.sections).forEach(s=>{if(secOn(p,s))k.push(secKey(p,s))}));return k}
 function qsIn(keys){return Object.values(Q).filter(q=>qIn(q,keys))}
-const secName=(q)=>q.pack.short+' · '+(q.pack.sections[q.sec]||{en:q.sec}).en;
+/* section labels: "Ch. 3" in the book, "Section 3" / "S3" in courses */
+const secNo=(p,s,short)=>p.lab?p.lab+' '+s:/^\d+$/.test(s)?(short?'S':'Section ')+s:'';
+const secTitle=(p,s)=>{const n=secNo(p,s),e=(p.sections[s]||{en:s}).en;return n?n+' · '+e:e};
+const secName=(q)=>q.pack.short+' · '+secTitle(q.pack,q.sec);
+/* everything for the CompTIA Security+ mock exam: course modules and book chapters, whatever is switched on */
+const MOCK=['secplus','secbook'];
+const mockKeys=()=>{const k=[];PACKS.filter(p=>MOCK.includes(p.id)).forEach(p=>Object.keys(p.sections).forEach(s=>k.push(secKey(p,s))));return k};
 
 /* ================= progress ================= */
 const dkey=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
@@ -257,7 +276,7 @@ function startSession(c){
   const s=build(c);
   if(!s){toast('No questions in the selected sections. Turn a course or section on in Courses.');return}
   S=s;st.set('sess',S);runTimer();renderQuiz();
-  const sn=(c.secs&&c.secs.length===1)?(()=>{const[pid,sec]=c.secs[0].split(':');const p=PACKS.find(x=>x.id===pid);return p&&p.sections[sec]?' · '+p.short+' · '+p.sections[sec].en:''})():'';
+  const sn=c.what||((c.secs&&c.secs.length===1)?(()=>{const[pid,sec]=c.secs[0].split(':');const p=PACKS.find(x=>x.id===pid);return p&&p.sections[sec]?' · '+p.short+' · '+secTitle(p,sec):''})():'');
   lastAct({mode:{practice:'Practice',exam:'Exam',review:'Smart review'}[S.mode]||S.mode,what:sn});
 }
 const lastAct=o=>st.set('lastact',Object.assign({t:now()},o));
@@ -397,6 +416,7 @@ function renderHome(){
    <button class="tile plain" data-act="setup" data-v="practice"><span class="ic">🎓</span><span><b>Practice</b><span class="d">Answer, see why, retry what you miss</span></span></button>
    <button class="tile plain" data-act="setup" data-v="exam"><span class="ic">⏱️</span><span><b>Exam</b><span class="d">Timed, no feedback until the end</span></span></button>
    <button class="tile plain" data-act="setup" data-v="review"><span class="ic">🎯</span><span><b>Smart review</b><span class="d">Weak and due questions first</span></span>${weak+due?`<span class="badge">${weak+due}</span>`:''}</button>
+   ${qsIn(mockKeys()).length?`<button class="tile plain" data-act="mock"><span class="ic">🏁</span><span><b>Security+ mock exam</b><span class="d">90 questions · 90 min · course + book, like the real test</span></span></button>`:''}
   </div>
   <div class="card"><h2>Progress</h2><div class="stats">
    <div class="stat"><b>${pct(seen,pool.length)}%</b><span>seen</span></div>
@@ -413,12 +433,12 @@ function weakSecs(){
   PACKS.filter(packOn).forEach(p=>Object.keys(p.sections).forEach(s=>{
     if(!secOn(p,s))return;const k=secKey(p,s),ids=qsIn([k]).map(q=>q.id);
     const a=ids.reduce((x,i)=>x+(P[i]?P[i].c+P[i].w:0),0),c=ids.reduce((x,i)=>x+(P[i]?P[i].c:0),0);
-    if(a>=3)out.push({k,n:p.short+' · '+p.sections[s].en,acc:pct(c,a),w:ids.filter(isWeak).length});
+    if(a>=3)out.push({k,n:p.short+' · '+secTitle(p,s),acc:pct(c,a),w:ids.filter(isWeak).length});
   }));
   return out.sort((x,y)=>x.acc-y.acc);
 }
 function readiness(pool){let s=0;pool.forEach(q=>{const p=P[q.id];s+=!p?.3:p.b>=3?.95:p.l===1?.75:.35});return Math.round(100+800*s/pool.length)}
-function nextRead(){const rd=readSt();for(const p of PACKS.filter(packOn))for(const k of Object.keys(p.sections))if(secOn(p,k)&&p.study&&p.study[k]&&!rd[secKey(p,k)])return{sk:secKey(p,k),t:(p.study[k].t||[p.sections[k].en])[0]};return null}
+function nextRead(){const rd=readSt();for(const p of PACKS.filter(packOn))for(const k of Object.keys(p.sections))if(secOn(p,k)&&p.study&&p.study[k]&&!rd[secKey(p,k)])return{sk:secKey(p,k),t:p.short+' · '+(secNo(p,k)?secNo(p,k)+' · ':'')+(p.study[k].t||[p.sections[k].en])[0]};return null}
 const bkDue=()=>Object.keys(P).length>=20&&(!st.get('bkat')||now()-st.get('bkat')>7*DAY);
 function coachCard(pool,ids,weak,due,seen){
   const sc=readiness(pool),ws=weakSecs().filter(w=>w.acc<80).slice(0,3),la=st.get('lastact'),today=dayRow().a,goal=SET.goal||30;
@@ -440,7 +460,7 @@ function coachCard(pool,ids,weak,due,seen){
 }
 
 /* ================= Backup ================= */
-const BK=['prog','hist','day','read','rpos','rlast','sess','last','set','cfg','userpacks','lastact'];
+const BK=['prog','hist','day','read','rpos','rvoice','rlast','sess','last','set','cfg','userpacks','lastact'];
 function backupData(){const d={app:'StudyPrep',v:5,at:new Date().toISOString()};BK.forEach(k=>{const v=st.get(k,undefined);if(v!==undefined)d[k]=v});d.prog=P;d.set=SET;d.day=DAYS;if(S&&!S.done)d.sess=S;return d}
 function saveBackup(){
   const b=new Blob([JSON.stringify(backupData())],{type:'application/json'}),a=document.createElement('a');
@@ -465,8 +485,9 @@ function renderSetup(){
   const tm=[['off','Off'],['auto','Auto'],['15','15 min'],['30','30 min'],['60','60 min'],['90','90 min']];
   const groups=PACKS.filter(packOn).map(p=>{
     const ks=Object.keys(p.sections).filter(s=>secOn(p,s));
-    return ks.length?`<div class="lbl">${esc(p.name)}</div><div class="chips">${ks.map(s=>{const k=secKey(p,s);const n=qsIn([k]).length;
-      return `<button class="chip ${cfg.secs.includes(k)?'on':''}" data-act="cfgsec" data-v="${esc(k)}">${esc(s.length<3?'S'+s:s)} · ${esc(p.sections[s].en)} (${n})</button>`}).join('')}</div>`:''}).join('');
+    const gk=ks.map(x=>secKey(p,x)),all=gk.every(k=>cfg.secs.includes(k));
+    return ks.length?`<div class="spread" style="margin-top:14px"><div class="lbl" style="margin:0">${esc(p.name)}</div><div class="row" style="gap:6px"><button class="plain sm" data-act="cfgonly" data-v="${esc(p.id)}">Only this</button><button class="plain sm" data-act="cfgall" data-v="${esc(p.id)}">${all?'None':'All'}</button></div></div><div class="chips" style="margin-top:6px">${ks.map(s=>{const k=secKey(p,s);const n=qsIn([k]).length;
+      return `<button class="chip ${cfg.secs.includes(k)?'on':''}" data-act="cfgsec" data-v="${esc(k)}">${esc(secNo(p,s,1)||s)} · ${esc(p.sections[s].en)} (${n})</button>`}).join('')}</div>`:''}).join('');
   page(`<div class="spread"><h1>Start a session</h1><button class="plain sm" data-act="tab" data-v="home">Back</button></div>
   <div class="lbl">Mode</div><div class="chips">${modes.map(m=>`<button class="chip ${cfg.mode===m[0]?'on':''}" data-act="cfgmode" data-v="${m[0]}">${m[1]}</button>`).join('')}</div>
   <div class="lbl">Questions</div><div class="chips">${ns.map(n=>`<button class="chip ${cfg.n===n?'on':''}" data-act="cfgn" data-v="${n}">${n}</button>`).join('')}<button class="chip ${cfg.n===9999?'on':''}" data-act="cfgn" data-v="9999">All (${pool.length})</button></div>
@@ -694,14 +715,17 @@ function renderAnswers(){
 const readSt=()=>st.get('read',{});
 function renderLearn(){
   const rd=readSt();
-  const cards=PACKS.filter(packOn).map(p=>{
-    const ks=Object.keys(p.sections).filter(k=>p.study&&p.study[k]);
-    if(!ks.length)return '';
-    return `<div class="card"><h2>${esc(p.name)}</h2><div class="lgrid">${ks.map(k=>{const sk=secKey(p,k);const t=p.study[k].t||[p.sections[k].en,p.sections[k].fa];
-      return `<button class="tile plain ltile" data-act="read" data-v="${esc(sk)}"><span class="ic">${rd[sk]?'✅':'📘'}</span><span><b>${esc(k.length<3?k+' · ':'')}${esc(t[0])}</b><span class="d">${esc(t[1]||'')}</span></span></button>`}).join('')}</div></div>`}).join('');
-  const rl=st.get('rlast'),rlp=rl&&PACKS.find(x=>x.id===rl.split(':')[0]),rlt=rlp&&rlp.study&&rlp.study[rl.split(':')[1]];
-  const cont=rlt?`<div class="card" style="border-color:var(--ac)"><b>Continue reading</b><div class="mut">${esc((rlt.t||[''])[0])}</div><div class="row" style="margin-top:10px"><button data-act="rdresume">Continue</button></div></div>`:'';
-  page(`<h1>Learn</h1>${cont}<p class="sub">Read the key points first, then practice the questions. Notes are in English and Persian.</p>${cards||'<div class="card empty">No study notes for the courses that are on.</div>'}`);
+  /* one course (or the textbook) at a time, so the page stays short; the choice is remembered */
+  const ps=PACKS.filter(p=>packOn(p)&&Object.keys(p.sections).some(k=>p.study&&p.study[k]));
+  let sel=st.get('lpack');if(!ps.some(p=>p.id===sel))sel=ps.length?ps[0].id:null;
+  const sw=ps.length>1?`<div class="chips" style="margin:0 0 12px">${ps.map(p=>`<button class="chip ${p.id===sel?'on':''}" data-act="lpack" data-v="${esc(p.id)}">${p.id==='secbook'?'📕':'📚'} ${esc(p.short)}</button>`).join('')}</div>`:'';
+  const cards=ps.filter(p=>p.id===sel).map(p=>{
+    const ks=Object.keys(p.sections).filter(k=>p.study&&p.study[k]);const nr=ks.filter(k=>rd[secKey(p,k)]).length;
+    return `<div class="card"><div class="spread"><h2 style="margin:0">${esc(p.name)}</h2><span class="mut">${nr} / ${ks.length} read</span></div><div class="lgrid" style="margin-top:10px">${ks.map(k=>{const sk=secKey(p,k);const t=p.study[k].t||[p.sections[k].en,p.sections[k].fa];
+      return `<button class="tile plain ltile" data-act="read" data-v="${esc(sk)}"><span class="ic">${rd[sk]?'✅':'📘'}</span><span><b>${esc(secNo(p,k)?secNo(p,k)+' · ':'')}${esc(t[0])}</b><span class="d">${esc(t[1]||'')}</span></span></button>`}).join('')}</div></div>`}).join('');
+  const rl=st.get('rlast'),rlp=rl&&PACKS.find(x=>x.id===rl.split(':')[0]),rls=rl&&rl.split(':')[1],rlt=rlp&&rlp.study&&rlp.study[rls];
+  const cont=rlt?`<div class="card" style="border-color:var(--ac)"><div class="spread"><div><b>Continue reading</b><div class="mut">${esc(rlp.short+' · '+(secNo(rlp,rls)?secNo(rlp,rls)+' · ':'')+(rlt.t||[''])[0])}</div></div><button class="sm" data-act="rdresume">Continue</button></div></div>`:'';
+  page(`<h1>Learn</h1>${cont}<p class="sub">Read the key points first, then practice the questions. Notes are in English and Persian.</p>${sw}${cards||'<div class="card empty">No study notes for the courses that are on.</div>'}`);
 }
 /* the lines "Listen" reads in a section, in order; audio/n1.txt has a recording of each */
 const nclean=x=>String(x||'').replace(/\s+/g,' ').trim();
@@ -777,7 +801,7 @@ function renderCourses(){
       <input type="checkbox" data-act="packtog" data-v="${esc(p.id)}" ${packOn(p)?'checked':''} aria-label="Enable ${esc(p.name)}"></div>
       <div class="sec" style="${packOn(p)?'':'opacity:.45'}">${Object.keys(p.sections).map(s=>{
         const sid=ids.filter(i=>Q[i].sec===s),m=sid.filter(mastered).length;
-        return `<div class="sw"><div><div>${esc(s.length<3?'Section '+s+' · ':'')}${esc(p.sections[s].en)}</div><div class="mut">${sid.length} q · ${m} mastered${p.sections[s].fa?' · '+esc(p.sections[s].fa):''}</div></div>
+        return `<div class="sw"><div><div>${esc(secTitle(p,s))}</div><div class="mut">${sid.length} q · ${m} mastered${p.sections[s].fa?' · '+esc(p.sections[s].fa):''}</div></div>
         <input type="checkbox" data-act="sectog" data-v="${esc(secKey(p,s))}" ${secOn(p,s)?'checked':''} ${packOn(p)?'':'disabled'}></div>`}).join('')}</div>
       ${p.user?`<button class="danger sm" data-act="delpack" data-v="${esc(p.id)}" style="margin-top:8px">Remove this course</button>`:''}</div>`}).join('')}
   <div class="card"><h2>Add a course</h2><p class="mut">Paste a course pack (JSON), or pick a .json file. Ask Claude to turn your class slides into a pack in this format.</p>
@@ -804,7 +828,7 @@ function renderStats(){
     if(!secOn(p,s))return;
     const ids=Object.keys(Q).filter(i=>Q[i].pack===p&&Q[i].sec===s);
     const a=ids.reduce((x,i)=>x+(P[i]?P[i].c+P[i].w:0),0),c=ids.reduce((x,i)=>x+(P[i]?P[i].c:0),0);
-    rows.push({n:p.short+' · '+p.sections[s].en,seen:ids.filter(i=>P[i]).length,t:ids.length,acc:a?pct(c,a):null});
+    rows.push({n:p.short+' · '+secTitle(p,s),seen:ids.filter(i=>P[i]).length,t:ids.length,acc:a?pct(c,a):null});
   }));
   const topics={};
   Object.keys(P).forEach(i=>{const q=Q[i];if(!q||!secOn(q.pack,q.sec))return;const k=q.pack.short+' · '+(q.t||'General');const o=topics[k]||(topics[k]={c:0,w:0,ids:[]});o.c+=P[i].c;o.w+=P[i].w;o.ids.push(i)});
@@ -921,6 +945,9 @@ document.addEventListener('click',e=>{
     case 'cfgmode':cfg.mode=v;st.set('cfg',cfg);renderSetup();break;
     case 'cfgn':cfg.n=+v;st.set('cfg',cfg);renderSetup();break;
     case 'cfgtimer':cfg.timer=v;st.set('cfg',cfg);renderSetup();break;
+    case 'cfgonly':case 'cfgall':{const p=PACKS.find(x=>x.id===v);const gk=Object.keys(p.sections).filter(x=>secOn(p,x)).map(x=>secKey(p,x));
+      if(a==='cfgonly')cfg.secs=gk;else if(gk.every(k=>cfg.secs.includes(k))){const r=cfg.secs.filter(k=>!gk.includes(k));if(!r.length){toast('Keep at least one section');break}cfg.secs=r}else cfg.secs=[...new Set([...cfg.secs,...gk])];
+      st.set('cfg',cfg);renderSetup();break}
     case 'cfgsec':{const i=cfg.secs.indexOf(v);i>=0?cfg.secs.splice(i,1):cfg.secs.push(v);if(!cfg.secs.length)cfg.secs=[v];st.set('cfg',cfg);renderSetup();break}
     case 'begin':st.set('cfg',cfg);startSession(cfg);break;
     case 'resume':runTimer();renderQuiz();break;
@@ -959,6 +986,8 @@ document.addEventListener('click',e=>{
     case 'finish':closeModal();finish();break;
     case 'exit':exitMenu();break;
     case 'saveexit':closeModal();st.set('sess',S);clearInterval(timerId);go('home');break;
+    case 'lpack':st.set('lpack',v);renderLearn();break;
+    case 'mock':{startSession({mode:'exam',n:90,timer:'90',secs:mockKeys(),what:' · Security+ mock exam'});break}
     case 'drillwrong':{const ids=S._wrong;S=null;startSession({mode:'review',ids,timer:'off',n:ids.length});break}
     case 'answers':renderAnswers();break;
     case 'packtog':break;

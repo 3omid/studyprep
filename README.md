@@ -30,6 +30,12 @@ Or paste/upload a pack JSON in the app under Courses > Add a course (no code nee
 ## v6 additions
 - AI tutor: after answering a question (not in Exam mode), tap “Ask AI” to have it explained in Persian or English and ask follow-up questions. Set it up in Settings → AI tutor: pick a provider (Google Gemini, OpenRouter or Groq, all with free plans), paste your own free key and optionally a model name. The key stays in this browser only (`sp1_aikey`) and is not included in backups. Providers live in the `AIP` table in `app.js`; any OpenAI-compatible service can be added with one entry.
 
+## Security+ course and textbook
+- `packs/secplus*.js` (not `-book`) = the course modules (pack `secplus`, sections 1–14 and R7-8).
+- `packs/secbook.js` + `packs/secplus-book<N>.js` = the textbook, Chapple & Seidl 9th ed. (pack `secbook`, chapters 1–14). Each chapter file adds section `'<N>'`, its questions and its notes. Question ids stay `secplus:b<N>_<n>` so progress made before the split is kept; old reading marks under `secplus:B<N>` are moved once at start-up.
+- Learn shows one of them at a time (switch at the top). Home → **Security+ mock exam** = 90 questions in 90 minutes from both, including scenario questions.
+- `packs/defsec2.js` (Sheridan Defensive Security 2) is loaded but starts switched off (`defOff`); turn it on in Courses.
+
 ## Android and Windows apps
 `.github/workflows/apps.yml` builds `StudyPrep.apk` (Capacitor, `native/android`) and `StudyPrep-Setup.exe` (Electron, `native/windows`) and publishes them on the **apps** release:
 - https://github.com/3omid/studyprep/releases/latest/download/StudyPrep.apk

@@ -3,12 +3,12 @@
    for objectives 4.3, 4.4, 4.8, 5.3 and 5.5; no text or review questions from the book are copied.
    The correct option is always first in o/of; the app shuffles the options. */
 (function(){
-  var pack=(window.PACKS||[]).find(function(p){return p.id==='secplus'});
+  var pack=(window.PACKS||[]).find(function(p){return p.id==='secbook'});
   if(!pack)return;
-  pack.sections['B5']={en:'Book Ch. 5: Assessment & testing',fa:'فصل ۵ کتاب: ارزیابی و آزمون امنیت'};
+  pack.sections['5']={en:'Assessment & testing',fa:'ارزیابی و آزمون امنیت'};
   var n=0;
   function M(t,q,qf,hf,o,of,en,fa){
-    pack.mcq.push({id:'secplus:b5_'+(++n),sec:'B5',t:t,q:q,qf:qf,hf:hf,o:o,of:of,en:en,fa:fa});
+    pack.mcq.push({id:'secplus:b5_'+(++n),sec:'5',t:t,q:q,qf:qf,hf:hf,o:o,of:of,en:en,fa:fa});
   }
   var T1='Vulnerability scanning',T2='CVSS & SCAP',T3='Vulnerability life cycle',T4='Penetration testing',T5='Audits & assessments';
 
@@ -305,7 +305,7 @@
   var L=function(items){return{k:'ul',en:items.map(function(x){return x[0]}),fa:items.map(function(x){return x[1]})}};
   var TB=function(h,r){return{k:'tbl',h:h,r:r}};
 
-  pack.study['B5']={t:['Book Ch. 5: Assessment & testing','فصل ۵ کتاب: ارزیابی و آزمون امنیت'],b:[
+  pack.study['5']={t:['Assessment & testing','ارزیابی و آزمون امنیت'],b:[
     PP('Matched to Chapter 5 of the course textbook (objectives 4.3, 4.4, 4.8, 5.3 and 5.5). Short review notes in our own words; read the chapter for the full explanation.',
       'این بخش با فصل ۵ کتاب درس جور است (سرفصل‌های 4.3، 4.4، 4.8، 5.3 و 5.5). یادداشت‌های کوتاه مرور به زبان خودمان؛ توضیح کامل را در کتاب بخوان.'),
 

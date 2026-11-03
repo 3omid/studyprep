@@ -1,9 +1,9 @@
 // Offline cache. App files are fetched fresh when online (so an update shows up the next
 // time the app is opened) and come from the cache when offline. Audio stays cache-first.
-const VERSION='studyprep-v25';
+const VERSION='studyprep-v26';
 const AUDIO='sp-audio3'; // new name drops the old cache that still held the Kokoro bundles
-const FILES=['./','index.html','style.css','app.js','manifest.webmanifest','packs/secplus.js','packs/secplus-m7-m8.js','packs/secplus-study.js','packs/secplus-m9.js','packs/secplus-r78.js','packs/secplus-m10.js','packs/secplus-m11.js','packs/secplus-m12.js','packs/secplus-q20.js','packs/secplus-gaps.js','packs/secplus-book1.js','packs/secplus-book8.js','packs/secplus-book9.js','packs/secplus-book10.js','glossary.js','glossx.js','glossx2.js','glossx3.js','dict.js','fx.js','themes.js',
-  'icons/icon-192.png','icons/icon-512.png','icons/maskable-512.png','icons/apple-touch-icon.png'];
+const FILES=['./','index.html','style.css','app.js','manifest.webmanifest','packs/secplus.js','packs/secplus-m7-m8.js','packs/secplus-study.js','packs/secplus-m9.js','packs/secplus-r78.js','packs/secplus-m10.js','packs/secplus-m11.js','packs/secplus-m12.js','packs/secplus-q20.js','packs/secplus-gaps.js','packs/secbook.js','packs/secplus-book1.js','packs/secplus-book2.js','packs/secplus-book3.js','packs/secplus-book4.js','packs/secplus-book5.js','packs/secplus-book6.js','packs/secplus-book7.js','packs/secplus-book8.js','packs/secplus-book9.js','packs/secplus-book10.js','packs/secplus-book11.js','packs/secplus-book12.js','packs/secplus-book13.js','packs/secplus-book14.js','packs/defsec2.js',
+  'glossary.js','glossx.js','glossx2.js','glossx3.js','dict.js','fx.js','themes.js','icons/icon-192.png','icons/icon-512.png','icons/maskable-512.png','icons/apple-touch-icon.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(VERSION).then(c=>c.addAll(FILES.map(f=>new Request(f,{cache:'reload'})))).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==VERSION&&k!==AUDIO).map(k=>caches.delete(k))))
   .then(()=>self.clients.claim())

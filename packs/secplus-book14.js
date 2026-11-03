@@ -3,12 +3,12 @@
    for the chapter's objectives (2.4, 2.5, 4.4, 4.8, 4.9); no text from the book is copied.
    The correct option is always first in o/of; the app shuffles the options. */
 (function(){
-  var pack=(window.PACKS||[]).find(function(p){return p.id==='secplus'});
+  var pack=(window.PACKS||[]).find(function(p){return p.id==='secbook'});
   if(!pack)return;
-  pack.sections['B14']={en:'Book Ch. 14: Monitoring and incident response',fa:'فصل ۱۴ کتاب: پایش و پاسخ به حادثه'};
+  pack.sections['14']={en:'Monitoring and incident response',fa:'پایش و پاسخ به حادثه'};
   var n=0;
   function M(t,q,qf,hf,o,of,en,fa){
-    pack.mcq.push({id:'secplus:b14_'+(++n),sec:'B14',t:t,q:q,qf:qf,hf:hf,o:o,of:of,en:en,fa:fa});
+    pack.mcq.push({id:'secplus:b14_'+(++n),sec:'14',t:t,q:q,qf:qf,hf:hf,o:o,of:of,en:en,fa:fa});
   }
   var T1='IR process',T2='Team, plans & exercises',T3='Indicators',T4='SIEM & alerting',T5='Logs & data sources',T6='Mitigation & RCA';
 
@@ -250,7 +250,7 @@
   var L=function(items){return{k:'ul',en:items.map(function(x){return x[0]}),fa:items.map(function(x){return x[1]})}};
   var TB=function(h,r){return{k:'tbl',h:h,r:r}};
 
-  pack.study['B14']={t:['Book Ch. 14: Monitoring and incident response','فصل ۱۴ کتاب: پایش و پاسخ به حادثه'],b:[
+  pack.study['14']={t:['Monitoring and incident response','پایش و پاسخ به حادثه'],b:[
     PP('Matched to Chapter 14 of the course textbook (objectives 2.4, 2.5, 4.4, 4.8 and 4.9). These are short review notes in our own words; read the chapter itself for the full explanation.',
       'این بخش با فصل ۱۴ کتاب درس جور است (سرفصل‌های 2.4، 2.5، 4.4، 4.8 و 4.9). این‌ها یادداشت‌های کوتاه مرور به زبان خودمان است؛ توضیح کامل را در خود کتاب بخوان.'),
 

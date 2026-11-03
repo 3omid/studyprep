@@ -3,12 +3,12 @@
    for the chapter's objectives (1.2, 2.5, 4.6); no text or review questions from the book are copied.
    The correct option is always first in o/of; the app shuffles the options. */
 (function(){
-  var pack=(window.PACKS||[]).find(function(p){return p.id==='secplus'});
+  var pack=(window.PACKS||[]).find(function(p){return p.id==='secbook'});
   if(!pack)return;
-  pack.sections['B8']={en:'Book Ch. 8: Identity and access management',fa:'فصل ۸ کتاب: مدیریت هویت و دسترسی'};
+  pack.sections['8']={en:'Identity and access management',fa:'مدیریت هویت و دسترسی'};
   var n=0;
   function M(t,q,qf,hf,o,of,en,fa){
-    pack.mcq.push({id:'secplus:b8_'+(++n),sec:'B8',t:t,q:q,qf:qf,hf:hf,o:o,of:of,en:en,fa:fa});
+    pack.mcq.push({id:'secplus:b8_'+(++n),sec:'8',t:t,q:q,qf:qf,hf:hf,o:o,of:of,en:en,fa:fa});
   }
   var T1='Identity & AAA',T2='SSO & federation',T3='Passwords & MFA',T4='Accounts & PAM',T5='Access control & permissions';
 
@@ -321,7 +321,7 @@
   var L=function(items){return{k:'ul',en:items.map(function(x){return x[0]}),fa:items.map(function(x){return x[1]})}};
   var TB=function(h,r){return{k:'tbl',h:h,r:r}};
 
-  pack.study['B8']={t:['Book Ch. 8: Identity and access management','فصل ۸ کتاب: مدیریت هویت و دسترسی'],b:[
+  pack.study['8']={t:['Identity and access management','مدیریت هویت و دسترسی'],b:[
     PP('Matched to Chapter 8 of the course textbook (objectives 1.2, 2.5 and 4.6). These are short review notes in our own words; read the chapter itself for the full explanation.',
       'این بخش با فصل ۸ کتاب درس جور است (سرفصل‌های 1.2، 2.5 و 4.6). این‌ها یادداشت‌های کوتاه مرور به زبان خودمان است؛ توضیح کامل را در خود کتاب بخوان.'),
 

@@ -3,12 +3,12 @@
    written for objectives 2.2 (human vectors) and 2.4 (password attacks); no text or review questions from
    the book are copied. The correct option is always first in o/of; the app shuffles the options. */
 (function(){
-  var pack=(window.PACKS||[]).find(function(p){return p.id==='secplus'});
+  var pack=(window.PACKS||[]).find(function(p){return p.id==='secbook'});
   if(!pack)return;
-  pack.sections['B4']={en:'Book Ch. 4: Social engineering & passwords',fa:'فصل ۴ کتاب: مهندسی اجتماعی و حمله به رمز'};
+  pack.sections['4']={en:'Social engineering & passwords',fa:'مهندسی اجتماعی و حمله به رمز'};
   var n=0;
   function M(t,q,qf,hf,o,of,en,fa){
-    pack.mcq.push({id:'secplus:b4_'+(++n),sec:'B4',t:t,q:q,qf:qf,hf:hf,o:o,of:of,en:en,fa:fa});
+    pack.mcq.push({id:'secplus:b4_'+(++n),sec:'4',t:t,q:q,qf:qf,hf:hf,o:o,of:of,en:en,fa:fa});
   }
   var T1='Principles',T2='Human vectors',T3='Password attacks';
 
@@ -207,7 +207,7 @@
   var L=function(items){return{k:'ul',en:items.map(function(x){return x[0]}),fa:items.map(function(x){return x[1]})}};
   var TB=function(h,r){return{k:'tbl',h:h,r:r}};
 
-  pack.study['B4']={t:['Book Ch. 4: Social engineering & passwords','فصل ۴ کتاب: مهندسی اجتماعی و حمله به رمز'],b:[
+  pack.study['4']={t:['Social engineering & passwords','مهندسی اجتماعی و حمله به رمز'],b:[
     PP('Matched to Chapter 4 of the course textbook (objectives 2.2 and 2.4). Short review notes in our own words; read the chapter for the full explanation.',
       'این بخش با فصل ۴ کتاب درس جور است (سرفصل‌های 2.2 و 2.4). یادداشت‌های کوتاه مرور به زبان خودمان؛ توضیح کامل را در کتاب بخوان.'),
 

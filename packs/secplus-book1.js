@@ -3,12 +3,12 @@
    for the chapter's objectives (1.1, 1.2, 1.4, 3.3, 5.2); no text from the book is copied.
    The correct option is always first in o/of; the app shuffles the options. */
 (function(){
-  var pack=(window.PACKS||[]).find(function(p){return p.id==='secplus'});
+  var pack=(window.PACKS||[]).find(function(p){return p.id==='secbook'});
   if(!pack)return;
-  pack.sections['B1']={en:'Book Ch. 1: Today\'s security professional',fa:'فصل ۱ کتاب: متخصص امنیت امروز'};
+  pack.sections['1']={en:'Today\'s security professional',fa:'متخصص امنیت امروز'};
   var n=0;
   function M(t,q,qf,hf,o,of,en,fa){
-    pack.mcq.push({id:'secplus:b1_'+(++n),sec:'B1',t:t,q:q,qf:qf,hf:hf,o:o,of:of,en:en,fa:fa});
+    pack.mcq.push({id:'secplus:b1_'+(++n),sec:'1',t:t,q:q,qf:qf,hf:hf,o:o,of:of,en:en,fa:fa});
   }
   var T1='CIA & DAD',T2='Breach impact',T3='Controls',T4='Data protection & DLP';
 
@@ -216,9 +216,9 @@
   var L=function(items){return{k:'ul',en:items.map(function(x){return x[0]}),fa:items.map(function(x){return x[1]})}};
   var TB=function(h,r){return{k:'tbl',h:h,r:r}};
 
-  pack.study['B1']={t:['Book Ch. 1: Today\'s security professional','فصل ۱ کتاب: متخصص امنیت امروز'],b:[
-    PP('Matched to Chapter 1 of the course textbook (objectives 1.1, 1.2, 1.4, 3.3 and 5.2). These are short review notes in our own words; read the chapter itself for the full explanation. Controls, CIA and gap analysis are also practiced in sections 1 and 14.',
-      'این بخش با فصل ۱ کتاب درس جور است (سرفصل‌های 1.1، 1.2، 1.4، 3.3 و 5.2). این‌ها یادداشت‌های کوتاه مرور به زبان خودمان است؛ توضیح کامل را در خود کتاب بخوان. کنترل‌ها، CIA و Gap analysis در بخش ۱ و ۱۴ هم تمرین شده‌اند.'),
+  pack.study['1']={t:['Today\'s security professional','متخصص امنیت امروز'],b:[
+    PP('Matched to Chapter 1 of the course textbook (objectives 1.1, 1.2, 1.4, 3.3 and 5.2). These are short review notes in our own words; read the chapter itself for the full explanation. Controls, CIA and gap analysis are also practiced in the Security+ course, sections 1 and 14.',
+      'این بخش با فصل ۱ کتاب درس جور است (سرفصل‌های 1.1، 1.2، 1.4، 3.3 و 5.2). این‌ها یادداشت‌های کوتاه مرور به زبان خودمان است؛ توضیح کامل را در خود کتاب بخوان. کنترل‌ها، CIA و Gap analysis در بخش ۱ و ۱۴ دوره‌ی Security+ هم تمرین شده‌اند.'),
 
     H('CIA goals and DAD threats','هدف‌های CIA و تهدیدهای DAD'),
     TB([['Goal (CIA)','هدف (CIA)'],['Threat (DAD)','تهدید (DAD)'],['Example','مثال']],[

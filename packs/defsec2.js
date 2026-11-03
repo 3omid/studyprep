@@ -1,7 +1,7 @@
 /* Course pack: Sheridan "Defensive Security 2" (cyber auditing, IAM, AI & automation in cybersecurity).
    Built from the course slides. Not a Security+ pack: it is its own course and can be switched on/off separately. */
 (function(){
-  var pack={id:'defsec2',name:'Defensive Security 2 (Sheridan)',short:'DefSec2',version:1,lang:'en',
+  var pack={id:'defsec2',name:'Defensive Security 2 (Sheridan)',short:'DefSec2',defOff:true,version:1,lang:'en',
     sections:{
       '1':{en:'Cyber auditing',fa:'ممیزی سایبری'},
       '2':{en:'Identity & access management',fa:'مدیریت هویت و دسترسی (IAM)'},
