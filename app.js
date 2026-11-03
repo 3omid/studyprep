@@ -371,9 +371,9 @@ function page(html,bar,keep){const y=window.scrollY,m=$('#main');m.innerHTML=htm
   // the question header is fixed at the top, outside #main for the same reason; #main leaves room for it
   const qh=m.querySelector('.qhead');m.classList.toggle('quiz',!!qh);if(qh){document.body.appendChild(qh);qhH()}
   skin();window.scrollTo(0,keep?y:0)}
-/* game look: always on the Play pages and in games, everywhere with a game theme */
+/* game look on every page; a game theme also brings its own picture background */
 function skin(){const b=document.body;if(!b)return;const g=document.documentElement.hasAttribute('data-game');
-  b.classList.toggle('gskin',g||tab==='game'||tab==='base'||(ACT==='quiz'&&!!S&&S.mode==='game'));b.classList.toggle('gall',g)}
+  b.classList.add('gskin');b.classList.toggle('gall',g)}
 function qhH(){const q=$('body>.qhead');if(q)document.documentElement.style.setProperty('--qh',q.offsetHeight+'px')}
 window.addEventListener('resize',()=>{tabH();qhH()});
 function renderTabs(){
@@ -401,7 +401,8 @@ function palVars(c,dark){
   // keep the accent readable on the page (it is also used for text)
   let ac=ac0;for(let i=0;i<8&&contrast(ac,bg)<3.2;i++)ac=mixC(ac,dark?'#ffffff':'#000000',.14);
   const acink=contrast(ac,'#ffffff')>=contrast(ac,'#0b0b0b')?'#ffffff':'#0b0b0b';
-  return `--bg:${bg};--sf:${card};--sf2:${mixC(card,line,.45)};--ink:${ink};--mut:${mut};--line:${line};--ac:${ac};--ac2:${ac2};--acink:${acink};`+
+  const acsh=acink==='#ffffff'?'0 2px 0 rgba(0,0,0,.35)':'0 1px 0 rgba(255,255,255,.45)';
+  return `--acsh:${acsh};--bg:${bg};--sf:${card};--sf2:${mixC(card,line,.45)};--ink:${ink};--mut:${mut};--line:${line};--ac:${ac};--ac2:${ac2};--acink:${acink};`+
     `--sel:${mixC(card,ac,dark?.2:.12)};--grad:linear-gradient(135deg,${ac},${mixC(ac,dark?'#ffffff':'#000000',.16)});--glow1:${rgba(ac,.12)};--glow2:${rgba(ac2,.1)};color-scheme:${dark?'dark':'light'}`;
 }
 function applyLook(){
@@ -411,7 +412,7 @@ function applyLook(){
   const th=THEMES.find(t=>t[0]===SET.pal);
   let css=$('#palcss');if(!css){css=document.createElement('style');css.id='palcss';document.head.appendChild(css)}
   const sc=(window.SCENES||{})[th&&th[3]==='game'?th[0]:'g-arena']||'none';
-  css.textContent=(th?`:root[data-theme]{${palVars(th[dark?5:4],dark)}}`:'')+`:root{--scene:${sc}}`;
+  css.textContent=(th?`:root[data-theme]{${palVars(th[dark?5:4],dark)}}`:'')+`:root{--scene:${sc}}`+(th?'':`:root[data-theme]{--acsh:${dark?'0 1px 0 rgba(255,255,255,.45)':'0 2px 0 rgba(0,0,0,.35)'}}`);
   r.toggleAttribute('data-game',!!(th&&th[3]==='game'));skin();
   const m=document.querySelector('meta[name=theme-color]');if(m)m.content=th?th[dark?5:4][0]:CLASSIC.bg[dark?'dark':'light'];
   tabH();
@@ -427,7 +428,7 @@ function renderHome(keep){
   const active=PACKS.filter(packOn).map(p=>p.short).join(', ')||'none';
   const res=S&&!S.done,np=pausedL().length;
   const mp=pct(mas,pool.length);
-  page(`${resBar()}${leagueCard()}<div class="hero"><div class="ring" style="--p:${mp}"><i>${mp}%</i></div><div><h1>StudyPrep</h1>
+  page(`${playerBar()}${leagueCard()}<div class="hero"><div class="ring" style="--p:${mp}"><i>${mp}%</i></div><div><h1>StudyPrep</h1>
   <p class="sub">Active: ${esc(active)} · ${keys.length} sections · ${pool.length} questions<br>${mas} mastered${(S&&S.best)?'':''}</p></div></div>
   ${res?`<div class="card" style="border-color:var(--ac)"><div class="spread"><div><b>Continue where you stopped</b><div class="mut">${esc(S.mode)} · question ${Math.min(S.i+1,S.items.length)} of ${S.items.length}${S.left!=null?' · '+fmt(S.left)+' left':''}</div></div></div>
   <div class="row" style="margin-top:10px"><button data-act="resume">Resume</button><button class="plain" data-act="tab" data-v="exam">All sessions</button></div></div>`:np?`<div class="card" style="border-color:var(--ac)"><div class="spread"><div><b>${np} unfinished session${np>1?'s':''}</b><div class="mut">${esc(sessLbl(pausedL()[0]))}</div></div><button class="sm" data-act="tab" data-v="exam">Open</button></div></div>`:''}
@@ -968,7 +969,7 @@ function palGrid(){
 function thModal(){
   const cur=thOf(SET.pal);if(!thTab)thTab=cur?cur[3]:'game';
   const items=(thTab==='color'?[['classic']]:[]).concat(THEMES.filter(t=>t[3]===thTab));
-  const html=`<div class="thsheet"><h3 style="margin:0 0 2px">🎨 Theme · تم</h3><p class="mut" style="margin:0 0 10px">Tap one to try it. Game themes have a picture background and game-style buttons.</p>
+  const html=`<div class="thsheet"><h3 style="margin:0 0 2px">🎨 Theme · تم</h3><p class="mut" style="margin:0 0 10px">Tap one to try it. Every theme uses the game look; Game themes also have their own picture background.</p>
    <div class="seg" style="--n:3;margin-bottom:12px">${THG.map(g=>`<button class="${thTab===g[0]?'on':''}" data-act="thtab" data-v="${g[0]}">${g[1]}</button>`).join('')}</div>
    <div class="thgrid">${items.map(t=>`<button class="thi ${SET.pal===t[0]?'on':''}" data-act="pal" data-v="${esc(t[0])}">${thPrev(t[0])}<b>${esc(thName(t[0]))}</b>${t[2]&&t[2]!==t[1]?`<small class="fa">${esc(t[2])}</small>`:''}${SET.pal===t[0]?'<i class="thok">✓</i>':''}</button>`).join('')}</div>
    <button data-act="close">Done · تمام</button></div>`;

@@ -46,4 +46,4 @@ Both open the live site (https://3omid.github.io/studyprep/), so content updates
 ## Game look and theme menu
 - Settings → Look → **Colour theme** is one button that opens a theme sheet with three tabs (Game, Cars, Colours) and a preview of each theme. Tapping a theme applies it at once and keeps the page where it was.
 - **Game themes** (`g-*` rows in `themes.js`): Arena, Royal Night, Jungle, Lava, Frost and Desert. Each has a picture background drawn in code as SVG (`window.SCENES`), so no image files are needed and it works offline.
-- The game look (picture background, outlined panels, glossy 3D buttons, the Lilita One display font, dark menu bar) is always on for the Play and Cyber Base pages and during games, and on every page when a game theme is picked (`body.gskin`).
+- The game look (picture background, outlined panels, glossy 3D buttons, the Lilita One display font, dark menu bar, player bar on Home and Play) is on every page (`body.gskin`). Game themes add their own picture background; other themes use the Arena picture.
