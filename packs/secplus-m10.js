@@ -171,8 +171,8 @@
   M(T3,'Which password practice is best?',
     'کدام عادت رمز عبور بهترین است؟',
     'بلند، پیچیده و هر حساب جدا.',
-    ['A long, unique password for each account, stored in a password manager','The same strong password for work and personal accounts','Your pet\'s name followed by the year','A short password changed every day'],
-    ['رمز بلند و جدا برای هر حساب، نگه‌داری‌شده در password manager','یک رمز قوی برای حساب کاری و شخصی','اسم حیوان خانگی + سال','رمز کوتاهی که هر روز عوض شود'],
+    ['A long, unique password per account, kept in a password manager','The same strong password for all work and personal accounts','Your pet\'s name followed by the current year and a symbol','A short password that you change to a new one every day'],
+    ['رمز بلند و جدا برای هر حساب، نگه‌داری‌شده در Password Manager','یک رمز قوی برای همه‌ی حساب‌های کاری و شخصی','اسم حیوان خانگی و بعد سال جاری و یک علامت','رمز کوتاهی که هر روز به یک رمز جدید عوض شود'],
     'Use long (12+ characters), complex and unique passwords for every account, and a password manager to store them. Never reuse passwords between work and personal accounts.',
     'رمز خوب بلند است (حداقل ۱۲ حرف با عدد و علامت) و برای هر حساب فرق دارد. لازم نیست همه را حفظ کنی؛ password manager مثل یک گاوصندوق برایت نگهشان می‌دارد.');
 
@@ -219,8 +219,8 @@
   M(T3,'Why are privileged accounts such as system administrators the main focus of PAM?',
     'چرا حساب‌های ادمین (privileged) تمرکز اصلی PAM هستند؟',
     'کلید همه‌ی درها دست کیست؟',
-    ['They have broad access to critical systems, so they are high-value targets','They are used only by guests','They never need passwords','They cannot be audited'],
-    ['چون به سیستم‌های حیاتی دسترسی وسیع دارند و هدف باارزشی هستند','چون فقط مهمان‌ها از آن استفاده می‌کنند','چون هیچ‌وقت رمز لازم ندارند','چون نمی‌شود بررسی‌شان کرد'],
+    ['They have wide access to critical systems, so attackers want them','They are used only by guests who visit the office for a short time','They never need passwords, so anyone can sign in with them','They cannot be audited, so their activity is never recorded'],
+    ['به سیستم‌های حیاتی دسترسی وسیع دارند، پس مهاجم‌ها دنبالشان هستند','فقط مهمان‌هایی که مدت کوتاهی به اداره می‌آیند از آن‌ها استفاده می‌کنند','هیچ‌وقت رمز لازم ندارند، پس هر کسی می‌تواند با آن‌ها وارد شود','نمی‌شود ممیزی‌شان کرد، پس کارهایشان هیچ‌وقت ثبت نمی‌شود'],
     'Privileged accounts can reach critical infrastructure. PAM reduces insider threats, prevents lateral movement and improves auditability.',
     'حساب ادمین مثل شاه‌کلید ساختمان است. اگر دست دزد بیفتد، همه‌ی درها باز می‌شود. برای همین PAM مراقب این حساب‌هاست.');
 
@@ -347,8 +347,8 @@
   M(T5,'A visitor plugs an unpatched laptop into an office network jack and is automatically placed on a guest VLAN. What did this?',
     'یک مهمان لپ‌تاپ وصله‌نشده‌اش را به پریز شبکه‌ی دفتر وصل می‌کند و خودکار به VLAN مهمان فرستاده می‌شود. چه چیزی این کار را کرد؟',
     'قبل از ورود به شبکه، «سلامت» دستگاه چک می‌شود.',
-    ['NAC with posture assessment','DLP','EDR','Web filtering'],
-    ['NAC با بررسی سلامت دستگاه','DLP','EDR','فیلتر وب'],
+    ['NAC with posture assessment','DLP watching outgoing files','EDR on the visitor\'s laptop','Web filtering at the proxy'],
+    ['NAC با بررسی سلامت دستگاه','DLP که فایل‌های خروجی را می‌پاید','EDR روی لپ‌تاپ مهمان','فیلتر وب روی Proxy'],
     'NAC validates devices and checks posture (antivirus, patches, firewall) before granting access, quarantining non-compliant or unknown devices.',
     'NAC مثل نگهبان دم در مدرسه است که قبل از ورود، کارت و لباس فرم را چک می‌کند. دستگاه سالم وارد می‌شود؛ دستگاه ناسالم به اتاق انتظار (VLAN مهمان) می‌رود.');
 
@@ -363,16 +363,16 @@
   M(T5,'How does XDR differ from EDR?',
     'فرق XDR با EDR چیست؟',
     'X = Extended (گسترش‌یافته).',
-    ['XDR combines data from endpoints, network, cloud and identity for a unified view','XDR only works on one laptop','XDR replaces all firewalls','XDR is a password manager'],
-    ['XDR داده‌ی دستگاه‌ها، شبکه، ابر و هویت را با هم ترکیب می‌کند','XDR فقط روی یک لپ‌تاپ کار می‌کند','XDR جای همه‌ی فایروال‌ها را می‌گیرد','XDR یک password manager است'],
+    ['XDR combines endpoint, network, cloud and identity data','XDR protects only one laptop at a time, with no central view','XDR replaces every firewall on the company network','XDR is a password manager that stores admin credentials'],
+    ['XDR داده‌ی دستگاه، شبکه، Cloud و هویت را ترکیب می‌کند','XDR هر بار فقط از یک لپ‌تاپ محافظت می‌کند و دید مرکزی ندارد','XDR جای همه‌ی فایروال‌های شبکه‌ی شرکت را می‌گیرد','XDR یک Password Manager است که رمزهای ادمین را نگه می‌دارد'],
     'XDR extends EDR by correlating data across endpoints, networks, servers, cloud workloads and identity systems to detect cross-domain threats and reduce alert fatigue.',
     'EDR فقط یک دستگاه را می‌بیند. XDR مثل اتاق کنترل است که دوربین‌های همه جا را با هم نگاه می‌کند: دستگاه‌ها، شبکه، ابر و حساب‌های کاربری.');
 
   M(T5,'An accountant who always logs in from Toronto at 9 a.m. suddenly logs in at 3 a.m. from another country and downloads 10,000 files. Which tool is designed to flag this?',
     'حسابداری که همیشه ساعت ۹ صبح از تورنتو وارد می‌شود، ناگهان ساعت ۳ صبح از کشور دیگری وارد می‌شود و ۱۰ هزار فایل دانلود می‌کند. کدام ابزار برای کشف این ساخته شده؟',
     'رفتار «کاربر» را با حالت عادی‌اش مقایسه می‌کند.',
-    ['UBA (User Behavior Analytics)','Group Policy','SPF','Password vaulting'],
-    ['UBA (تحلیل رفتار کاربر)','Group Policy','SPF','گاوصندوق رمز'],
+    ['UBA (user behavior analytics)','Group Policy login restrictions','SPF records for the mail domain','Password vaulting for admin accounts'],
+    ['UBA (تحلیل رفتار کاربر)','محدودیت ورود با Group Policy','رکوردهای SPF برای دامنه‌ی ایمیل','گاوصندوق رمز برای حساب‌های ادمین'],
     'UBA learns normal user patterns (login times, file access) and uses machine learning to flag anomalies that may signal stolen credentials, insider threats or data exfiltration.',
     'UBA عادت‌های هر کاربر را یاد می‌گیرد. اگر کسی مثل همیشه رفتار نکند، مثلاً نصف شب از کشور دیگر وارد شود، هشدار می‌دهد. احتمالاً رمزش دزدیده شده.');
 
@@ -403,16 +403,16 @@
   M(T6,'An old firewall rule leaves TCP 3389 open to the internet, and attackers use it to get into a critical server. Which service was exposed?',
     'یک قانون قدیمی فایروال پورت TCP 3389 را به اینترنت باز گذاشته و هکرها از آن وارد یک سرور حیاتی شده‌اند. کدام سرویس باز مانده بود؟',
     'دسکتاپ از راه دور ویندوز.',
-    ['RDP (Remote Desktop Protocol)','HTTPS','SSH','DNS'],
-    ['RDP (دسکتاپ از راه دور)','HTTPS','SSH','DNS'],
+    ['RDP (Remote Desktop Protocol)','HTTPS (secure web traffic)','SSH (secure remote shell)','DNS (domain name lookups)'],
+    ['RDP (دسکتاپ از راه دور)','HTTPS (ترافیک امن وب)','SSH (پوسته‌ی امن از راه دور)','DNS (پیدا کردن نام دامنه)'],
     'Port 3389 is RDP. Fix: audit firewall rules regularly, remove broad rules, apply least privilege, and alert on unusual external access.',
     'پورت 3389 مال RDP است، یعنی کنترل کامپیوتر از راه دور. باز گذاشتنش روی اینترنت مثل این است که در خانه را باز بگذاری. فایروال را مرتب بازبینی کن و قانون‌های اضافه را پاک کن.');
 
   M(T6,'Employees reuse "Summer2024!" on work and personal sites. One site is breached and attackers try those logins on company systems. What attack is this, and what stops it best?',
     'کارمندها رمز «Summer2024!» را هم برای کار و هم برای سایت‌های شخصی استفاده می‌کنند. یک سایت هک می‌شود و هکرها همان ورودها را روی سیستم شرکت امتحان می‌کنند. این چه حمله‌ای است و بهترین جلوگیری چیست؟',
     'رمزهای دزدیده‌شده را «می‌چپانند».',
-    ['Credential stuffing; MFA plus unique passwords','Phishing; a DMZ','SQL injection; a WAF','Tailgating; a badge reader'],
-    ['Credential stuffing؛ MFA + رمز جدا برای هر حساب','فیشینگ؛ DMZ','SQL injection؛ WAF','دنبال کسی وارد شدن؛ کارت‌خوان'],
+    ['Credential stuffing; MFA and unique passwords','Phishing; moving the servers into a DMZ','SQL injection; a web application firewall','Tailgating; a badge reader at the main door'],
+    ['Credential Stuffing؛ MFA و رمز جدا برای هر حساب','فیشینگ؛ بردن سرورها به DMZ','SQL Injection؛ فایروال برنامه‌ی وب','Tailgating؛ کارت‌خوان در ورودی اصلی'],
     'Credential stuffing replays leaked username/password pairs on other sites. MFA, unique passwords, password managers and dark web monitoring defend against it.',
     'Credential stuffing یعنی هکر رمزهای لو رفته از یک سایت را روی سایت‌های دیگر امتحان می‌کند، چون می‌داند آدم‌ها رمز تکراری دارند. MFA جلویش را می‌گیرد، چون رمز به تنهایی کافی نیست.');
 

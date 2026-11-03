@@ -90,8 +90,8 @@
   M(T3,'A server\'s security log has no entries between 02:00 and 04:00, but the central log server still holds them. What is the most likely explanation?',
     'لاگ امنیتی یک سرور بین ساعت ۲ تا ۴ هیچ ورودی ندارد، اما سرور لاگ مرکزی هنوز آن‌ها را دارد. محتمل‌ترین توضیح چیست؟',
     'چرا لاگ مرکزی مهم است؟',
-    ['An attacker cleared the local logs to hide activity','Normal log rotation removed them','The server was newly built','The logs were encrypted by ransomware'],
-    ['مهاجم لاگ‌های محلی را پاک کرده تا کارش پنهان شود','چرخش عادی لاگ آن‌ها را حذف کرده','سرور تازه نصب شده','باج‌افزار لاگ‌ها را رمز کرده'],
+    ['An attacker cleared the local logs','Normal log rotation removed the old entries','The server was newly built that night','Ransomware encrypted the log files'],
+    ['مهاجم لاگ‌های محلی را پاک کرده','چرخش عادی لاگ، رکوردهای قدیمی را حذف کرده','سرور همان شب تازه نصب شده','باج‌افزار فایل‌های لاگ را رمز کرده'],
     'Missing logs often mean an attacker wiped them. Rotation removes the oldest entries, not a gap in the middle; encrypted logs would still exist as files. This is why organizations send logs to a protected central server.',
     'لاگ‌های گم‌شده معمولاً یعنی مهاجم آن‌ها را پاک کرده. چرخش لاگ قدیمی‌ترین‌ها را حذف می‌کند، نه یک تکه از وسط؛ لاگ رمزشده هم هنوز به‌صورت فایل وجود دارد. به همین دلیل سازمان‌ها لاگ‌ها را به یک سرور مرکزی محافظت‌شده می‌فرستند.');
 
@@ -139,8 +139,8 @@
   M(T4,'A SIEM rule automatically adds a firewall block when it detects beaconing. What is the main risk of this kind of rule?',
     'یک قاعده‌ی SIEM وقتی Beaconing می‌بیند خودکار یک قاعده‌ی مسدودسازی به فایروال اضافه می‌کند. ریسک اصلی این نوع قاعده چیست؟',
     'اگر اشتباهی فعال شود چه می‌شود؟',
-    ['A mis-triggered rule can cause an outage','It cannot be logged','It makes the SIEM agentless','It disables correlation'],
-    ['فعال شدن اشتباهی آن ممکن است باعث قطعی شود','قابل ثبت در لاگ نیست','SIEM را بدون Agent می‌کند','همبستگی را خاموش می‌کند'],
+    ['A false trigger can cause an outage','Blocks made by the rule cannot be logged','It makes the SIEM run without agents','It turns off the SIEM\'s correlation engine'],
+    ['فعال شدن اشتباهی می‌تواند قطعی بیاورد','مسدودسازی‌های این قاعده قابل ثبت در لاگ نیست','SIEM را بدون Agent اجرا می‌کند','موتور همبستگی SIEM را خاموش می‌کند'],
     'Rules with an active response can block legitimate traffic or change infrastructure if their logic is wrong. Rules need to be built carefully, tested and reviewed regularly, and custom rules for your own environment matter most.',
     'قاعده‌هایی که پاسخ فعال دارند، اگر منطقشان غلط باشد می‌توانند ترافیک مجاز را ببندند یا زیرساخت را تغییر دهند. قاعده‌ها باید با دقت ساخته، تست و مرتب بازبینی شوند و قاعده‌های سفارشی برای محیط خودتان از همه مهم‌ترند.');
 
@@ -156,8 +156,8 @@
   M(T5,'Why might flow data from a very busy network miss some connections?',
     'چرا ممکن است داده‌ی Flow از یک شبکه‌ی خیلی شلوغ بعضی اتصال‌ها را نشان ندهد؟',
     'مثلاً ۱ از هر ۱۰۰۰ بسته.',
-    ['Flows are often sampled to save processing and storage','Flows only record UDP traffic','Flows are deleted every hour','Flows need an agent on every host'],
-    ['Flowها اغلب نمونه‌برداری می‌شوند تا پردازش و فضا کمتر مصرف شود','Flow فقط ترافیک UDP را ثبت می‌کند','Flowها هر ساعت پاک می‌شوند','Flow روی هر سیستم Agent لازم دارد'],
+    ['Flows are often sampled to save resources','Flow records include only UDP traffic','Flow records are deleted every hour','Flows need an agent on every single host'],
+    ['Flowها اغلب برای صرفه‌جویی نمونه‌برداری می‌شوند','رکوردهای Flow فقط ترافیک UDP را دارند','رکوردهای Flow هر ساعت پاک می‌شوند','Flow روی تک‌تک سیستم‌ها Agent لازم دارد'],
     'Tracking every flow costs a lot of device CPU and storage, so flows are often sampled at rates like 10:1 or 1000:1. Sampling, especially with sFlow, scales well but loses some detail.',
     'ثبت همه‌ی Flowها پردازنده و فضای زیادی از دستگاه می‌گیرد، پس اغلب با نرخ‌هایی مثل ۱۰ به ۱ یا ۱۰۰۰ به ۱ نمونه‌برداری می‌شود. نمونه‌برداری، مخصوصاً در sFlow، برای شبکه‌ی بزرگ خوب است اما بخشی از جزئیات از دست می‌رود.');
 
@@ -237,8 +237,8 @@
   M(T6,'An attacker stole the private key of the company\'s web server certificate. Which configuration change best addresses this?',
     'مهاجم کلید خصوصی گواهی وب‌سرور شرکت را دزدیده. کدام تغییر پیکربندی بهترین پاسخ است؟',
     'گواهی دیگر قابل اعتماد نیست.',
-    ['Revoke the certificate and issue a new one','Add a DLP rule','Lower the SIEM threshold','Enable NetFlow sampling'],
-    ['ابطال گواهی و صدور گواهی جدید','افزودن قاعده‌ی DLP','پایین آوردن آستانه‌ی SIEM','روشن کردن نمونه‌برداری NetFlow'],
+    ['Revoke the certificate and issue a new one','Add a DLP rule for the web server\'s files','Lower the alert threshold in the SIEM','Turn on NetFlow sampling at the edge router'],
+    ['ابطال گواهی و صدور گواهی جدید','افزودن قاعده‌ی DLP برای فایل‌های وب‌سرور','پایین آوردن آستانه‌ی هشدار در SIEM','روشن کردن نمونه‌برداری NetFlow روی روتر لبه'],
     'If attackers have a certificate\'s private key, revoke the certificate and replace it. Other common remediation changes are firewall rules, MDM actions such as remote wipe, DLP rules and URL or content filters. Track every change so it can be rolled back later.',
     'اگر مهاجم کلید خصوصی گواهی را دارد، گواهی را باطل و جایگزین کن. تغییرهای رایج دیگر: قاعده‌ی فایروال، اقدام‌های MDM مثل پاک کردن از راه دور، قاعده‌ی DLP و فیلتر URL یا محتوا. هر تغییر را ثبت کن تا بعداً بشود برگرداند.');
 

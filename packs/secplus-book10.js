@@ -89,8 +89,8 @@
   M(T2,'A company runs most workloads in its own private cloud and, through one management platform, automatically sends overflow to a public cloud during busy periods. What is this?',
     'شرکتی بیشتر بارها را در ابر خصوصی خودش اجرا می‌کند و با یک پلتفرم مدیریتی واحد، در زمان‌های شلوغ بار اضافه را خودکار به ابر عمومی می‌فرستد. این چیست؟',
     'ترکیب یکپارچه + Bursting.',
-    ['Hybrid cloud with cloud bursting','Community cloud','Multitenancy','Edge computing'],
-    ['ابر ترکیبی با Cloud bursting','ابر اجتماعی','چندمستأجری','رایانش لبه'],
+    ['Hybrid cloud with cloud bursting','Community cloud shared by companies','Multitenancy on one public cloud','Edge computing at branch offices'],
+    ['ابر ترکیبی با Cloud Bursting','ابر اجتماعی مشترک بین شرکت‌ها','چندمستأجری روی یک ابر عمومی','رایانش لبه در شعبه‌ها'],
     'Hybrid cloud blends public, private and/or community clouds into one coherent platform; simply buying both separately is not hybrid. Sending overflow to the public cloud is public cloud bursting. Hybrid also supports a decentralized design with fewer single points of failure.',
     'ابر ترکیبی ابرهای عمومی، خصوصی و/یا اجتماعی را در یک پلتفرم یکپارچه ترکیب می‌کند؛ فقط خریدن جداگانه‌ی هر دو ترکیبی نیست. فرستادن بار اضافه به ابر عمومی Public cloud bursting است. Hybrid طراحی غیرمتمرکز با نقاط شکست کمتر را هم ممکن می‌کند.');
 
@@ -129,8 +129,8 @@
   M(T2,'A Canadian company\'s cloud provider stores customer backups in datacenters in three other countries. Which concern does this raise?',
     'ارائه‌دهنده‌ی ابری یک شرکت کانادایی، پشتیبان مشتری‌ها را در دیتاسنترهایی در سه کشور دیگر نگه می‌دارد. این چه نگرانی‌ای ایجاد می‌کند؟',
     'قانون کجا اعمال می‌شود؟',
-    ['Data sovereignty: the data may fall under the laws of each country where it is stored or processed','Multitenancy','VM sprawl','Resource reuse'],
-    ['حاکمیت داده: داده ممکن است تحت قانون هر کشوری باشد که در آن ذخیره یا پردازش می‌شود','چندمستأجری','VM sprawl','استفاده‌ی دوباره از منابع'],
+    ['Data sovereignty: each country\'s laws may apply','Multitenancy with other customers on the same hosts','VM sprawl from backup servers nobody tracks','Resource reuse of disks that were not wiped'],
+    ['حاکمیت داده: ممکن است قانون هر کشور اعمال شود','چندمستأجری با مشتری‌های دیگر روی همان میزبان‌ها','VM Sprawl از سرورهای پشتیبانی که کسی ردیابی نمی‌کند','استفاده‌ی دوباره از دیسک‌هایی که پاک نشده‌اند'],
     'Data sovereignty means data is subject to the laws of every jurisdiction where it is collected, stored or processed. Choose allowed regions when the provider offers it, know where your data goes, and consider encrypting with keys the provider does not control.',
     'حاکمیت داده یعنی داده تابع قانون هر حوزه‌ای است که در آن جمع‌آوری، ذخیره یا پردازش می‌شود. اگر ارائه‌دهنده اجازه دهد Regionهای مجاز را انتخاب کن، بدان داده‌ات کجا می‌رود و رمزگذاری با کلیدی که دست ارائه‌دهنده نیست را در نظر بگیر.');
 
@@ -162,16 +162,16 @@
   M(T3,'An audit finds dozens of forgotten test VMs that nobody owns. They are unpatched and still cost money every month. What is this problem, and what prevents it?',
     'یک ممیزی ده‌ها VM آزمایشی فراموش‌شده پیدا می‌کند که مالکی ندارند. وصله نشده‌اند و هنوز هر ماه هزینه دارند. این مشکل چیست و چه چیزی جلویش را می‌گیرد؟',
     'VMها مثل علف هرز پخش شده‌اند.',
-    ['VM sprawl; instance awareness (tracking every instance)','VM escape; a Type I hypervisor','Resource reuse; disk wiping','Data sovereignty; region locks'],
-    ['VM sprawl؛ آگاهی از نمونه‌ها (ردیابی همه‌ی Instanceها)','VM escape؛ Hypervisor نوع اول','Resource reuse؛ پاک کردن دیسک','حاکمیت داده؛ قفل Region'],
+    ['VM sprawl; tracking every instance','VM escape; switching to a Type I hypervisor','Resource reuse; wiping disks before reuse','Data sovereignty; locking data to one region'],
+    ['VM Sprawl؛ ردیابی همه‌ی Instanceها','VM Escape؛ رفتن به Hypervisor نوع اول','Resource Reuse؛ پاک کردن دیسک قبل از استفاده‌ی دوباره','حاکمیت داده؛ قفل کردن داده به یک Region'],
     'VM sprawl is instances created and then forgotten or abandoned, building up cost and security gaps. Instance awareness, tagging owners and automatic cleanup prevent it.',
     'VM sprawl یعنی Instanceهایی که ساخته و بعد فراموش یا رها شده‌اند و هزینه و ضعف امنیتی جمع می‌کنند. آگاهی از Instanceها، برچسب مالک و پاک‌سازی خودکار جلویش را می‌گیرد.');
 
   M(T3,'A team packages an app with its libraries so it runs the same on any host, sharing the host\'s kernel instead of carrying a full OS. Which NIST practice helps secure this?',
     'تیمی یک اپ را با کتابخانه‌هایش بسته‌بندی می‌کند تا روی هر میزبانی یکسان اجرا شود و به جای داشتن یک سیستم‌عامل کامل، از Kernel میزبان استفاده کند. کدام توصیه‌ی NIST به امن کردنش کمک می‌کند؟',
     'کانتینر؛ مثل VM محافظتش کن.',
-    ['Use a container-specific host OS and group containers by risk profile','Run every container as root for compatibility','Put all containers on one network with no segmentation','Disable vulnerability scanning to keep images small'],
-    ['از سیستم‌عامل میزبان مخصوص کانتینر استفاده کن و کانتینرها را بر اساس سطح ریسک جدا کن','همه‌ی کانتینرها را برای سازگاری با root اجرا کن','همه را بدون تفکیک در یک شبکه بگذار','برای کوچک ماندن Image اسکن آسیب‌پذیری را خاموش کن'],
+    ['Use a container-specific host OS and group containers by risk','Run every container as root so the libraries stay compatible','Put all containers on one flat network to simplify traffic','Turn off image vulnerability scanning to keep images small'],
+    ['از سیستم‌عامل میزبان مخصوص کانتینر استفاده کن و کانتینرها را بر اساس ریسک جدا کن','همه‌ی کانتینرها را با root اجرا کن تا کتابخانه‌ها سازگار بمانند','همه‌ی کانتینرها را برای سادگی در یک شبکه‌ی تخت بگذار','اسکن آسیب‌پذیری Image را خاموش کن تا Image کوچک بماند'],
     'Containers (for example Docker) give application-level virtualization and must be isolated like VMs. NIST suggests stripped-down container host OSs to shrink the attack surface, segmenting containers by risk and purpose, and container-aware vulnerability tools.',
     'کانتینرها (مثلاً Docker) مجازی‌سازی در سطح اپ می‌دهند و باید مثل VM جدا نگه داشته شوند. NIST توصیه می‌کند سیستم‌عامل میزبانِ کم‌حجم مخصوص کانتینر (سطح حمله‌ی کمتر)، تفکیک کانتینرها بر اساس ریسک و کاربرد، و ابزار آسیب‌پذیری مخصوص کانتینر.');
 
@@ -186,8 +186,8 @@
   M(T3,'A sensitive PDF in an object storage bucket shows up in search engine results. What is the most likely cause?',
     'یک PDF حساس در یک Bucket ذخیره‌ساز شیء در نتایج موتور جستجو پیدا می‌شود. محتمل‌ترین علت چیست؟',
     'چند کلیک اشتباه.',
-    ['The bucket\'s access permissions were set to public','VM escape on the storage host','The block volume was too small','A Type II hypervisor was used'],
-    ['مجوز دسترسی Bucket عمومی تنظیم شده بود','VM escape روی میزبان ذخیره‌ساز','Volume بلوکی خیلی کوچک بود','از Hypervisor نوع دوم استفاده شده بود'],
+    ['The bucket\'s permissions were set to public','A VM escape on the storage provider\'s host','The block storage volume was too small','A Type II hypervisor was used for storage'],
+    ['مجوز Bucket عمومی تنظیم شده بود','VM Escape روی میزبان ارائه‌دهنده‌ی ذخیره‌سازی','Volume ذخیره‌سازی بلوکی خیلی کوچک بود','برای ذخیره‌سازی از Hypervisor نوع دوم استفاده شده بود'],
     'Misconfigured permissions on object storage are a common cloud breach cause: a few wrong clicks can publish files to the whole web. Review bucket policies, block public access by default and encrypt sensitive data.',
     'مجوزهای اشتباه روی Object storage یکی از علت‌های رایج نشت داده در ابر است: چند کلیک اشتباه می‌تواند فایل را برای کل وب منتشر کند. Policyهای Bucket را بازبینی کن، دسترسی عمومی را به طور پیش‌فرض ببند و داده‌ی حساس را رمز کن.');
 
@@ -227,8 +227,8 @@
   M(T4,'An app is built from many small, independent services, each doing one job and talking to the others through APIs. What is this design called, and what extra control helps protect it?',
     'یک اپ از تعداد زیادی سرویس کوچک و مستقل ساخته شده که هرکدام یک کار انجام می‌دهد و از طریق API با بقیه حرف می‌زند. اسم این طراحی چیست و چه کنترل اضافه‌ای به محافظتش کمک می‌کند؟',
     'سرویس‌های ریز + API.',
-    ['Microservices; API inspection (often in a web application firewall)','A monolith; a bigger server','Type II virtualization; a host firewall','A cold site; geographic dispersion'],
-    ['میکروسرویس؛ بازرسی API (معمولاً در WAF)','یکپارچه (Monolith)؛ سرور بزرگ‌تر','مجازی‌سازی نوع دوم؛ فایروال میزبان','سایت سرد؛ پراکندگی جغرافیایی'],
+    ['Microservices; API inspection, often in a WAF','A monolith; a bigger server with more memory','Type II virtualization; a host-based firewall','A cold site; geographic dispersion of services'],
+    ['میکروسرویس؛ بازرسی API، معمولاً در WAF','یکپارچه (Monolith)؛ سرور بزرگ‌تر با حافظه‌ی بیشتر','مجازی‌سازی نوع دوم؛ فایروال روی میزبان','سایت سرد؛ پراکندگی جغرافیایی سرویس‌ها'],
     'Microservices provide narrow functions to other services, often as FaaS, and react to events through APIs. Because so much depends on APIs, use secure coding plus API inspection that checks requests for attacks.',
     'میکروسرویس‌ها کارهای ریز را برای سرویس‌های دیگر انجام می‌دهند، اغلب به شکل FaaS، و از طریق API به رویدادها پاسخ می‌دهند. چون همه چیز به API وابسته است، کدنویسی امن به اضافه‌ی بازرسی API که درخواست‌ها را برای حمله بررسی می‌کند لازم است.');
 
@@ -251,8 +251,8 @@
   M(T4,'A company needs to generate and use encryption keys so that no single person, including cloud provider staff, ever sees the raw key. What should it use?',
     'شرکتی باید کلیدهای رمزگذاری بسازد و استفاده کند طوری که هیچ‌کس، حتی کارکنان ارائه‌دهنده‌ی ابر، هرگز کلید خام را نبیند. از چه استفاده کند؟',
     'دستگاه سخت‌افزاری مخصوص کلید.',
-    ['A hardware security module (HSM)','A security group','A transit gateway','An API-based CASB'],
-    ['ماژول امنیت سخت‌افزاری (HSM)','Security group','Transit gateway','CASB مبتنی بر API'],
+    ['A hardware security module (HSM)','A security group on the key server','A transit gateway between networks','An API-based CASB for cloud apps'],
+    ['ماژول امنیت سخت‌افزاری (HSM)','Security Group روی سرور کلید','Transit Gateway بین شبکه‌ها','CASB مبتنی بر API برای برنامه‌های ابری'],
     'HSMs are special devices that create, store and use keys and do crypto operations without exposing keys to people. They are expensive but very secure. Cloud providers offer HSM services so customers can manage their own keys without exposing them to the provider.',
     'HSM دستگاه مخصوصی است که کلید را می‌سازد، نگه می‌دارد و استفاده می‌کند و عملیات رمزنگاری را بدون نشان دادن کلید به آدم‌ها انجام می‌دهد. گران اما خیلی امن است. ارائه‌دهنده‌های ابری سرویس HSM می‌دهند تا مشتری کلیدهای خودش را بدون افشا برای ارائه‌دهنده مدیریت کند.');
 
@@ -267,16 +267,16 @@
   M(T4,'Before signing with a cloud vendor, what contract clause best gives the customer assurance that the vendor is protecting its data as promised?',
     'قبل از امضای قرارداد با یک فروشنده‌ی ابری، کدام بند قرارداد بهتر به مشتری اطمینان می‌دهد که فروشنده طبق قول از داده‌اش محافظت می‌کند؟',
     'حق بررسی.',
-    ['A right-to-audit clause (by the customer or an independent auditor)','A clause promising unlimited free storage','A clause banning multitenancy','A clause requiring a Type II hypervisor'],
-    ['بند حق ممیزی (توسط مشتری یا حسابرس مستقل)','بند فضای ذخیره‌ی رایگان نامحدود','بند ممنوعیت چندمستأجری','بند الزام Hypervisor نوع دوم'],
+    ['A right-to-audit clause','A clause promising unlimited free storage','A clause banning multitenancy on all hosts','A clause requiring a Type II hypervisor'],
+    ['بند حق ممیزی','بند فضای ذخیره‌ی رایگان نامحدود','بند ممنوعیت چندمستأجری روی همه‌ی میزبان‌ها','بند الزام Hypervisor نوع دوم'],
     'Cloud governance covers vetting vendors, watching their stability and managing the cloud portfolio. Contracts should guarantee the right to audit, either directly or through an independent third party, so the customer can verify security and data protection.',
     'حاکمیت ابر شامل ارزیابی فروشنده‌ها، پایش ثبات آن‌ها و مدیریت مجموعه‌ی سرویس‌های ابری است. قرارداد باید حق ممیزی را تضمین کند، مستقیم یا با حسابرس مستقل، تا مشتری بتواند امنیت و حفاظت از داده را بررسی کند.');
 
   M(T4,'A company moves a critical app to one virtual server in one cloud availability zone and assumes the cloud makes it highly available. What is wrong with this assumption?',
     'شرکتی یک اپ حیاتی را روی یک سرور مجازی در یک Availability zone ابری می‌برد و فرض می‌کند ابر خودش آن را High availability می‌کند. این فرض چه اشکالی دارد؟',
     'HA خودکار نیست.',
-    ['High availability is not automatic; it must be designed and often paid for, for example across multiple zones or regions','Nothing; all cloud services are highly available by default','Availability zones never fail','Only SaaS can be highly available'],
-    ['High availability خودکار نیست؛ باید طراحی و اغلب خریداری شود، مثلاً در چند Zone یا Region','هیچ اشکالی؛ همه‌ی سرویس‌های ابری به طور پیش‌فرض HA هستند','Availability zoneها هرگز خراب نمی‌شوند','فقط SaaS می‌تواند HA باشد'],
+    ['High availability must be designed, e.g. across several zones','Nothing; every cloud service is highly available by default','Nothing; availability zones are built so they never fail','Only SaaS products can be highly available, not servers'],
+    ['High Availability باید طراحی شود، مثلاً در چند Zone','هیچ اشکالی؛ همه‌ی سرویس‌های ابری به‌طور پیش‌فرض HA هستند','هیچ اشکالی؛ Availability Zoneها طوری ساخته شده‌اند که هرگز خراب نشوند','فقط محصولات SaaS می‌توانند HA باشند، نه سرورها'],
     'Base cloud services do not guarantee high availability. Customers must configure and often pay for redundancy, such as servers in several zones or regions behind a load balancer, plus replicated storage and backups.',
     'سرویس‌های پایه‌ی ابر High availability را تضمین نمی‌کنند. مشتری باید افزونگی را تنظیم و اغلب خریداری کند، مثل سرور در چند Zone یا Region پشت Load balancer، به اضافه‌ی ذخیره‌ساز تکثیرشده و پشتیبان.');
 

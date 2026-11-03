@@ -64,8 +64,8 @@
   M(T2,'A patch removes a vulnerability on a web server. What changed in the risk equation?',
     'یک وصله آسیب‌پذیری یک وب‌سرور را برطرف می‌کند. در معادله‌ی ریسک چه چیزی عوض شد؟',
     'ریسک = تهدید × آسیب‌پذیری.',
-    ['The vulnerability was reduced; the threat still exists','The threat was eliminated','The asset value went down','The risk was transferred'],
-    ['آسیب‌پذیری کم شد؛ تهدید هنوز هست','تهدید از بین رفت','ارزش دارایی کم شد','ریسک منتقل شد'],
+    ['The vulnerability was reduced; the threat remains','The threat was eliminated along with the flaw','The value of the web server as an asset went down','The risk was transferred to the software vendor'],
+    ['آسیب‌پذیری کم شد؛ تهدید هنوز هست','تهدید همراه با ضعف از بین رفت','ارزش وب‌سرور به‌عنوان دارایی کم شد','ریسک به فروشنده‌ی نرم‌افزار منتقل شد'],
     'Risk needs both a threat and a vulnerability. Patching removes the vulnerability (mitigation); attackers (the threat) are still out there. Exemptions and exceptions are formal ways to accept a risk.',
     'ریسک هم تهدید می‌خواهد و هم آسیب‌پذیری. وصله آسیب‌پذیری را برمی‌دارد (Mitigation)؛ مهاجمان (تهدید) هنوز هستند. Exemption و Exception راه‌های رسمی پذیرش ریسک‌اند.');
 
@@ -89,8 +89,8 @@
   M(T3,'Before buying routers, a company verifies they were not tampered with between the factory and delivery. What is this part of?',
     'شرکتی قبل از خرید روترها بررسی می‌کند که بین کارخانه و تحویل دست‌کاری نشده باشند. این بخشی از چیست؟',
     'ریسک زنجیره‌ی تأمین.',
-    ['Supply chain assessment (hardware source authenticity)','Risk avoidance','Qualitative risk analysis','Data minimization'],
-    ['ارزیابی زنجیره‌ی تأمین (اصالت منبع سخت‌افزار)','اجتناب از ریسک','تحلیل کیفی ریسک','کمینه‌سازی داده'],
+    ['Supply chain assessment','Risk avoidance by not buying','Qualitative risk analysis','Data minimization for routers'],
+    ['ارزیابی زنجیره‌ی تأمین','اجتناب از ریسک با نخریدن','تحلیل کیفی ریسک','کمینه‌سازی داده برای روترها'],
     'Vendors are an external risk. Supply chain assessments include vendor due diligence and checking hardware source authenticity (trusted suppliers, tamper evidence) so devices are not compromised before arrival.',
     'فروشنده‌ها ریسک بیرونی‌اند. ارزیابی زنجیره‌ی تأمین شامل Due diligence فروشنده و بررسی اصالت منبع سخت‌افزار است (تأمین‌کننده‌ی مطمئن، نشانه‌ی دست‌کاری) تا دستگاه قبل از رسیدن آلوده نشده باشد.');
 
@@ -106,8 +106,8 @@
   M(T4,'Which statement about disasters is true for disaster recovery planning?',
     'کدام جمله درباره‌ی فاجعه برای برنامه‌ریزی بازیابی از فاجعه درست است؟',
     'فقط طوفان و سیل نیست.',
-    ['A disaster is any event that can disrupt the business: natural or human-made, internal or external','Only natural events count as disasters','Cyberattacks are never disasters','Disasters only affect data centers'],
-    ['فاجعه هر رویدادی است که کار را مختل کند: طبیعی یا انسانی، داخلی یا خارجی','فقط رویدادهای طبیعی فاجعه‌اند','حمله‌ی سایبری هیچ‌وقت فاجعه نیست','فاجعه فقط روی مرکز داده اثر دارد'],
+    ['Any event, natural or human-made, that disrupts the business','Only natural events such as floods and earthquakes count','Cyberattacks are never treated as disasters in DR plans','Disasters only affect data centers, not offices or staff'],
+    ['هر رویداد طبیعی یا انسانی که کار را مختل کند','فقط رویدادهای طبیعی مثل سیل و زلزله حساب می‌شوند','حمله‌ی سایبری در برنامه‌ی DR هیچ‌وقت فاجعه حساب نمی‌شود','فاجعه فقط روی مرکز داده اثر دارد، نه دفتر یا کارمندان'],
     'DR planning covers environmental disasters (floods, fires, storms) and human-made ones (attacks, errors, power loss), from external or internal sources. The BIA identifies mission-essential functions and their RTO/RPO.',
     'برنامه‌ی DR فاجعه‌های محیطی (سیل، آتش، طوفان) و انسانی (حمله، خطا، قطع برق) را از منبع بیرونی یا درونی پوشش می‌دهد. BIA کارکردهای حیاتی و RTO/RPO آن‌ها را مشخص می‌کند.');
 
@@ -123,8 +123,8 @@
   M(T5,'An EU customer asks a company to erase all of their personal data. Which right is this under GDPR?',
     'یک مشتری اروپایی از شرکتی می‌خواهد همه‌ی داده‌های شخصی‌اش را پاک کند. این کدام حق طبق GDPR است؟',
     'حق فراموش شدن.',
-    ['Right to be forgotten (erasure)','Right to audit','Legal hold','Data sovereignty'],
-    ['حق فراموش شدن (پاک کردن)','حق حسابرسی','Legal hold','حاکمیت داده'],
+    ['Right to be forgotten (erasure)','Right to audit the company\'s systems','A legal hold on the customer\'s records','Data sovereignty over the stored data'],
+    ['حق فراموش شدن (پاک کردن)','حق حسابرسی سیستم‌های شرکت','Legal Hold روی سوابق مشتری','حاکمیت داده روی داده‌ی ذخیره‌شده'],
     'GDPR gives data subjects the right to have their personal data erased in many cases. Organizations need a data inventory to find it, and a data protection officer (DPO) to oversee privacy compliance.',
     'GDPR در خیلی موارد به Data subject حق پاک شدن داده‌های شخصی‌اش را می‌دهد. سازمان برای پیدا کردن داده به فهرست داده (Data inventory) و برای نظارت بر حریم خصوصی به مسئول حفاظت داده (DPO) نیاز دارد.');
 

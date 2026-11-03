@@ -24,24 +24,24 @@
   M(T1,'A network scan says a server "may be missing" an OS update. Which change would let the scanner confirm this with more confidence?',
     'یک اسکن شبکه می‌گوید یک سرور «ممکن است» یک آپدیت سیستم‌عامل را نداشته باشد. کدام تغییر اجازه می‌دهد اسکنر با اطمینان بیشتری تأیید کند؟',
     'از بیرون حدس می‌زند؛ از داخل می‌بیند.',
-    ['Run a credentialed scan or use an agent on the server','Scan from a different country','Disable the scanner\'s plug-in updates','Scan only at night'],
-    ['اسکن با اطلاعات ورود یا یک Agent روی سرور','از یک کشور دیگر اسکن کن','آپدیت افزونه‌های اسکنر را خاموش کن','فقط شب اسکن کن'],
+    ['Run a credentialed scan or use an agent','Run the scan from a server in another country','Turn off the scanner\'s plug-in updates first','Run the scan only at night when it is quiet'],
+    ['اسکن با اطلاعات ورود یا استفاده از Agent','اسکن را از یک سرور در کشور دیگر اجرا کن','اول آپدیت افزونه‌های اسکنر را خاموش کن','اسکن را فقط شب که شلوغ نیست اجرا کن'],
     'Remote, noncredentialed scans can only guess at some issues. Credentialed scans and agent-based ("inside-out") scans read the real configuration, improving accuracy. Roll out agents carefully with a small pilot first.',
     'اسکن از راه دور و بدون اطلاعات ورود درباره‌ی بعضی مشکلات فقط حدس می‌زند. اسکن با اطلاعات ورود و اسکن با Agent («از داخل به بیرون») تنظیمات واقعی را می‌خوانند و دقت را بالا می‌برند. Agentها را با احتیاط و اول با یک آزمایش کوچک نصب کن.');
 
   M(T1,'A team wants to use plug-ins that might crash a critical production database. What is the best first step?',
     'تیمی می‌خواهد از افزونه‌هایی استفاده کند که ممکن است یک پایگاه داده‌ی حیاتی اصلی را از کار بیندازند. بهترین قدم اول چیست؟',
     'اول جایی امتحان کن که خرابی مهم نیست.',
-    ['Run the scan against a test copy of the system first','Run it on production during peak hours','Never scan the database at all','Run it without telling anyone'],
-    ['اول اسکن را روی یک نسخه‌ی آزمایشی از سیستم اجرا کن','روی سیستم اصلی در ساعت شلوغ اجرا کن','هیچ‌وقت پایگاه داده را اسکن نکن','بدون اطلاع به کسی اجرایش کن'],
+    ['Run the scan against a test copy first','Run it on production during peak hours to see real load','Never scan the database, since it is too important','Run it quietly without telling the database owners'],
+    ['اول اسکن را روی یک نسخه‌ی آزمایشی اجرا کن','روی سیستم اصلی در ساعت شلوغ اجرا کن تا بار واقعی دیده شود','هیچ‌وقت پایگاه داده را اسکن نکن، چون خیلی مهم است','بی‌سروصدا و بدون خبر دادن به صاحبان پایگاه داده اجرا کن'],
     'Intrusive plug-ins can disrupt or damage systems. Testing in an environment that mirrors production lets you fix problems on both before scanning production. Disabling unneeded plug-ins also speeds scans and reduces false positives.',
     'افزونه‌های مزاحم (Intrusive) می‌توانند سیستم را مختل یا خراب کنند. آزمایش در محیطی شبیه سیستم اصلی اجازه می‌دهد قبل از اسکن اصلی، مشکلات هر دو را رفع کنی. خاموش کردن افزونه‌های غیرلازم هم اسکن را سریع‌تر و هشدار اشتباه را کمتر می‌کند.');
 
   M(T1,'A company scans its web servers from the Internet, from the office LAN and from inside the data center, and gets different results. Why?',
     'شرکتی وب‌سرورهایش را از اینترنت، از شبکه‌ی اداری و از داخل دیتاسنتر اسکن می‌کند و نتایج متفاوتی می‌گیرد. چرا؟',
     'چیزهایی بین اسکنر و هدف قرار دارند.',
-    ['Firewalls, segmentation, IDS and IPS on the path change what each perspective sees','The scanner is broken','The servers change their software every hour','Only external scans are real'],
-    ['فایروال، بخش‌بندی، IDS و IPS در مسیر، چیزی که هر دیدگاه می‌بیند را تغییر می‌دهند','اسکنر خراب است','سرورها هر ساعت نرم‌افزارشان را عوض می‌کنند','فقط اسکن بیرونی واقعی است'],
+    ['Firewalls and IPS on each path change what the scanner can see','The scanner is broken and gives random results on each run','The servers change their installed software every single hour','Only the external scan is real; the internal scans are faulty'],
+    ['فایروال‌ها و IPS هر مسیر، چیزی را که اسکنر می‌بیند تغییر می‌دهند','اسکنر خراب است و در هر اجرا نتیجه‌ی تصادفی می‌دهد','سرورها هر ساعت نرم‌افزار نصب‌شده‌شان را عوض می‌کنند','فقط اسکن بیرونی واقعی است و اسکن‌های داخلی خطا دارند'],
     'Scan perspective matters. External scans show the attacker\'s view, internal scans show an insider\'s view, and data center scans or agents show the server\'s true state. PCI DSS requires external scans by an Approved Scanning Vendor (ASV).',
     'دیدگاه اسکن مهم است. اسکن بیرونی دید مهاجم بیرونی، اسکن داخلی دید یک خودی، و اسکن دیتاسنتر یا Agent وضعیت واقعی سرور را نشان می‌دهد. PCI DSS اسکن بیرونی توسط یک فروشنده‌ی مورد تأیید (ASV) را الزامی می‌کند.');
 
@@ -56,24 +56,24 @@
   M(T1,'Which tool is best for finding SQL injection and cross-site scripting flaws in a company website?',
     'کدام ابزار برای پیدا کردن نقص‌های SQL injection و XSS در سایت یک شرکت بهتر است؟',
     'مخصوص وب.',
-    ['A web application vulnerability scanner','A network port scanner only','A spam filter','A hardware security module'],
-    ['اسکنر آسیب‌پذیری برنامه‌ی وب','فقط اسکنر پورت شبکه','فیلتر اسپم','ماژول امنیتی سخت‌افزاری (HSM)'],
+    ['A web application vulnerability scanner','A network port scanner such as Nmap','A spam filter on the company mail server','A hardware security module (HSM)'],
+    ['اسکنر آسیب‌پذیری برنامه‌ی وب','اسکنر پورت شبکه مثل Nmap','فیلتر اسپم روی سرور ایمیل شرکت','ماژول امنیتی سخت‌افزاری (HSM)'],
     'Web application scanners (Nikto, Arachni, Acunetix, or the web features of Nessus, Qualys and Nexpose) probe for SQLi, XSS and CSRF using malicious input and fuzzing. Network scanners like Nessus, Qualys, Nexpose and OpenVAS focus on hosts and services.',
     'اسکنرهای برنامه‌ی وب (Nikto، Arachni، Acunetix یا بخش وب Nessus، Qualys و Nexpose) با ورودی مخرب و Fuzzing دنبال SQLi، XSS و CSRF می‌گردند. اسکنرهای شبکه مثل Nessus، Qualys، Nexpose و OpenVAS روی میزبان‌ها و سرویس‌ها تمرکز دارند.');
 
   M(T1,'A scan finds a public web server that answers DEBUG requests and shows detailed error pages. What should be done?',
     'یک اسکن نشان می‌دهد یک وب‌سرور عمومی به درخواست‌های DEBUG جواب می‌دهد و صفحه‌های خطای مفصل نشان می‌دهد. چه باید کرد؟',
     'اطلاعات داخلی نباید به بیرون برسد.',
-    ['Disable debug mode on public systems and debug only in development','Leave it on so developers can help users','Add more RAM to the server','Change the server\'s IP address'],
-    ['حالت Debug را روی سیستم‌های عمومی خاموش کن و فقط در محیط توسعه Debug کن','روشن بگذار تا برنامه‌نویس‌ها به کاربران کمک کنند','RAM سرور را زیاد کن','IP سرور را عوض کن'],
+    ['Turn off debug mode on public systems','Leave it on so developers can help users faster','Add more RAM so the error pages load quickly','Change the server\'s IP address to hide it'],
+    ['حالت Debug را روی سیستم‌های عمومی خاموش کن','روشن بگذار تا برنامه‌نویس‌ها سریع‌تر به کاربران کمک کنند','RAM بیشتری بگذار تا صفحه‌های خطا سریع باز شوند','IP سرور را عوض کن تا پنهان شود'],
     'Debug output can reveal database structure, authentication methods and other internals to attackers. Other common weak configurations: default settings, default credentials, unsecured root accounts, open ports and open permissions.',
     'خروجی Debug می‌تواند ساختار پایگاه داده، روش احراز هویت و جزئیات داخلی دیگر را به مهاجم نشان دهد. پیکربندی‌های ضعیف رایج دیگر: تنظیمات پیش‌فرض، اطلاعات ورود پیش‌فرض، حساب root ناامن، پورت‌های باز و مجوزهای باز.');
 
   M(T1,'A scan flags a server running Telnet and FTP. What is the right fix?',
     'یک اسکن سروری را که Telnet و FTP اجرا می‌کند علامت می‌زند. اصلاح درست چیست؟',
     'جایگزین‌های رمزگذاری‌شده.',
-    ['Replace Telnet with SSH and FTP with SFTP or FTPS','Change the Telnet password monthly','Move FTP to a different port','Block the scanner'],
-    ['Telnet را با SSH و FTP را با SFTP یا FTPS جایگزین کن','رمز Telnet را ماهانه عوض کن','FTP را به یک پورت دیگر ببر','جلوی اسکنر را بگیر'],
+    ['Replace Telnet with SSH and FTP with SFTP','Change the Telnet password every month','Move FTP to a different, non-standard port','Block the scanner\'s IP address at the firewall'],
+    ['Telnet را با SSH و FTP را با SFTP جایگزین کن','رمز Telnet را هر ماه عوض کن','FTP را به یک پورت غیراستاندارد دیگر ببر','IP اسکنر را روی فایروال مسدود کن'],
     'Telnet and FTP send usernames, passwords and data in clear text, so they are insecure protocols. SSH, SFTP and FTPS encrypt the session. Similarly, weak ciphers such as RC4 should be replaced with AES.',
     'Telnet و FTP نام کاربری، رمز و داده را به‌صورت متن آشکار می‌فرستند؛ پس پروتکل ناامن‌اند. SSH، SFTP و FTPS جلسه را رمزگذاری می‌کنند. به همین شکل، رمزهای ضعیف مثل RC4 باید با AES جایگزین شوند.');
 
@@ -146,16 +146,16 @@
   M(T3,'What is the correct order of the vulnerability life cycle?',
     'ترتیب درست چرخه‌ی عمر آسیب‌پذیری کدام است؟',
     'پیدا کن، بفهم، رفع کن، چک کن، گزارش بده.',
-    ['Identification → analysis → response and remediation → validation of remediation → reporting','Analysis → identification → reporting → remediation → validation','Remediation → identification → analysis → reporting → validation','Reporting → validation → analysis → identification → remediation'],
-    ['شناسایی ← تحلیل ← پاسخ و رفع ← تأیید رفع ← گزارش','تحلیل ← شناسایی ← گزارش ← رفع ← تأیید','رفع ← شناسایی ← تحلیل ← گزارش ← تأیید','گزارش ← تأیید ← تحلیل ← شناسایی ← رفع'],
+    ['Identify → analyze → remediate → validate → report','Analyze → identify → report → remediate → validate','Remediate → identify → analyze → report → validate','Report → validate → analyze → identify → remediate'],
+    ['شناسایی ← تحلیل ← رفع ← تأیید ← گزارش','تحلیل ← شناسایی ← گزارش ← رفع ← تأیید','رفع ← شناسایی ← تحلیل ← گزارش ← تأیید','گزارش ← تأیید ← تحلیل ← شناسایی ← رفع'],
     'Identification (scans, pen tests, responsible disclosure/bug bounty, audits) → Analysis (confirm, prioritize with CVSS/CVE, add local context) → Response (patch, segment, compensating controls, insurance, exceptions) → Validation (rescan, audit, verification) → Reporting.',
     'شناسایی (اسکن، تست نفوذ، افشای مسئولانه/Bug bounty، ممیزی) ← تحلیل (تأیید، اولویت با CVSS/CVE، افزودن شرایط محلی) ← پاسخ (وصله، بخش‌بندی، کنترل جبرانی، بیمه، استثنا) ← تأیید (اسکن مجدد، ممیزی، بررسی) ← گزارش.');
 
   M(T3,'Two vulnerabilities have the same CVSS score, but one is on an Internet-facing payment server and the other is on an isolated lab PC. Why fix the payment server first?',
     'دو آسیب‌پذیری امتیاز CVSS یکسان دارند، اما یکی روی سرور پرداخت رو به اینترنت است و دیگری روی یک کامپیوتر آزمایشگاهی ایزوله. چرا اول سرور پرداخت را رفع کنیم؟',
     'CVSS دید بیرونی است؛ شرایط خودت را اضافه کن.',
-    ['Exposure factor, environmental variables and organizational impact are higher there','CVSS scores are always wrong','Lab PCs never get attacked','Payment servers are cheaper to patch'],
-    ['ضریب در معرض بودن، متغیرهای محیطی و اثر سازمانی آنجا بیشتر است','امتیاز CVSS همیشه غلط است','کامپیوترهای آزمایشگاه هیچ‌وقت حمله نمی‌بینند','وصله کردن سرور پرداخت ارزان‌تر است'],
+    ['Its exposure and impact on the business are higher','CVSS scores are always wrong for lab computers','Lab PCs are never attacked by anyone at all','Payment servers are cheaper and quicker to patch'],
+    ['در معرض بودن و اثرش روی کسب‌وکار بیشتر است','امتیاز CVSS برای کامپیوترهای آزمایشگاه همیشه غلط است','هیچ‌کس هیچ‌وقت به کامپیوترهای آزمایشگاه حمله نمی‌کند','وصله کردن سرور پرداخت ارزان‌تر و سریع‌تر است'],
     'CVSS and CVE give an outside view. Analysis then adds your own context: exposure factor, environmental variables, industry and organizational impact, and risk tolerance. That decides real priority.',
     'CVSS و CVE دید بیرونی می‌دهند. تحلیل سپس شرایط خودت را اضافه می‌کند: ضریب در معرض بودن، متغیرهای محیطی، اثر صنعتی و سازمانی و تحمل ریسک. این‌ها اولویت واقعی را تعیین می‌کنند.');
 
@@ -170,8 +170,8 @@
   M(T3,'After patching a critical flaw, how does the team usually confirm the fix worked?',
     'بعد از وصله کردن یک نقص بحرانی، تیم معمولاً چطور تأیید می‌کند که رفع شده؟',
     'دوباره نگاه کن.',
-    ['Rescan the system and check the finding is gone','Assume the patch worked','Delete the old scan report','Ask the vendor by email'],
-    ['سیستم را دوباره اسکن کن و ببین یافته از بین رفته','فرض کن وصله کار کرده','گزارش اسکن قبلی را پاک کن','با ایمیل از فروشنده بپرس'],
+    ['Rescan and check the finding is gone','Assume the patch worked as described','Delete the old scan report from the system','Email the vendor and ask if it was fixed'],
+    ['دوباره اسکن کن و ببین یافته از بین رفته','فرض کن وصله همان‌طور که گفته شده کار کرده','گزارش اسکن قبلی را از سیستم پاک کن','به فروشنده ایمیل بزن و بپرس درست شده یا نه'],
     'Validation of remediation is usually a rescan. For serious issues, internal or external auditors may verify to give independent assurance. Then report findings, actions, trends and recommendations to stakeholders.',
     'تأیید رفع معمولاً با اسکن مجدد است. برای مشکلات جدی، ممیزان داخلی یا بیرونی ممکن است برای اطمینان مستقل بررسی کنند. بعد یافته‌ها، اقدامات، روندها و پیشنهادها به ذی‌نفعان گزارش می‌شود.');
 
@@ -260,8 +260,8 @@
   M(T5,'A bank regulator chooses the auditors and the scope, then audits the bank\'s security controls. What type of audit is this?',
     'ناظر بانکی ممیزان و محدوده را انتخاب می‌کند و بعد کنترل‌های امنیتی بانک را ممیزی می‌کند. این کدام نوع ممیزی است؟',
     'درخواست از طرف یک نهاد بیرونی است.',
-    ['Independent third-party (regulatory) audit','Internal audit','Self-assessment','Penetration test'],
-    ['ممیزی مستقل شخص ثالث (نظارتی)','ممیزی داخلی','خودارزیابی','تست نفوذ'],
+    ['An independent third-party (regulatory) audit','An internal audit by the bank\'s own staff','A self-assessment filled in by managers','A penetration test by a hired red team'],
+    ['ممیزی مستقل شخص ثالث (نظارتی)','ممیزی داخلی توسط کارکنان خود بانک','خودارزیابی که مدیران پر می‌کنند','تست نفوذ توسط یک تیم قرمز استخدامی'],
     'Independent third-party audits are external audits requested by an outside party (regulator, customer), which also picks the auditors and scope. A regular external audit is requested by the organization or its board.',
     'ممیزی مستقل شخص ثالث نوعی ممیزی بیرونی است که یک طرف بیرونی (ناظر، مشتری) درخواست می‌کند و ممیز و محدوده را هم انتخاب می‌کند. ممیزی بیرونی عادی را خود سازمان یا هیئت‌مدیره‌اش درخواست می‌کند.');
 
@@ -284,16 +284,16 @@
   M(T5,'A cloud provider has hundreds of customers who each want to audit it. Which approach reduces this burden?',
     'یک ارائه‌دهنده‌ی ابری صدها مشتری دارد که هر کدام می‌خواهند آن را ممیزی کنند. کدام روش این بار را کم می‌کند؟',
     'یک گزارش استاندارد برای همه.',
-    ['One SSAE 18 (SOC) audit whose report is shared with customers','Refusing all audits','A separate audit for each customer','Publishing its passwords'],
-    ['یک ممیزی SSAE 18 (SOC) که گزارشش با مشتری‌ها به اشتراک گذاشته شود','رد کردن همه‌ی ممیزی‌ها','ممیزی جداگانه برای هر مشتری','منتشر کردن رمزهایش'],
+    ['One SOC (SSAE 18) audit, with the report shared','Refusing all customer audits to protect itself','Running a separate audit for every customer','Publishing its admin passwords for transparency'],
+    ['یک ممیزی SOC (SSAE 18) با گزارش اشتراکی','رد کردن همه‌ی ممیزی‌های مشتری برای محافظت از خودش','انجام ممیزی جداگانه برای هر مشتری','منتشر کردن رمزهای ادمین برای شفافیت'],
     'SSAE 18 from the AICPA lets a service organization get one standardized external audit (a SOC audit) and share the report, instead of many separate third-party audits. COBIT and ISO 27001/27002 are common audit standards.',
     'SSAE 18 از AICPA اجازه می‌دهد یک سازمان خدماتی یک ممیزی بیرونی استاندارد (ممیزی SOC) بگیرد و گزارشش را به اشتراک بگذارد، به جای ممیزی‌های جداگانه‌ی زیاد. COBIT و ISO 27001/27002 استانداردهای رایج ممیزی‌اند.');
 
   M(T5,'What is the main difference between a security assessment and a security audit?',
     'فرق اصلی ارزیابی امنیتی (Assessment) و ممیزی امنیتی (Audit) چیست؟',
     'چه کسی انجام می‌دهد و برای چه کسی؟',
-    ['Audits must be done by independent auditors to show control effectiveness to third parties','Assessments are always done by regulators','Audits never use testing tools','Assessments cannot include recommendations'],
-    ['ممیزی باید توسط ممیز مستقل انجام شود تا اثربخشی کنترل‌ها را به طرف‌های بیرونی نشان دهد','ارزیابی همیشه توسط ناظر انجام می‌شود','ممیزی هیچ‌وقت از ابزار آزمون استفاده نمی‌کند','ارزیابی نمی‌تواند پیشنهاد داشته باشد'],
+    ['Audits are done by independent auditors for outside parties','Assessments are always carried out by government regulators','Audits never use any testing tools, only document reviews','Assessments are not allowed to include any recommendations'],
+    ['ممیزی را ممیز مستقل برای طرف‌های بیرونی انجام می‌دهد','ارزیابی همیشه توسط ناظران دولتی انجام می‌شود','ممیزی هیچ‌وقت از ابزار آزمون استفاده نمی‌کند، فقط سند بررسی می‌کند','ارزیابی اجازه ندارد هیچ پیشنهادی داشته باشد'],
     'Assessments are comprehensive reviews with a risk assessment and recommendations, usually for management and internal use. Audits use similar techniques but are formal, done by independent auditors, and aimed at boards, regulators and other third parties.',
     'ارزیابی یک بررسی جامع با ارزیابی ریسک و پیشنهاد است، معمولاً برای مدیریت و استفاده‌ی داخلی. ممیزی از روش‌های مشابه استفاده می‌کند اما رسمی است، توسط ممیز مستقل انجام می‌شود و برای هیئت‌مدیره، ناظران و طرف‌های بیرونی است.');
 

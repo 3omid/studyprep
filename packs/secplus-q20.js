@@ -126,8 +126,8 @@
   M(T3,'What makes a system/process audit different from a vulnerability scan?',
     'چه چیزی ممیزی سیستم/فرایند (Audit) را از اسکن آسیب‌پذیری متمایز می‌کند؟',
     'اسکن ضعف‌های فنی را پیدا می‌کند؛ ممیزی به کنترل‌ها و تأثیر بر کسب‌وکار نگاه می‌کند.',
-    ['It evaluates business impact and control effectiveness','It\'s conducted by external teams','It only applies to open-source software','It cannot be automated'],
-    ['تأثیر بر کسب‌وکار و اثربخشی کنترل‌ها را ارزیابی می‌کند','توسط تیم‌های خارجی انجام می‌شود','فقط برای نرم‌افزار متن‌باز است','قابل خودکارسازی نیست'],
+    ['It evaluates business impact and control effectiveness','It is always carried out by external teams, never staff','It applies only to open-source software and libraries','It can never be automated in any part of the process'],
+    ['تأثیر بر کسب‌وکار و اثربخشی کنترل‌ها را ارزیابی می‌کند','همیشه تیم‌های خارجی انجامش می‌دهند، نه کارمندان','فقط برای نرم‌افزار و کتابخانه‌های متن‌باز است','هیچ بخشی از آن را نمی‌شود خودکار کرد'],
     'An audit checks whether controls and processes actually work (access reviews, policy compliance) and what failures would cost the business. A vulnerability scan only finds technical weaknesses such as missing patches, open ports and misconfigurations. Audits can be internal or external and parts can be automated.',
     'ممیزی می‌پرسد: آیا دسترسی‌ها درست مدیریت می‌شوند؟ آیا سیاست‌ها رعایت می‌شوند؟ آیا کنترل‌ها واقعاً کار می‌کنند؟ اگر مشکلی پیش بیاید چه خسارتی به کسب‌وکار می‌خورد؟ اما اسکن آسیب‌پذیری فقط ضعف فنی پیدا می‌کند: Patch نصب‌نشده، پورت باز، تنظیم اشتباه. ممیزی می‌تواند داخلی یا خارجی باشد و بخشی از آن خودکار است.');
 
@@ -171,8 +171,8 @@
   M(T4,'Which tool would best help detect unauthorized file modifications on a critical server?',
     'کدام ابزار برای کشف تغییرات غیرمجاز فایل‌ها روی یک سرور حیاتی بهتر است؟',
     'ابزاری که Hash فایل‌ها را نگه می‌دارد و وقتی Hash عوض شود خبر می‌دهد.',
-    ['File integrity monitoring','NAC','SELinux','UBA'],
-    ['File integrity monitoring (پایش یکپارچگی فایل)','NAC (کنترل دسترسی به شبکه)','SELinux (کنترل دسترسی لینوکس)','UBA (تحلیل رفتار کاربران)'],
+    ['File integrity monitoring','NAC (network access control)','SELinux mandatory access control','UBA (user behavior analytics)'],
+    ['File Integrity Monitoring (پایش یکپارچگی فایل)','NAC (کنترل دسترسی به شبکه)','کنترل دسترسی اجباری SELinux','UBA (تحلیل رفتار کاربران)'],
     'FIM stores hashes (for example SHA-256) of important files and alerts when a hash changes, revealing unauthorized edits to system files or settings. NAC decides which devices may join the network, SELinux restricts access, and UBA watches user behavior.',
     'FIM از فایل‌های مهم Hash (مثلاً SHA-256) می‌گیرد؛ اگر مهاجم یا کاربر بدون مجوز فایلی را تغییر دهد، Hash عوض می‌شود و FIM هشدار می‌دهد. NAC = چه دستگاهی وارد شبکه شود، SELinux = محدود کردن دسترسی، UBA = رفتار کاربر. هر وقت «Unauthorized file modification» دیدی، FIM را انتخاب کن.');
 

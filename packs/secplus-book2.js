@@ -16,8 +16,8 @@
   M(T1,'A teenager downloads a ready-made DDoS tool and points it at random school websites without understanding how the tool works. Which threat actor is this?',
     'یک نوجوان یک ابزار آماده‌ی DDoS را دانلود می‌کند و بدون اینکه بداند ابزار چطور کار می‌کند، آن را روی سایت‌های تصادفی مدرسه‌ها اجرا می‌کند. این کدام نوع مهاجم است؟',
     'مهارت کم، ابزار آماده، هدف تصادفی.',
-    ['Unskilled attacker (script kiddie)','Hacktivist','Nation-state actor','Organized crime'],
-    ['مهاجم کم‌مهارت (Script kiddie)','هکتیویست','مهاجم دولتی','جرائم سازمان‌یافته'],
+    ['Unskilled attacker (script kiddie)','Hacktivist protesting the schools','Nation-state actor (government APT)','Organized crime group seeking money'],
+    ['مهاجم کم‌مهارت (Script Kiddie)','هکتیویستی که به مدرسه‌ها اعتراض دارد','مهاجم دولتی (APT دولتی)','گروه جرائم سازمان‌یافته به دنبال پول'],
     'Unskilled attackers rely on tools written by others, have few resources and pick targets of opportunity, often just to prove they can. They are still dangerous because the tools are free and they are numerous.',
     'مهاجم کم‌مهارت از ابزار دیگران استفاده می‌کند، منابع کمی دارد و هدف‌های در دسترس را انتخاب می‌کند؛ اغلب فقط برای نشان دادن توانایی. چون ابزارها رایگان و این افراد زیادند، باز هم خطرناک‌اند.');
 
@@ -56,16 +56,16 @@
   M(T1,'A database administrator who was passed over for promotion copies the customer list before resigning. What gives this attacker the biggest advantage?',
     'یک مدیر پایگاه داده که ترفیع نگرفته، قبل از استعفا فهرست مشتری‌ها را کپی می‌کند. بزرگ‌ترین مزیت این مهاجم چیست؟',
     'لازم نیست از دیوار بیرونی رد شود.',
-    ['Existing authorized access and inside knowledge','Large funding','Custom zero-day exploits','A large group of helpers'],
-    ['دسترسی مجاز فعلی و شناخت از داخل','بودجه‌ی زیاد','اکسپلویت Zero-day اختصاصی','گروه بزرگی از همدستان'],
+    ['Authorized access and inside knowledge','Large funding from a foreign government','Custom zero-day exploits bought online','A large group of skilled outside helpers'],
+    ['دسترسی مجاز و شناخت از داخل','بودجه‌ی زیاد از یک دولت خارجی','اکسپلویت Zero-day اختصاصی خریده‌شده','گروه بزرگی از همدستان ماهر بیرونی'],
     'Insiders often work alone with little money, but they already have access and know where valuable data is. Behavioral assessments, done together with HR, help spot warning signs early.',
     'خودی‌ها معمولاً تنها و با پول کم کار می‌کنند، اما از قبل دسترسی دارند و می‌دانند داده‌ی ارزشمند کجاست. ارزیابی رفتاری با همکاری منابع انسانی کمک می‌کند نشانه‌ها زود دیده شوند.');
 
   M(T1,'The marketing team signs up for an unapproved online file-sharing service with a company card to work faster. What is this, and what does it usually tell IT?',
     'تیم بازاریابی برای سریع‌تر کار کردن، با کارت شرکت در یک سرویس اشتراک فایل آنلاین تأییدنشده ثبت‌نام می‌کند. این چیست و معمولاً چه چیزی به IT می‌گوید؟',
     'نیت بد نیست؛ نیاز کاری برآورده نشده.',
-    ['Shadow IT; a business need is not being met by approved services','Insider threat; the team is stealing data','Hacktivism; the team disagrees with policy','Supply chain attack; the vendor is malicious'],
-    ['IT سایه؛ یک نیاز کاری با سرویس‌های تأییدشده برآورده نشده','تهدید خودی؛ تیم دارد داده می‌دزدد','هکتیویسم؛ تیم با سیاست مخالف است','حمله‌ی زنجیره‌ی تأمین؛ فروشنده بدخواه است'],
+    ['Shadow IT; approved services do not meet a business need','Insider threat; the team is stealing company data on purpose','Hacktivism; the team is protesting against company policy','Supply chain attack; the file-sharing vendor is malicious'],
+    ['IT سایه؛ سرویس‌های تأییدشده یک نیاز کاری را برآورده نمی‌کنند','تهدید خودی؛ تیم عمداً دارد داده‌ی شرکت را می‌دزدد','هکتیویسم؛ تیم به سیاست شرکت اعتراض دارد','حمله‌ی زنجیره‌ی تأمین؛ فروشنده‌ی سرویس بدخواه است'],
     'Shadow IT is technology used without approval, usually by well-meaning staff. The risk is that company data sits with a vendor outside IT\'s control. Talking to the users often finds a safe, approved alternative.',
     'IT سایه یعنی استفاده از فناوری بدون تأیید، معمولاً توسط کارمندان خوش‌نیت. خطرش این است که داده‌ی شرکت پیش فروشنده‌ای خارج از کنترل IT است. صحبت با کاربران معمولاً یک جایگزین امن و تأییدشده پیدا می‌کند.');
 
@@ -146,8 +146,8 @@
   M(T3,'A factory still runs a control PC on an operating system the vendor stopped updating years ago. What is the main security concern?',
     'یک کارخانه هنوز یک کامپیوتر کنترلی با سیستم‌عاملی دارد که سازنده سال‌هاست به‌روزرسانی‌اش را متوقف کرده. نگرانی اصلی امنیتی چیست؟',
     'نقص‌های جدید هیچ‌وقت رفع نمی‌شوند.',
-    ['No new security patches will be released','The computer will run slowly','The license will cost more','Users will need new training'],
-    ['هیچ وصله‌ی امنیتی جدیدی منتشر نمی‌شود','کامپیوتر کند کار می‌کند','لایسنس گران‌تر می‌شود','کاربران آموزش جدید لازم دارند'],
+    ['No new security patches will be released','The computer will run slower every year','The software license will cost much more','Operators will need training on a new system'],
+    ['هیچ وصله‌ی امنیتی جدیدی منتشر نمی‌شود','کامپیوتر هر سال کندتر کار می‌کند','لایسنس نرم‌افزار خیلی گران‌تر می‌شود','اپراتورها برای سیستم جدید آموزش لازم دارند'],
     'Unsupported systems and applications get no more patches, so every new vulnerability stays open forever. If the system cannot be replaced, isolate it and add compensating controls.',
     'سیستم‌ها و برنامه‌های بدون پشتیبانی دیگر وصله نمی‌گیرند؛ پس هر آسیب‌پذیری جدید برای همیشه باز می‌ماند. اگر جایگزینی ممکن نیست، جدایش کن و کنترل جبرانی بگذار.');
 
@@ -162,8 +162,8 @@
   M(T3,'Attackers break into an IT company that remotely manages servers for 200 clients, then use its tools to push ransomware to those clients. Which vector is this?',
     'مهاجمان به یک شرکت IT که سرورهای ۲۰۰ مشتری را از راه دور مدیریت می‌کند نفوذ می‌کنند و با ابزارهای خودش باج‌افزار را به آن مشتری‌ها می‌فرستند. این کدام مسیر است؟',
     'از طریق شریکی که به همه دسترسی دارد.',
-    ['Supply chain (managed service provider)','Removable device','Typosquatting','Open service ports'],
-    ['زنجیره‌ی تأمین (ارائه‌دهنده‌ی خدمات مدیریت‌شده، MSP)','دستگاه قابل‌حمل','Typosquatting','پورت‌های سرویس باز'],
+    ['Supply chain (managed service provider)','Removable device carried into each client','Typosquatting of the clients\' domain names','Open service ports on the clients\' firewalls'],
+    ['زنجیره‌ی تأمین (ارائه‌دهنده‌ی خدمات مدیریت‌شده، MSP)','دستگاه قابل‌حمل که به هر مشتری برده شده','Typosquatting روی دامنه‌ی مشتریان','پورت‌های سرویس باز روی فایروال مشتریان'],
     'Supply chain attacks hit an organization through its MSPs, vendors or suppliers. An MSP already has trusted access to many customers, so one breach spreads widely. Strong vendor management helps.',
     'حمله‌ی زنجیره‌ی تأمین از طریق MSPها، فروشندگان یا تأمین‌کنندگان به سازمان می‌رسد. MSP از قبل به مشتری‌های زیادی دسترسی مورد اعتماد دارد؛ پس یک نفوذ گسترده پخش می‌شود. مدیریت خوب فروشنده کمک می‌کند.');
 
@@ -178,8 +178,8 @@
   M(T3,'Why is a zero-day vulnerability especially dangerous?',
     'چرا آسیب‌پذیری Zero-day به‌طور خاص خطرناک است؟',
     'سازنده هنوز از آن خبر ندارد.',
-    ['The vendor does not know about it, so no patch exists','It only affects old systems','It always needs physical access','It is listed in every threat feed'],
-    ['سازنده از آن خبر ندارد، پس وصله‌ای وجود ندارد','فقط روی سیستم‌های قدیمی اثر دارد','همیشه دسترسی فیزیکی لازم دارد','در همه‌ی فیدهای تهدید آمده است'],
+    ['The vendor does not know about it, so no patch exists','It affects only very old systems that are out of support','It always needs physical access to the target machine','It is already listed in every commercial threat feed'],
+    ['سازنده از آن خبر ندارد، پس وصله‌ای وجود ندارد','فقط روی سیستم‌های خیلی قدیمی بدون پشتیبانی اثر دارد','همیشه به دسترسی فیزیکی به دستگاه هدف نیاز دارد','از قبل در همه‌ی فیدهای تهدید تجاری آمده است'],
     'A zero-day is a flaw unknown to the vendor and defenders, so there is no patch. APT groups often find zero-days themselves and keep them secret for later use. Defense in depth and behavior-based detection help.',
     'Zero-day نقصی است که سازنده و مدافعان از آن خبر ندارند؛ پس وصله‌ای نیست. گروه‌های APT اغلب خودشان Zero-day پیدا می‌کنند و برای بعد مخفی نگه می‌دارند. دفاع چندلایه و تشخیص رفتاری کمک می‌کنند.');
 
@@ -203,24 +203,24 @@
   M(T4,'A company pays a vendor for a curated threat feed built with the vendor\'s own research and tools. Which identification method is this?',
     'شرکتی برای یک فید تهدید گزینش‌شده که با تحقیق و ابزارهای خود فروشنده ساخته شده پول می‌دهد. این کدام روش شناسایی است؟',
     'منبعش خصوصی است و فروخته می‌شود.',
-    ['Proprietary/third-party (closed-source) intelligence','Open-source intelligence','Information-sharing organization','Responsible disclosure'],
-    ['اطلاعات اختصاصی/شخص ثالث (منبع‌بسته)','اطلاعات منبع‌باز','سازمان اشتراک اطلاعات','افشای مسئولانه'],
+    ['Proprietary (closed-source) intelligence','Open-source intelligence (OSINT)','An information-sharing organization (ISAC)','Responsible disclosure by researchers'],
+    ['اطلاعات اختصاصی (منبع‌بسته)','اطلاعات منبع‌باز (OSINT)','سازمان اشتراک اطلاعات (ISAC)','افشای مسئولانه توسط پژوهشگران'],
     'Proprietary or closed-source intelligence comes from vendors who keep their methods secret and sell the results. It saves effort because the vendor filters and validates huge amounts of open data.',
     'اطلاعات اختصاصی یا منبع‌بسته از فروشنده‌هایی می‌آید که روش‌هایشان را مخفی نگه می‌دارند و نتیجه را می‌فروشند. کار را کم می‌کند، چون فروشنده حجم زیادی از داده‌ی باز را فیلتر و تأیید می‌کند.');
 
   M(T4,'A hospital joins a sector group where members share attack details with each other under a trust agreement and get 24/7 analysis. What kind of group is this?',
     'یک بیمارستان عضو گروهی در صنعت خودش می‌شود که اعضا با توافق اعتماد جزئیات حمله‌ها را با هم به اشتراک می‌گذارند و تحلیل شبانه‌روزی می‌گیرند. این چه گروهی است؟',
     'Information Sharing and Analysis Center.',
-    ['An ISAC (information-sharing organization)','A bug bounty program','A dark web forum','An Approved Scanning Vendor'],
-    ['ISAC (سازمان اشتراک اطلاعات)','برنامه‌ی Bug bounty','انجمن دارک وب','فروشنده‌ی اسکن مورد تأیید (ASV)'],
+    ['An ISAC (information-sharing organization)','A bug bounty program run by a vendor','A dark web forum for security researchers','An Approved Scanning Vendor (ASV) group'],
+    ['ISAC (سازمان اشتراک اطلاعات)','برنامه‌ی Bug Bounty یک شرکت','انجمن دارک‌وب برای پژوهشگران امنیت','گروه فروشنده‌های اسکن مورد تأیید (ASV)'],
     'ISACs are sector-based communities (health, finance, energy…) where members share threat information on a trust model. Many run 24/7 and offer incident response help to members.',
     'ISACها جامعه‌هایی بر اساس صنعت (سلامت، مالی، انرژی…) هستند که اعضا با مدل اعتماد اطلاعات تهدید را به اشتراک می‌گذارند. بسیاری شبانه‌روزی کار می‌کنند و به اعضا در پاسخ به حادثه کمک می‌کنند.');
 
   M(T4,'Employee usernames and passwords from your company suddenly appear for sale on a Tor marketplace. What should you conclude?',
     'نام کاربری و رمز کارمندان شرکتت ناگهان در یک بازار روی Tor برای فروش گذاشته می‌شود. چه نتیجه‌ای باید بگیری؟',
     'این داده از جایی لو رفته.',
-    ['A successful compromise has likely happened and needs investigation','It is normal background noise and can be ignored','The Tor network itself was hacked','Only the employees\' personal accounts are at risk'],
-    ['احتمالاً یک نفوذ موفق رخ داده و باید بررسی شود','نویز عادی است و می‌شود نادیده گرفت','خود شبکه‌ی Tor هک شده','فقط حساب‌های شخصی کارمندان در خطر است'],
+    ['A breach has likely happened and must be investigated','It is normal background noise and can safely be ignored','The Tor network itself was hacked and leaked the data','Only the employees\' personal accounts are at any risk'],
+    ['احتمالاً نفوذی رخ داده و باید بررسی شود','نویز عادی است و می‌شود با خیال راحت نادیده گرفت','خود شبکه‌ی Tor هک شده و داده را لو داده','فقط حساب‌های شخصی کارمندان در خطر است'],
     'The dark web uses layered encryption (for example Tor) for anonymity, and criminals sell stolen data there. Monitoring it for your organization\'s credentials can reveal a breach early; reset the accounts and investigate.',
     'دارک وب با رمزگذاری چندلایه (مثل Tor) ناشناس می‌ماند و مجرمان داده‌ی دزدی را آنجا می‌فروشند. پایش آن برای اطلاعات ورود سازمان می‌تواند نفوذ را زود نشان دهد؛ حساب‌ها را ریست و موضوع را بررسی کن.');
 
@@ -259,16 +259,16 @@
   M(T4,'A live threat map shows most attacks on your network coming from one country. Why should you be careful with this conclusion?',
     'یک نقشه‌ی تهدید زنده نشان می‌دهد بیشتر حمله‌ها به شبکه‌ات از یک کشور می‌آید. چرا باید در این نتیجه‌گیری محتاط بود؟',
     'مهاجمان از سیستم‌های دیگران عبور می‌کنند.',
-    ['Attackers relay through cloud services and compromised systems, so location is unreliable','Threat maps only show old attacks','Threat maps never show real data','Countries cannot be identified from IP addresses at all'],
-    ['مهاجمان از سرویس‌های ابری و سیستم‌های آلوده عبور می‌کنند؛ پس موقعیت قابل اعتماد نیست','نقشه‌ها فقط حمله‌های قدیمی را نشان می‌دهند','نقشه‌ها هیچ‌وقت داده‌ی واقعی نشان نمی‌دهند','از IP اصلاً نمی‌شود کشور را فهمید'],
+    ['Attackers relay through other systems, so the location is unreliable','Threat maps show only attacks from previous years, not live ones','Threat maps never show real data, only made-up demo traffic','Countries can never be identified from IP addresses in any way'],
+    ['مهاجمان از سیستم‌های دیگر عبور می‌کنند، پس موقعیت قابل اعتماد نیست','نقشه‌ها فقط حمله‌های سال‌های قبل را نشان می‌دهند، نه زنده','نقشه‌ها هیچ‌وقت داده‌ی واقعی نشان نمی‌دهند، فقط ترافیک نمایشی','از IP به هیچ روشی نمی‌شود کشور را فهمید'],
     'Threat maps give a geographic view of attacks, but attribution by location is notoriously unreliable because attackers hide behind relays, VPNs, cloud hosts and botnets.',
     'نقشه‌ی تهدید نمای جغرافیایی حمله‌ها را نشان می‌دهد، اما نسبت دادن بر اساس مکان بسیار غیرقابل اعتماد است، چون مهاجمان پشت سرورهای واسط، VPN، میزبان‌های ابری و بات‌نت پنهان می‌شوند.');
 
   M(T4,'A new report has a confidence score of 35 on a 1–100 scale. How should the team treat it?',
     'یک گزارش جدید روی مقیاس ۱ تا ۱۰۰ امتیاز اطمینان ۳۵ دارد. تیم با آن چطور رفتار کند؟',
     'نادیده نگیر، ولی تصمیم بزرگ هم نگیر.',
-    ['Keep watching it, but do not base major decisions on it yet','Delete it because it is discredited','Act on it immediately as confirmed','Share it publicly as a confirmed threat'],
-    ['زیر نظرش داشته باش، اما فعلاً تصمیم مهمی بر اساسش نگیر','پاکش کن چون بی‌اعتبار است','فوراً مثل یک تهدید تأییدشده عمل کن','عمومی منتشرش کن به‌عنوان تهدید قطعی'],
+    ['Keep watching it, but do not base big decisions on it yet','Delete it right away, because low scores mean it is false','Act on it immediately as if it were a confirmed threat','Share it publicly so other companies can block the threat'],
+    ['زیر نظرش داشته باش، ولی فعلاً تصمیم بزرگی بر اساسش نگیر','فوراً پاکش کن، چون امتیاز پایین یعنی غلط است','فوراً طوری عمل کن که انگار تهدید تأییدشده است','عمومی منتشرش کن تا شرکت‌های دیگر هم جلوی تهدید را بگیرند'],
     'Low-confidence intelligence (here in the "doubtful" range) is often early information that may firm up as more sources confirm it. Do not ignore it, but do not rely on it alone for big decisions. "Discredited" is the lowest level, proven wrong.',
     'اطلاعات با اطمینان پایین (اینجا در محدوده‌ی «مشکوک») اغلب اطلاعات اولیه است که با تأیید منابع بیشتر محکم می‌شود. نادیده‌اش نگیر، اما برای تصمیم بزرگ فقط به آن تکیه نکن. «Discredited» پایین‌ترین سطح است، یعنی ثابت شده غلط است.');
 

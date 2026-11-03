@@ -27,16 +27,16 @@
   M(T1,'Why must vulnerability management be repeated regularly instead of done once?',
     'چرا مدیریت آسیب‌پذیری باید مرتب تکرار شود و یک بار کافی نیست؟',
     'فکر کن: آیا نرم‌افزارها و هکرها ثابت می‌مانند؟',
-    ['New threats emerge and software and infrastructure keep changing','Scanners stop working after one use','Regulations forbid scanning more than once','Patches expire after one year'],
-    ['تهدیدهای جدید پیدا می‌شوند و نرم‌افزار و زیرساخت مدام عوض می‌شوند','اسکنر بعد از یک بار استفاده خراب می‌شود','قانون اسکن بیشتر از یک بار را ممنوع کرده','وصله‌ها بعد از یک سال منقضی می‌شوند'],
+    ['New threats appear and systems keep changing','Scanners stop working reliably after their first full run','Regulations forbid scanning the same network more than once','Patches expire after one year and must be reinstalled'],
+    ['تهدیدهای جدید پیدا می‌شوند و سیستم‌ها مدام عوض می‌شوند','اسکنرها بعد از اولین اجرای کامل دیگر درست کار نمی‌کنند','قانون اسکن یک شبکه را بیشتر از یک بار ممنوع کرده','وصله‌ها بعد از یک سال منقضی می‌شوند و باید دوباره نصب شوند'],
     'New vulnerabilities are published every day, and every software update or new system can add weaknesses, so the cycle must run continuously.',
     'هر روز ضعف‌های تازه کشف می‌شود و هر آپدیت یا دستگاه جدید هم ممکن است ضعف تازه بیاورد. پس باید مدام چک کنی.');
 
   M(T2,'A security team wants a fast, automated way to check 2,000 servers every week for known missing patches. What should they use?',
     'تیم امنیت می‌خواهد هر هفته ۲۰۰۰ سرور را سریع و خودکار برای وصله‌های نصب‌نشده‌ی شناخته‌شده چک کند. از چه چیزی استفاده کند؟',
     'کار زیاد + تکراری + ضعف‌های «شناخته‌شده» = یک ابزار خودکار.',
-    ['A vulnerability scanner such as Nessus or Qualys','A penetration test','A bug bounty program','A tabletop exercise'],
-    ['اسکنر آسیب‌پذیری مثل Nessus یا Qualys','تست نفوذ (penetration test)','برنامه‌ی جایزه‌ی باگ (bug bounty)','تمرین روی میز (tabletop)'],
+    ['A vulnerability scanner such as Nessus','A penetration test by an outside firm','A bug bounty program for researchers','A tabletop exercise with the server team'],
+    ['اسکنر آسیب‌پذیری مثل Nessus','تست نفوذ توسط یک شرکت بیرونی','برنامه‌ی جایزه‌ی باگ برای پژوهشگران','تمرین روی میز (Tabletop) با تیم سرورها'],
     'Vulnerability scanners automatically compare systems against databases of known flaws (CVE). They are efficient for regular checks across large environments.',
     'اسکنر آسیب‌پذیری خودکار است و سیستم‌ها را با فهرست ضعف‌های شناخته‌شده (CVE) مقایسه می‌کند. برای چک کردن مرتب تعداد زیادی دستگاه بهترین است. تست نفوذ دستی و کند است.');
 
@@ -75,24 +75,24 @@
   M(T2,'An app uses dozens of open-source libraries. Which practice tracks known vulnerabilities and licence issues in those third-party dependencies?',
     'یک برنامه از ده‌ها کتابخانه‌ی متن‌باز آماده استفاده می‌کند. کدام کار ضعف‌های شناخته‌شده و مشکلات مجوز این قطعه‌های آماده را زیر نظر می‌گیرد؟',
     'ابزارهایی مثل Snyk و OWASP Dependency-Check.',
-    ['Package (dependency) monitoring','Log archiving','Black-box testing','Cyber insurance'],
-    ['پایش بسته‌ها و وابستگی‌ها (Package monitoring)','بایگانی لاگ','تست جعبه‌سیاه','بیمه‌ی سایبری'],
+    ['Package (dependency) monitoring','Log archiving for the build servers','Black-box testing of the running app','Cyber insurance for open-source risk'],
+    ['پایش بسته‌ها و وابستگی‌ها (Package monitoring)','بایگانی لاگ سرورهای Build','تست جعبه‌سیاه برنامه‌ی در حال اجرا','بیمه‌ی سایبری برای ریسک منبع‌باز'],
     'Package monitoring scans third-party dependencies for known vulnerabilities, licensing issues and outdated libraries, with tools like Snyk or OWASP Dependency-Check.',
     'برنامه‌ها پر از قطعه‌های آماده‌ای هستند که دیگران نوشته‌اند. Package monitoring مثل چک کردن تاریخ انقضای مواد غذایی است: می‌گوید کدام قطعه قدیمی یا خراب است.');
 
   M(T2,'A bank joins a group where banks share verified threat information only with trusted members. What is this?',
     'یک بانک عضو گروهی می‌شود که در آن بانک‌ها اطلاعات تأییدشده‌ی تهدیدها را فقط با اعضای مورد اعتماد به اشتراک می‌گذارند. این چیست؟',
     'مثال معروفش FS-ISAC برای بخش مالی است.',
-    ['An ISAC (Information Sharing and Analysis Center)','A proprietary feed','Dark web monitoring','A CVE'],
-    ['ISAC (مرکز اشتراک و تحلیل اطلاعات)','فید تجاری (Proprietary)','پایش دارک‌وب','یک CVE'],
+    ['An ISAC (Information Sharing and Analysis Center)','A proprietary threat feed bought from a vendor','Dark web monitoring for leaked bank data','A CVE entry published for the banking sector'],
+    ['ISAC (مرکز اشتراک و تحلیل اطلاعات)','فید تهدید تجاری که از یک شرکت خریده شده','پایش دارک‌وب برای داده‌ی لورفته‌ی بانک‌ها','یک CVE که برای بخش بانکی منتشر شده'],
     'ISACs are industry-specific organizations that share vetted threat intelligence among trusted members, for example FS-ISAC for the financial sector.',
     'ISAC مثل گروه تلگرامی خصوصی بین شرکت‌های یک صنعت است: هر کس حمله‌ای دید، به بقیه خبر می‌دهد. مثلاً FS-ISAC برای بانک‌ها.');
 
   M(T2,'Which threat intelligence source is public and free, such as CVE databases, security blogs and social media?',
     'کدام منبع اطلاعات تهدید عمومی و رایگان است، مثل پایگاه CVE، وبلاگ‌های امنیتی و شبکه‌های اجتماعی؟',
     'Open-Source یعنی «در دسترس همه».',
-    ['OSINT (Open-Source Intelligence)','Proprietary feed','ISAC','SIEM'],
-    ['OSINT (اطلاعات منبع‌باز)','فید تجاری','ISAC','SIEM'],
+    ['OSINT (open-source intelligence)','A proprietary (paid) threat feed','An ISAC for one industry sector','A SIEM that correlates the logs'],
+    ['OSINT (اطلاعات منبع‌باز)','فید تهدید تجاری (پولی)','یک ISAC برای یک صنعت','SIEMی که لاگ‌ها را همبسته می‌کند'],
     'OSINT is publicly available information: CVE databases, threat blogs, GitHub disclosures and social media.',
     'OSINT یعنی هر اطلاعاتی که همه می‌توانند پیدا کنند: سایت CVE، وبلاگ‌ها، گیت‌هاب، توییتر. رایگان است.');
 
@@ -115,8 +115,8 @@
   M(T2,'What is the main difference between a vulnerability scan and a penetration test?',
     'فرق اصلی اسکن آسیب‌پذیری با تست نفوذ چیست؟',
     'یکی فقط «پیدا می‌کند»، دیگری «امتحان می‌کند که واقعاً می‌شود وارد شد».',
-    ['A pen test actively tries to exploit weaknesses; a scan only detects known issues','A scan is always manual; a pen test is always automated','A pen test only checks for missing patches','There is no difference'],
-    ['تست نفوذ واقعاً سعی می‌کند از ضعف سوءاستفاده کند؛ اسکن فقط ضعف‌های شناخته‌شده را پیدا می‌کند','اسکن همیشه دستی و تست نفوذ همیشه خودکار است','تست نفوذ فقط وصله‌های جاافتاده را چک می‌کند','هیچ فرقی ندارند'],
+    ['A pen test tries to exploit weaknesses; a scan only finds known issues','A scan is always done by hand, while a pen test is always automated','A pen test only looks for missing patches, while a scan tests everything','There is no real difference, since both exploit the same weaknesses'],
+    ['تست نفوذ سعی می‌کند از ضعف سوءاستفاده کند؛ اسکن فقط ضعف‌های شناخته‌شده را پیدا می‌کند','اسکن همیشه دستی است و تست نفوذ همیشه خودکار','تست نفوذ فقط وصله‌های جاافتاده را می‌گردد و اسکن همه چیز را تست می‌کند','فرق واقعی ندارند، چون هر دو از همان ضعف‌ها سوءاستفاده می‌کنند'],
     'A scanner reports known issues. A penetration test simulates a real attack and tries to exploit weaknesses to show how far an attacker could actually get.',
     'اسکنر مثل کسی است که دور خانه می‌گردد و می‌گوید «این پنجره قفل ندارد». تست نفوذ مثل کسی است که واقعاً از پنجره وارد می‌شود تا ببیند تا کجای خانه می‌تواند برود.');
 
@@ -147,8 +147,8 @@
   M(T2,'A company invites outside researchers through HackerOne to report bugs ethically in exchange for rewards. What is this?',
     'شرکت از طریق HackerOne از محققان بیرونی دعوت می‌کند که باگ‌ها را به روش اخلاقی گزارش کنند و در عوض جایزه بگیرند. این چیست؟',
     'Bugcrowd هم همین کار را می‌کند.',
-    ['A responsible disclosure / bug bounty program','An ISAC','A compensating control','A system audit'],
-    ['برنامه‌ی افشای مسئولانه / جایزه‌ی باگ (Bug bounty)','ISAC','کنترل جایگزین','ممیزی سیستم'],
+    ['A bug bounty (responsible disclosure) program','An ISAC that shares threats between companies','A compensating control for unpatched systems','A system audit done by an outside firm'],
+    ['برنامه‌ی جایزه‌ی باگ (افشای مسئولانه)','ISACی که تهدیدها را بین شرکت‌ها به اشتراک می‌گذارد','کنترل جایگزین برای سیستم‌های وصله‌نشده','ممیزی سیستم توسط یک شرکت بیرونی'],
     'Responsible disclosure programs (HackerOne, Bugcrowd) give researchers a clear, legal channel to report vulnerabilities, often with rewards, so issues are fixed before attackers exploit them.',
     'شرکت می‌گوید: «اگر ضعفی پیدا کردی، به جای سوءاستفاده به ما بگو تا جایزه بگیری.» هکرِ خوب امنیت قانونی و پول می‌گیرد، شرکت هم زودتر مشکل را درست می‌کند.');
 
@@ -179,8 +179,8 @@
   M(T3,'A CVSS 9.8 flaw is found on a public web app and a CVSS 5.0 flaw on an isolated internal system. What is the best approach?',
     'یک ضعف با امتیاز ۹٫۸ روی سایت عمومی پیدا شده و یک ضعف با امتیاز ۵ روی یک سیستم داخلی جداافتاده. بهترین کار چیست؟',
     'امتیاز بالا + در معرض اینترنت = اول همین.',
-    ['Patch the 9.8 public-facing flaw immediately; handle the 5.0 in routine updates','Fix the 5.0 first because it is easier','Ignore both until the next audit','Buy cyber insurance instead of patching'],
-    ['ضعف ۹٫۸ روی سایت عمومی را فوراً وصله کن؛ ضعف ۵ را در آپدیت‌های معمول','اول ضعف ۵ را درست کن چون راحت‌تر است','هر دو را تا ممیزی بعدی نادیده بگیر','به جای وصله، بیمه‌ی سایبری بخر'],
+    ['Patch the public 9.8 flaw now; fix the 5.0 in routine updates','Fix the 5.0 flaw first, because it is quicker and easier to close','Leave both flaws alone until the next scheduled security audit','Buy cyber insurance to cover both flaws instead of patching them'],
+    ['ضعف ۹٫۸ سایت عمومی را همین حالا وصله کن؛ ضعف ۵ را در آپدیت‌های معمول','اول ضعف ۵ را درست کن، چون بستنش سریع‌تر و راحت‌تر است','هر دو ضعف را تا ممیزی امنیتی بعدی دست نزن','به جای وصله، برای هر دو ضعف بیمه‌ی سایبری بخر'],
     'High severity plus internet exposure means immediate patching. A medium flaw on an isolated system can wait for routine maintenance.',
     'امتیاز ۹٫۸ خیلی خطرناک است و سایت هم جلوی چشم همه‌ی هکرهای دنیاست، پس فوری. ضعف ۵ روی سیستمی که به اینترنت وصل نیست، می‌تواند تا آپدیت بعدی صبر کند.');
 
@@ -195,24 +195,24 @@
   M(T3,'In CVSS, what does the Scope metric describe?',
     'در CVSS، معیار Scope (دامنه) چه چیزی را نشان می‌دهد؟',
     'فقط یک قسمت یا زنجیره‌وار به بقیه؟',
-    ['Whether the vulnerability affects only one component or cascades to others','How much the patch costs','How many CVE numbers it has','Which country found the flaw'],
-    ['اینکه ضعف فقط یک قسمت را درگیر می‌کند یا به قسمت‌های دیگر هم سرایت می‌کند','هزینه‌ی وصله چقدر است','چند شماره‌ی CVE دارد','کدام کشور ضعف را پیدا کرده'],
+    ['Whether the flaw affects only one component or spreads to others','How much it will cost the organization to buy and apply the patch','How many separate CVE numbers have been assigned to the flaw','Which country\'s security agency first discovered and reported it'],
+    ['اینکه ضعف فقط یک قسمت را درگیر می‌کند یا به قسمت‌های دیگر هم می‌رسد','خرید و اعمال وصله چقدر برای سازمان خرج دارد','چند شماره‌ی CVE جداگانه به ضعف داده شده','سازمان امنیتی کدام کشور اول ضعف را پیدا و گزارش کرده'],
     'Scope shows whether exploitation stays in one component or has a cascading effect on others.',
     'Scope مثل این است که آتش فقط در یک اتاق بماند یا به کل خانه سرایت کند.');
 
   M(T3,'What is CVE-2023-12345?',
     'CVE-2023-12345 چیست؟',
     'یک «شماره‌ی شناسایی» است، نه یک نمره.',
-    ['A unique identifier for a publicly known vulnerability','A severity score from 0 to 10','A type of malware','A SIEM product'],
-    ['یک شناسه‌ی یکتا برای یک آسیب‌پذیری شناخته‌شده‌ی عمومی','نمره‌ی شدت از ۰ تا ۱۰','نوعی بدافزار','یک محصول SIEM'],
+    ['A unique ID for a publicly known vulnerability','A severity score on a scale from 0 to 10','A family of malware tracked by antivirus vendors','A SIEM product that collects vulnerability data'],
+    ['یک شناسه‌ی یکتا برای یک آسیب‌پذیری شناخته‌شده‌ی عمومی','نمره‌ی شدت در مقیاس ۰ تا ۱۰','یک خانواده‌ی بدافزار که شرکت‌های آنتی‌ویروس دنبالش می‌کنند','یک محصول SIEM که داده‌ی آسیب‌پذیری جمع می‌کند'],
     'CVE gives each publicly known vulnerability a unique ID, managed by MITRE, so every tool and team refers to the same issue. Details are searchable at nvd.nist.gov.',
     'CVE مثل کد ملی برای هر ضعف است. هر ضعف شناخته‌شده یک شماره‌ی منحصربه‌فرد می‌گیرد تا همه‌ی ابزارها و تیم‌ها بدانند از کدام حرف می‌زنند. سازمان MITRE مدیریتش می‌کند.');
 
   M(T3,'What is the difference between CVE and CVSS?',
     'فرق CVE و CVSS چیست؟',
     'یکی «اسم» است، یکی «نمره».',
-    ['CVE names the vulnerability; CVSS scores how severe it is','CVE scores severity; CVSS names it','They are the same thing','CVE is for hardware only'],
-    ['CVE اسم/شماره‌ی ضعف است؛ CVSS نمره‌ی شدت آن','CVE نمره است و CVSS اسم','هر دو یکی‌اند','CVE فقط برای سخت‌افزار است'],
+    ['CVE names the flaw; CVSS scores its severity','CVE scores the severity; CVSS names the flaw','They are two names for the same database','CVE covers hardware only; CVSS covers software'],
+    ['CVE اسم/شماره‌ی ضعف است؛ CVSS نمره‌ی شدت آن','CVE نمره‌ی شدت است؛ CVSS اسم ضعف','دو اسم برای یک دیتابیس هستند','CVE فقط سخت‌افزار است و CVSS فقط نرم‌افزار'],
     'CVE = the identifier (which vulnerability). CVSS = the score (how bad it is, 0-10). A report usually gives both.',
     'CVE = اسم و شماره‌ی ضعف (کدام ضعف؟). CVSS = نمره‌ی خطرناکی (چقدر بد؟). مثل اسم دانش‌آموز و نمره‌اش.');
 
@@ -259,8 +259,8 @@
   M(T3,'The same vulnerability is found on a hospital\'s patient system and on a startup\'s test server. Why might the hospital fix it first?',
     'یک ضعف یکسان، هم روی سیستم بیماران یک بیمارستان پیدا شده و هم روی سرور آزمایشی یک استارتاپ. چرا ممکن است بیمارستان زودتر درستش کند؟',
     'اهمیت دستگاه، قانون، و اینکه چقدر ریسک را تحمل می‌کنند.',
-    ['Asset criticality, regulations (HIPAA) and lower risk tolerance','The CVSS score is different for hospitals','Hospitals have more scanners','Startups are not allowed to patch'],
-    ['اهمیت دستگاه، قانون (HIPAA) و تحمل ریسک کمتر','امتیاز CVSS برای بیمارستان فرق دارد','بیمارستان اسکنر بیشتری دارد','استارتاپ‌ها اجازه‌ی وصله ندارند'],
+    ['Asset criticality, HIPAA rules and lower risk tolerance','The CVSS base score is calculated differently for hospitals','Hospitals own more scanners, so they find flaws sooner','Startups are not legally allowed to patch test servers'],
+    ['اهمیت دارایی، قوانین HIPAA و تحمل ریسک کمتر','نمره‌ی پایه‌ی CVSS برای بیمارستان جور دیگری حساب می‌شود','بیمارستان اسکنر بیشتری دارد، پس ضعف را زودتر پیدا می‌کند','استارتاپ‌ها از نظر قانونی اجازه‌ی وصله‌ی سرور تست ندارند'],
     'Prioritization depends on the environment: asset criticality, exposure, regulations and business risk tolerance. A hospital tolerates far less risk than a startup.',
     'اولویت فقط به نمره بستگی ندارد. باید ببینی آن دستگاه چقدر مهم است، به اینترنت وصل است یا نه، قانون چه می‌گوید، و شرکت چقدر می‌تواند ریسک تحمل کند. جان بیمار در خطر است، پس بیمارستان خیلی کمتر ریسک قبول می‌کند.');
 
@@ -315,16 +315,16 @@
   M(T4,'Which item belongs in a vulnerability report?',
     'کدام مورد باید در گزارش آسیب‌پذیری باشد؟',
     'گزارش خوب می‌گوید: چه شد، چقدر بد بود، کجا، چه کردیم، کِی.',
-    ['CVE/CVSS reference, impacted systems, remediation actions and timeline','The attacker\'s home address','Only the scanner\'s brand name','Employees\' personal passwords'],
-    ['ارجاع CVE/CVSS، سیستم‌های درگیر، اقدامات رفع و زمان‌بندی','آدرس خانه‌ی هکر','فقط اسم برند اسکنر','رمزهای شخصی کارمندها'],
+    ['CVE/CVSS reference, affected systems, fixes and timeline','The attacker\'s suspected home address and phone number','Only the brand name and version of the scanner used','The personal passwords of employees on affected systems'],
+    ['ارجاع CVE/CVSS، سیستم‌های درگیر، راه رفع و زمان‌بندی','آدرس خانه و شماره تلفن احتمالی مهاجم','فقط اسم برند و نسخه‌ی اسکنر استفاده‌شده','رمزهای شخصی کارمندان روی سیستم‌های درگیر'],
     'A good report has: a summary, CVSS/CVE reference, impacted systems, remediation actions taken or planned, and a timeline from discovery to resolution.',
     'گزارش خوب ۵ بخش دارد: خلاصه‌ی ضعف، شماره‌ی CVE و نمره‌ی CVSS، کدام سیستم‌ها درگیرند، چه کاری انجام شده یا قرار است بشود، و زمان‌بندی (کِی پیدا شد و کِی درست شد).');
 
   M(T5,'Why is real-time monitoring needed in addition to vulnerability scanning?',
     'چرا علاوه بر اسکن آسیب‌پذیری، به پایش لحظه‌ای (monitoring) هم نیاز داریم؟',
     'اسکن «ضعف» را پیدا می‌کند؛ پایش «حمله‌ی در حال وقوع» را.',
-    ['It detects active threats that scanning misses','It replaces the need for patching','It lowers CVSS scores','It is required only for printers'],
-    ['حمله‌های در حال وقوع را که اسکن نمی‌بیند پیدا می‌کند','دیگر نیازی به وصله نیست','امتیاز CVSS را پایین می‌آورد','فقط برای پرینترها لازم است'],
+    ['It detects active attacks that scans miss','It removes the need to apply patches at all','It lowers the CVSS scores of open flaws','It is required by law only for printers'],
+    ['حمله‌های در حال وقوع را که اسکن نمی‌بیند پیدا می‌کند','نیاز به اعمال وصله را کلاً از بین می‌برد','نمره‌ی CVSS ضعف‌های باز را پایین می‌آورد','طبق قانون فقط برای پرینترها لازم است'],
     'Scanning finds weaknesses at a point in time. Monitoring gives continuous visibility over systems, applications and infrastructure to detect active attacks quickly.',
     'اسکن مثل معاینه‌ی سالانه‌ی پزشک است؛ پایش مثل دستگاه ضربان قلب که لحظه‌به‌لحظه نشان می‌دهد چه خبر است. اگر حمله‌ای همین الان رخ بدهد، پایش زود خبر می‌دهد.');
 
@@ -339,8 +339,8 @@
   M(T5,'The SOC gets hundreds of meaningless alerts a day and analysts start ignoring them. Which activity helps most?',
     'مرکز امنیت (SOC) هر روز صدها هشدار بی‌معنی می‌گیرد و کارشناس‌ها دیگر به هشدارها توجه نمی‌کنند. کدام کار بیشتر کمک می‌کند؟',
     'باید هشدارها را «تنظیم» کنی تا فقط مهم‌ها بیایند.',
-    ['Alert tuning to reduce noise and false positives','Turning off the SIEM','Archiving all alerts unread','Buying more scanners'],
-    ['تنظیم هشدارها (Alert tuning) برای کم کردن هشدار بی‌مورد','خاموش کردن SIEM','بایگانی همه‌ی هشدارها بدون خواندن','خریدن اسکنر بیشتر'],
+    ['Alert tuning to cut noise and false positives','Turning off the SIEM until the noise stops','Archiving all alerts without reading them','Buying more scanners to cover the network'],
+    ['تنظیم هشدارها (Alert tuning) برای کم کردن نویز و هشدار اشتباه','خاموش کردن SIEM تا نویز تمام شود','بایگانی همه‌ی هشدارها بدون خواندن','خریدن اسکنر بیشتر برای پوشش شبکه'],
     'Alert tuning refines detection rules to reduce noise and false positives so real alerts stand out.',
     'Alert tuning یعنی تنظیم کنی که فقط هشدارهای واقعی بیایند. مثل چوپان دروغگو: اگر آژیر زیاد الکی بزند، روزی که گرگ واقعاً بیاید، کسی گوش نمی‌دهد.');
 
@@ -395,8 +395,8 @@
   M(T5,'A team compares every server against CIS Benchmarks to detect settings that drifted from the secure standard. What are they using?',
     'تیم هر سرور را با CIS Benchmarks مقایسه می‌کند تا تنظیماتی که از حالت امن استاندارد خارج شده را پیدا کند. از چه چیزی استفاده می‌کنند؟',
     'یک «خط مبنا» از تنظیمات درست.',
-    ['Benchmarks and configuration baselines','Dark web monitoring','Cyber insurance','A proprietary threat feed'],
-    ['Benchmark و baseline پیکربندی','پایش دارک‌وب','بیمه‌ی سایبری','فید تهدید تجاری'],
+    ['Benchmarks and configuration baselines','Dark web monitoring of leaked settings','Cyber insurance against configuration errors','A proprietary threat intelligence feed'],
+    ['Benchmark و Baseline پیکربندی','پایش دارک‌وب برای تنظیمات لورفته','بیمه‌ی سایبری در برابر خطای پیکربندی','فید اطلاعات تهدید تجاری'],
     'Benchmarks and configuration baselines (e.g. CIS Benchmarks) define secure settings so tools can detect deviations from the expected state.',
     'Baseline مثل عکس «اتاق مرتب» است. هر روز اتاق را با عکس مقایسه می‌کنی تا ببینی چه چیزی جابه‌جا شده.');
 

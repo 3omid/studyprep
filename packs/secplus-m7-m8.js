@@ -36,16 +36,16 @@
   M('7',T1,'Which of the following is an example of non-human-readable data?',
     'کدام مورد نمونه‌ی داده‌ی غیرقابل‌خواندن برای انسان است؟',
     'غیرقابل‌خواندن یعنی برای سیستم ساخته شده و بدون ابزار خاص (رمزگشایی یا parse) خوانده نمی‌شود.',
-    ['A compressed archive or a hexadecimal dump','A plain-text email','A Word document','An HTML page'],
-    ['فایل فشرده یا hex dump','ایمیل متنی ساده','سند Word','صفحه‌ی HTML'],
+    ['A compressed archive or a hex dump','A plain-text email sent between staff','A Word document with a written report','An HTML page shown in a web browser'],
+    ['فایل فشرده یا Hex Dump','ایمیل متنی ساده بین کارمندان','سند Word با یک گزارش نوشته‌شده','صفحه‌ی HTML که در مرورگر نشان داده می‌شود'],
     'Encrypted files, binary executables, compressed archives and hex dumps need special tools to read. Word files, PDFs, plain text and HTML pages are human-readable.',
     'فایل رمزنگاری‌شده، فایل اجرایی باینری، آرشیو فشرده و hex dump بدون ابزار خاص خوانده نمی‌شوند. Word، PDF، متن ساده و HTML برای انسان قابل خواندن‌اند.');
 
   M('7',T1,'A SIEM ingests machine-readable logs in JSON or syslog format. What does it typically produce from them?',
     'یک SIEM لاگ‌های ماشینی با فرمت JSON یا syslog را دریافت می‌کند. معمولاً از آن‌ها چه خروجی‌ای می‌سازد؟',
     '',
-    ['Human-readable dashboards and alerts','Encrypted backups','Tokenized card numbers','A hardened system image'],
-    ['داشبورد و هشدار قابل‌فهم برای انسان','بکاپ رمزنگاری‌شده','شماره‌ی کارت توکن‌شده','image سخت‌سازی‌شده'],
+    ['Human-readable dashboards and alerts','Encrypted backups of every log source','Tokenized card numbers for payments','A hardened system image for servers'],
+    ['داشبورد و هشدار قابل‌فهم برای انسان','بکاپ رمزنگاری‌شده از همه‌ی منابع لاگ','شماره‌ی کارت توکن‌شده برای پرداخت','Image سخت‌سازی‌شده برای سرورها'],
     'SIEM tools parse large volumes of machine-readable logs and turn them into dashboards and alerts people can act on.',
     'SIEM حجم زیادی لاگ ماشینی را parse می‌کند و به داشبورد و هشدار قابل‌استفاده برای انسان تبدیل می‌کند.');
 
@@ -100,16 +100,16 @@
   M('7',T2,'What does data sovereignty mean?',
     'مفهوم data sovereignty (حاکمیت داده) چیست؟',
     'داده تابع قوانین کشوری است که در آن ذخیره می‌شود.',
-    ['Digital data is subject to the laws of the country where it is stored','Data belongs to whoever encrypts it first','Data may be stored anywhere regardless of law','Data must always be stored in the cloud'],
-    ['داده تابع قوانین کشوری است که در آن ذخیره شده','داده مال کسی است که اول رمزنگاری‌اش کند','داده را می‌توان بدون توجه به قانون هرجا ذخیره کرد','داده باید همیشه در cloud باشد'],
+    ['Data is subject to the laws of the country where it is stored','Data legally belongs to whoever encrypts it first','Data may be stored anywhere, regardless of local law','Data must always be stored with a public cloud provider'],
+    ['داده تابع قوانین کشوری است که در آن ذخیره شده','داده از نظر قانونی مال کسی است که اول رمزنگاری‌اش کند','داده را می‌توان بدون توجه به قانون محلی هرجا ذخیره کرد','داده باید همیشه نزد یک ارائه‌دهنده‌ی Cloud عمومی ذخیره شود'],
     'Digital information is subject to the laws of the country where it is stored. Some laws require data to stay within national borders, especially for health, finance and government.',
     'اطلاعات دیجیتال تابع قوانین کشور محل ذخیره‌سازی است. بعضی قوانین می‌گویند داده باید داخل مرز بماند، به‌ویژه در سلامت، مالی و دولت.');
 
   M('7',T2,'A multinational stores European customer data in the U.S. Which concept explains why GDPR may restrict this?',
     'یک شرکت چندملیتی داده‌ی مشتریان اروپایی را در آمریکا ذخیره می‌کند. کدام مفهوم توضیح می‌دهد چرا GDPR ممکن است این را محدود کند؟',
     'مکان فیزیکی یا حقوقی ذخیره/پردازش داده تعیین می‌کند چه قانونی اعمال شود.',
-    ['Geolocation and cross-border transfer restrictions','Tokenization','Journaling','Platform diversity'],
-    ['Geolocation و محدودیت انتقال بین‌مرزی','Tokenization','Journaling','Platform diversity'],
+    ['Geolocation and cross-border transfer limits','Tokenization of the customers\' personal data','Journaling of every change made to the data','Platform diversity across the two data centers'],
+    ['Geolocation و محدودیت انتقال بین‌مرزی','Tokenization داده‌ی شخصی مشتریان','Journaling همه‌ی تغییرات داده','تنوع پلتفرم بین دو دیتاسنتر'],
     'Geolocation (where data is stored, transmitted or processed) determines which privacy laws and cross-border transfer rules apply.',
     'Geolocation (محل ذخیره، انتقال یا پردازش داده) تعیین می‌کند کدام قوانین حریم خصوصی و محدودیت‌های انتقال بین‌مرزی اعمال شود.');
 
@@ -164,16 +164,16 @@
   M('7',T3,'Obfuscating JavaScript code is mainly meant to:',
     'obfuscate کردن کد JavaScript بیشتر برای چه هدفی است؟',
     '',
-    ['Make the code hard to understand and reverse engineer','Encrypt data at rest','Provide high availability','Verify file integrity'],
-    ['سخت کردن فهم کد و reverse engineering','رمزنگاری داده‌ی ذخیره‌شده','فراهم کردن high availability','بررسی یکپارچگی فایل'],
+    ['Make the code hard to understand and reverse engineer','Encrypt the data the script stores at rest in the browser','Provide high availability if the web server goes down','Verify that the file was not changed after it was published'],
+    ['سخت کردن فهم کد و Reverse Engineering','رمزنگاری داده‌ای که اسکریپت در مرورگر ذخیره می‌کند','فراهم کردن High Availability اگر وب‌سرور از کار بیفتد','بررسی اینکه فایل بعد از انتشار تغییر نکرده باشد'],
     'Obfuscation alters code or data to make it unintelligible to unauthorized users, for example to prevent reverse engineering.',
     'Obfuscation کد یا داده را برای افراد غیرمجاز نامفهوم می‌کند، مثلاً برای جلوگیری از reverse engineering.');
 
   M('7',T3,'Using VLANs to isolate development, production and guest networks mainly helps to:',
     'استفاده از VLAN برای جدا کردن شبکه‌ی توسعه، production و مهمان بیشتر چه کمکی می‌کند؟',
     '',
-    ['Limit lateral movement and reduce the attack surface','Increase backup frequency','Remove the need for access permissions','Replace encryption'],
-    ['محدود کردن lateral movement و کم کردن attack surface','بیشتر کردن تناوب بکاپ','حذف نیاز به مجوزهای دسترسی','جایگزین رمزنگاری'],
+    ['Limit lateral movement and reduce the attack surface','Increase how often each network is backed up','Remove the need for user access permissions','Replace encryption of traffic inside each network'],
+    ['محدود کردن Lateral Movement و کم کردن سطح حمله','بیشتر کردن دفعات بکاپ‌گیری از هر شبکه','حذف نیاز به مجوزهای دسترسی کاربران','جایگزین رمزنگاری ترافیک داخل هر شبکه'],
     'Segmentation divides resources into zones so a compromise in one zone does not spread easily. RBAC and least privilege complement it.',
     'Segmentation منابع را به zone تقسیم می‌کند تا نفوذ به یک zone به‌راحتی پخش نشود. RBAC و least privilege مکمل آن هستند.');
 
@@ -188,8 +188,8 @@
   M('7',T4,'What does RTO (Recovery Time Objective) measure?',
     'RTO (Recovery Time Objective) چه چیزی را اندازه می‌گیرد؟',
     'RPO = چقدر داده از دست برود. RTO = چقدر طول بکشد تا برگردیم.',
-    ['The maximum acceptable downtime to restore operations','The maximum acceptable data loss','The age of the oldest backup','The cost of the DR site'],
-    ['حداکثر downtime قابل‌قبول برای برگرداندن عملیات','حداکثر داده‌ی قابل‌قبول برای از دست رفتن','قدیمی‌ترین بکاپ','هزینه‌ی سایت DR'],
+    ['The maximum acceptable downtime to restore operations','The maximum acceptable amount of data that can be lost','The age of the oldest backup that is still kept','The yearly cost of running the disaster recovery site'],
+    ['حداکثر Downtime قابل‌قبول برای برگرداندن عملیات','حداکثر مقدار داده‌ی قابل‌قبول برای از دست رفتن','عمر قدیمی‌ترین بکاپی که هنوز نگه داشته شده','هزینه‌ی سالانه‌ی اداره‌ی سایت بازیابی از فاجعه'],
     'RTO is the maximum acceptable downtime. It determines how fast backup systems and storage must respond. RPO is about data loss.',
     'RTO حداکثر downtime قابل‌قبول است و تعیین می‌کند سیستم بکاپ و storage چقدر سریع باید پاسخ دهد. RPO درباره‌ی از دست رفتن داده است.');
 
@@ -252,16 +252,16 @@
   M('7',T5,'A company\'s primary data center is in Toronto and its backup is in Calgary. What is the main benefit?',
     'مرکز داده‌ی اصلی یک شرکت در تورنتو و مرکز بکاپ آن در کلگری است. مهم‌ترین مزیت چیست؟',
     '',
-    ['An outage in Ontario can fail over to Alberta with minimal downtime','Both sites always share the same power grid','It removes the need for backups','It eliminates the need for encryption'],
-    ['قطعی در انتاریو می‌تواند با حداقل downtime به آلبرتا failover شود','هر دو سایت همیشه از یک شبکه‌ی برق استفاده می‌کنند','نیاز به بکاپ را از بین می‌برد','نیاز به رمزنگاری را از بین می‌برد'],
+    ['An outage in Ontario can fail over to Alberta','Both sites always share the same power grid and staff','It removes the need to keep any separate backups','It removes the need to encrypt data between the sites'],
+    ['قطعی در انتاریو می‌تواند به آلبرتا Failover شود','هر دو سایت همیشه شبکه‌ی برق و کارمند مشترک دارند','نیاز به نگه داشتن هر بکاپ جداگانه را از بین می‌برد','نیاز به رمزنگاری داده بین دو سایت را از بین می‌برد'],
     'Geographic distribution separates critical services from regional threats such as floods, wildfires, earthquakes and regional power failures, and supports data residency requirements.',
     'توزیع جغرافیایی سرویس‌های حیاتی را از تهدیدهای منطقه‌ای مثل سیل، آتش‌سوزی، زلزله و قطعی برق جدا می‌کند و به الزامات data residency هم کمک می‌کند.');
 
   M('7',T5,'Why would an organization use both Windows and Linux (platform diversity)?',
     'چرا یک سازمان هم از Windows و هم از Linux استفاده کند (platform diversity)؟',
     'اگر همه چیز یک جور باشد، یک آسیب‌پذیری همه را می‌زند (monoculture).',
-    ['To reduce monoculture risk, where one flaw affects every system','To avoid needing any patches','To guarantee zero downtime','To remove the need for firewalls'],
-    ['برای کم کردن ریسک monoculture که یک ضعف روی همه‌ی سیستم‌ها اثر بگذارد','برای بی‌نیازی از patch','برای تضمین صفر downtime','برای بی‌نیازی از firewall'],
+    ['To reduce monoculture risk, where one flaw hits every system','To avoid needing patches, since attackers target only one OS','To guarantee zero downtime when one platform has an outage','To remove the need for firewalls between the two platforms'],
+    ['برای کم کردن ریسک Monoculture که یک ضعف به همه‌ی سیستم‌ها بخورد','برای بی‌نیازی از Patch، چون مهاجم فقط یک OS را هدف می‌گیرد','برای تضمین صفر Downtime وقتی یک پلتفرم قطع شود','برای بی‌نیازی از فایروال بین دو پلتفرم'],
     'Platform diversity reduces the attack surface and mitigates monoculture vulnerabilities. Multi-cloud similarly avoids vendor lock-in and improves uptime.',
     'Platform diversity attack surface را کم می‌کند و ریسک monoculture را کاهش می‌دهد. multi-cloud هم از vendor lock-in جلوگیری و uptime را بهتر می‌کند.');
 
@@ -276,8 +276,8 @@
   M('7',T5,'COOP (Continuity of Operations) planning is mainly about:',
     'برنامه‌ریزی COOP (Continuity of Operations) بیشتر درباره‌ی چیست؟',
     '',
-    ['Keeping critical services running during disruptions using alternate sites, communication plans and key staff','Encrypting backups with AES-256','Scanning source code for bugs','Choosing Wi-Fi channels'],
-    ['ادامه‌ی سرویس‌های حیاتی هنگام اختلال با سایت جایگزین، برنامه‌ی ارتباطی و نیروی کلیدی','رمزنگاری بکاپ با AES-256','اسکن source code برای باگ','انتخاب کانال Wi-Fi'],
+    ['Keeping critical services running during a disruption','Encrypting all backups with AES-256 before they leave the site','Scanning the source code of in-house apps for security bugs','Choosing Wi-Fi channels that do not overlap in the office'],
+    ['سرپا نگه داشتن سرویس‌های حیاتی هنگام اختلال','رمزنگاری همه‌ی بکاپ‌ها با AES-256 قبل از خروج از سایت','اسکن کد برنامه‌های داخلی برای پیدا کردن باگ امنیتی','انتخاب کانال‌های Wi-Fi بدون هم‌پوشانی در اداره'],
     'COOP uses alternate sites, communication plans and key staff, and is tested with tabletop exercises and simulations.',
     'COOP از سایت جایگزین، برنامه‌ی ارتباطی و نیروی کلیدی استفاده می‌کند و با tabletop exercise و simulation تست می‌شود.');
 
@@ -316,16 +316,16 @@
   M('7',T6,'A UPS and a generator are both installed in a data center. What is the correct role of the UPS?',
     'در یک data center هم UPS و هم generator نصب شده است. نقش درست UPS کدام است؟',
     'UPS = پل کوتاه‌مدت، Generator = برق بلندمدت.',
-    ['Provide instant short-term power until the generator starts','Provide power for several days','Replace the generator','Encrypt data on disk'],
-    ['برق فوری کوتاه‌مدت تا روشن شدن generator','برق برای چند روز','جایگزین generator','رمزنگاری داده‌ی دیسک'],
+    ['Instant short-term power until the generator starts','Power for several days during a long regional outage','A full replacement for the generator in most cases','Encryption of data on disk during a power failure'],
+    ['برق فوری کوتاه‌مدت تا روشن شدن Generator','برق برای چند روز در یک قطعی طولانی منطقه‌ای','جایگزین کامل Generator در بیشتر موارد','رمزنگاری داده‌ی دیسک در زمان قطع برق'],
     'A UPS bridges the gap between power failure and generator startup and protects against brownouts. Generators supply long-duration power once the UPS is depleted. Layer both.',
     'UPS فاصله‌ی بین قطع برق تا روشن شدن generator را پر می‌کند و در برابر افت ولتاژ محافظت می‌کند. generator برق بلندمدت می‌دهد. بهترین کار ترکیب هر دو است.');
 
   M('7',T6,'What does defense in depth mean?',
     'defense in depth (دفاع در عمق) یعنی چه؟',
     '',
-    ['Multiple layers of security where each layer compensates for weaknesses in others','One very strong firewall at the perimeter','Encrypting only data at rest','Trusting internal users completely'],
-    ['چند لایه‌ی امنیتی که هر لایه ضعف لایه‌های دیگر را جبران می‌کند','یک firewall بسیار قوی در محیط شبکه','رمزنگاری فقط داده‌ی at rest','اعتماد کامل به کاربران داخلی'],
+    ['Several layers of security that cover each other\'s weaknesses','One very strong firewall placed at the network perimeter','Encrypting data at rest only, since stored data is the target','Fully trusting internal users once they are inside the network'],
+    ['چند لایه‌ی امنیتی که ضعف‌های همدیگر را می‌پوشانند','یک فایروال بسیار قوی در مرز شبکه','فقط رمزنگاری داده‌ی ذخیره‌شده، چون هدف همان داده است','اعتماد کامل به کاربران داخلی وقتی وارد شبکه شدند'],
     'Layers include encryption, data classification, high availability, backups, access controls, and monitoring and alerts.',
     'لایه‌ها شامل رمزنگاری، طبقه‌بندی داده، high availability، بکاپ، کنترل دسترسی و مانیتورینگ و هشدار هستند.');
 
@@ -374,16 +374,16 @@
   M('8',U1,'What is a secure baseline?',
     'secure baseline چیست؟',
     'یک پیکربندی رسمی و تأییدشده که حداقل کنترل‌های امنیتی را تعریف می‌کند.',
-    ['A formally approved configuration that defines the minimum security controls a system must meet','A list of all known malware','A backup of the operating system','A firewall rule that blocks all traffic'],
-    ['پیکربندی رسمی و تأییدشده که حداقل کنترل‌های امنیتی لازم برای یک سیستم را تعریف می‌کند','فهرست همه‌ی بدافزارهای شناخته‌شده','بکاپ سیستم‌عامل','قانون firewall که کل ترافیک را مسدود می‌کند'],
+    ['An approved configuration that sets the minimum security controls','A list of all known malware signatures for the antivirus tool','A full backup of the operating system taken after installation','A firewall rule set that blocks all traffic until it is reviewed'],
+    ['پیکربندی تأییدشده که حداقل کنترل‌های امنیتی را تعیین می‌کند','فهرست همه‌ی امضاهای بدافزار شناخته‌شده برای آنتی‌ویروس','بکاپ کامل سیستم‌عامل که بعد از نصب گرفته شده','مجموعه‌ی قوانین فایروال که تا بازبینی همه‌ی ترافیک را مسدود می‌کند'],
     'A baseline is the reference configuration for password policy, privileges, firewall rules, logging, software restrictions and update settings. It must be tailored to asset type, risk tolerance and standards such as NIST, CIS Benchmarks or PCI-DSS.',
     'baseline پیکربندی مرجع برای سیاست رمز، سطح دسترسی، قوانین firewall، logging، محدودیت نرم‌افزار و به‌روزرسانی است. باید بر اساس نوع دارایی، تحمل ریسک و استانداردهایی مثل NIST، CIS Benchmarks یا PCI-DSS تنظیم شود.');
 
   M('8',U1,'Which item would most likely appear in a secure baseline for corporate laptops?',
     'کدام مورد به احتمال زیاد در secure baseline لپ‌تاپ‌های سازمانی قرار می‌گیرد؟',
     '',
-    ['Full disk encryption, automatic screen lock, a host firewall and endpoint protection','Local admin rights for every user','Autorun enabled for USB drives','Telnet enabled for remote support'],
-    ['رمزنگاری کامل دیسک، قفل خودکار صفحه، firewall میزبان و endpoint protection','دسترسی local admin برای همه‌ی کاربران','autorun فعال برای USB','Telnet فعال برای پشتیبانی از راه دور'],
+    ['Full disk encryption, screen lock, host firewall and endpoint protection','Local administrator rights for every user so they can install software','Autorun enabled for USB drives so files open faster for the user','Telnet enabled on every laptop so the help desk can connect remotely'],
+    ['رمزنگاری کامل دیسک، قفل صفحه، فایروال میزبان و Endpoint Protection','دسترسی Local Admin برای همه‌ی کاربران تا بتوانند نرم‌افزار نصب کنند','Autorun فعال برای USB تا فایل‌ها برای کاربر سریع‌تر باز شوند','Telnet فعال روی همه‌ی لپ‌تاپ‌ها تا Help Desk از راه دور وصل شود'],
     'Example baseline: BitLocker, screen lock after 5 minutes, disabled USB mass storage, host-based firewall and endpoint protection software.',
     'نمونه‌ی baseline: BitLocker، قفل صفحه بعد از ۵ دقیقه، غیرفعال کردن USB mass storage، firewall میزبان و نرم‌افزار endpoint protection.');
 
@@ -398,24 +398,24 @@
   M('8',U1,'While establishing a baseline for a Windows server, which action reduces the attack surface?',
     'هنگام ساخت baseline برای یک Windows server کدام اقدام attack surface را کم می‌کند؟',
     '',
-    ['Disabling legacy services and protocols such as Telnet, FTP and SMBv1','Enabling every optional service','Sharing the admin password with the team','Opening ports 135 and 445 to the internet'],
-    ['غیرفعال کردن سرویس‌ها و پروتکل‌های قدیمی مثل Telnet، FTP و SMBv1','فعال کردن همه‌ی سرویس‌های اختیاری','به اشتراک گذاشتن رمز admin با تیم','باز کردن پورت‌های 135 و 445 به اینترنت'],
+    ['Disabling legacy services such as Telnet, FTP and SMBv1','Enabling every optional Windows role and feature by default','Sharing the local administrator password with the whole team','Opening ports 135 and 445 to the internet for remote access'],
+    ['غیرفعال کردن سرویس‌های قدیمی مثل Telnet، FTP و SMBv1','فعال کردن همه‌ی نقش‌ها و قابلیت‌های اختیاری Windows به‌طور پیش‌فرض','به اشتراک گذاشتن رمز Local Admin با کل تیم','باز کردن پورت‌های 135 و 445 به اینترنت برای دسترسی از راه دور'],
     'Establishing a baseline means defining settings, removing unnecessary services and software, applying least privilege and documenting everything under version control.',
     'ساخت baseline یعنی تعریف تنظیمات، حذف سرویس و نرم‌افزار غیرضروری، اعمال least privilege و مستندسازی با version control.');
 
   M('8',U1,'Which approach best deploys a secure baseline consistently across hundreds of endpoints?',
     'کدام روش بهترین راه برای اعمال یکنواخت secure baseline روی صدها endpoint است؟',
     'اتوماسیون = تکرارپذیری و خطای انسانی کمتر.',
-    ['Automation with Ansible, Puppet, Endpoint Configuration Manager or pre-hardened images','Manually configuring each laptop from memory','Asking users to harden their own devices','Printing a checklist for each user'],
-    ['اتوماسیون با Ansible، Puppet، Endpoint Configuration Manager یا image از پیش سخت‌سازی‌شده','تنظیم دستی هر لپ‌تاپ از حافظه','از کاربران بخواهیم دستگاهشان را خودشان سخت‌سازی کنند','چاپ checklist برای هر کاربر'],
+    ['Automation tools such as Ansible or Puppet, or pre-hardened images','Manually configuring each laptop from memory as it is unboxed','Asking users to harden their own devices by following an email','Printing a paper checklist and handing one to each user'],
+    ['ابزارهای اتوماسیون مثل Ansible یا Puppet، یا Image از پیش سخت‌سازی‌شده','تنظیم دستی هر لپ‌تاپ از حافظه وقتی از جعبه درمی‌آید','از کاربران بخواهیم با یک ایمیل دستگاهشان را خودشان سخت‌سازی کنند','چاپ یک Checklist کاغذی و دادن آن به هر کاربر'],
     'Scripts (PowerShell, Bash), configuration tools and system imaging maximize consistency and reduce human error.',
     'اسکریپت (PowerShell، Bash)، ابزارهای پیکربندی و system imaging یکنواختی را بیشتر و خطای انسانی را کمتر می‌کنند.');
 
   M('8',U1,'A quarterly audit finds laptops that no longer match the approved settings after software updates. What is this problem called, and what fixes it?',
     'یک ممیزی سه‌ماهه نشان می‌دهد لپ‌تاپ‌ها بعد از به‌روزرسانی‌ها دیگر با تنظیمات تأییدشده مطابقت ندارند. اسم این مشکل چیست و چه چیزی آن را درست می‌کند؟',
     'drift یعنی فاصله گرفتن تنظیمات واقعی از baseline.',
-    ['Configuration drift, fixed by regular reviews and re-applying the baseline','Data sovereignty, fixed by moving data','Monoculture, fixed by buying more servers','Session hijacking, fixed by cookies'],
-    ['Configuration drift که با بازبینی منظم و اعمال دوباره‌ی baseline درست می‌شود','Data sovereignty که با جابه‌جایی داده درست می‌شود','Monoculture که با خرید سرور بیشتر درست می‌شود','Session hijacking که با cookie درست می‌شود'],
+    ['Configuration drift, fixed by regular reviews and re-applying the baseline','Data sovereignty, fixed by moving the laptops\' data to another country','Monoculture, fixed by buying servers that run a different OS','Session hijacking, fixed by shortening the lifetime of session cookies'],
+    ['Configuration Drift که با بازبینی منظم و اعمال دوباره‌ی Baseline درست می‌شود','Data Sovereignty که با بردن داده‌ی لپ‌تاپ‌ها به کشور دیگر درست می‌شود','Monoculture که با خرید سرورهایی با OS دیگر درست می‌شود','Session Hijacking که با کوتاه کردن عمر Cookieهای نشست درست می‌شود'],
     'Baselines are not static. Maintenance includes regular drift reviews, patching and testing and documenting changes before applying them organization-wide.',
     'baseline ثابت نیست. نگهداری شامل بازبینی منظم drift، patch و تست و مستندسازی تغییرات قبل از اعمال در کل سازمان است.');
 
@@ -446,24 +446,24 @@
   M('8',U2,'Which action best hardens a newly installed IP camera or smart thermostat?',
     'کدام اقدام بهترین سخت‌سازی برای یک دوربین IP یا ترموستات هوشمند تازه نصب‌شده است؟',
     '',
-    ['Change default credentials, update firmware and place it on a separate VLAN','Leave default credentials so support can log in','Connect it to the same VLAN as the file server','Enable every wireless interface'],
-    ['تغییر رمز پیش‌فرض، به‌روزرسانی firmware و قرار دادن آن در VLAN جدا','نگه داشتن رمز پیش‌فرض تا پشتیبانی بتواند وارد شود','وصل کردن آن به همان VLAN فایل‌سرور','فعال کردن همه‌ی رابط‌های بی‌سیم'],
+    ['Change default credentials, update firmware, use a separate VLAN','Keep the default credentials so the vendor\'s support can log in','Connect it to the same VLAN as the file server for easy access','Enable every wireless interface so it always stays connected'],
+    ['تغییر رمز پیش‌فرض، به‌روزرسانی Firmware و استفاده از VLAN جدا','نگه داشتن رمز پیش‌فرض تا پشتیبانی سازنده بتواند وارد شود','وصل کردن آن به همان VLAN فایل‌سرور برای دسترسی راحت','فعال کردن همه‌ی رابط‌های بی‌سیم تا همیشه وصل بماند'],
     'IoT devices often lack built-in security and cannot run security tools, so network isolation (VLAN, outbound-only access), strong credentials, firmware updates and disabling unused ports matter more.',
     'دستگاه‌های IoT معمولاً امنیت داخلی ندارند و ابزار امنیتی روی‌شان نصب نمی‌شود، پس ایزوله‌سازی شبکه (VLAN، فقط outbound)، رمز قوی، به‌روزرسانی firmware و بستن پورت‌های بلااستفاده مهم‌تر است.');
 
   M('8',U2,'Why is patching ICS/SCADA systems done cautiously, and what is a preferred protection?',
     'چرا patch کردن سیستم‌های ICS/SCADA با احتیاط انجام می‌شود و یک روش محافظت ترجیحی چیست؟',
     'این سیستم‌ها برای availability و کارایی ساخته شده‌اند، نه امنیت.',
-    ['Updates can disrupt operations, so only tested firmware is applied and the network is air-gapped or firewalled','They never need updates','Patching is illegal for them','Encryption is impossible so nothing can be done'],
-    ['به‌روزرسانی می‌تواند عملیات را مختل کند؛ پس فقط firmware تست‌شده اعمال می‌شود و شبکه air-gap یا پشت firewall است','هرگز به به‌روزرسانی نیاز ندارند','patch کردنشان غیرقانونی است','رمزنگاری ممکن نیست پس کاری نمی‌شود کرد'],
+    ['Updates can disrupt operations, so tested firmware and isolation are used','They never need updates, because they run only fixed control logic','Patching them is illegal under most industrial safety regulations','Encryption is impossible on them, so no protection can be added'],
+    ['به‌روزرسانی می‌تواند عملیات را مختل کند، پس از Firmware تست‌شده و جداسازی استفاده می‌شود','هرگز به‌روزرسانی نمی‌خواهند، چون فقط منطق کنترلی ثابت اجرا می‌کنند','Patch کردنشان طبق بیشتر مقررات ایمنی صنعتی غیرقانونی است','رمزنگاری روی آن‌ها ممکن نیست، پس هیچ محافظتی نمی‌شود اضافه کرد'],
     'ICS, SCADA and RTOS are built for availability and performance. Hardening uses isolation (air gap or firewalled segments), strict ACLs, disabling default services, physical security and cautious, tested patching. Failures can cause physical harm.',
     'ICS، SCADA و RTOS برای availability و کارایی ساخته شده‌اند. سخت‌سازی شامل ایزوله‌سازی (air gap یا بخش پشت firewall)، ACL سخت‌گیرانه، غیرفعال کردن سرویس‌های پیش‌فرض، امنیت فیزیکی و patch آزمایش‌شده با احتیاط است. خطا می‌تواند آسیب فیزیکی بزند.');
 
   M('8',U3,'What is the main purpose of a wireless site survey?',
     'هدف اصلی site survey بی‌سیم چیست؟',
     '',
-    ['Find optimal access point placement, RF dead zones and interference sources','Encrypt the Wi-Fi password','Create user accounts','Patch the access points'],
-    ['پیدا کردن بهترین محل access point، نقاط کور RF و منابع تداخل','رمزنگاری رمز Wi-Fi','ساخت حساب کاربری','patch کردن access pointها'],
+    ['Find the best AP placement, dead zones and interference','Encrypt the Wi-Fi password before it is shared with staff','Create user accounts for everyone who will use the network','Install the latest firmware patches on the access points'],
+    ['پیدا کردن بهترین محل AP، نقاط کور و منابع تداخل','رمزنگاری رمز Wi-Fi قبل از دادن آن به کارمندان','ساخت حساب کاربری برای همه‌ی کسانی که از شبکه استفاده می‌کنند','نصب آخرین Patchهای Firmware روی Access Pointها'],
     'A site survey evaluates the physical and RF environment before deploying or upgrading Wi-Fi: AP placement, dead zones and interference such as microwaves, elevators or neighbouring networks.',
     'site survey قبل از راه‌اندازی یا ارتقای Wi-Fi محیط فیزیکی و RF را ارزیابی می‌کند: محل AP، نقاط کور و تداخل مثل مایکروویو، آسانسور یا شبکه‌های مجاور.');
 
@@ -486,8 +486,8 @@
   M('8',U3,'Two access points in a meeting room overlap on the same channel and VoIP quality drops. What is the best fix?',
     'دو access point در اتاق جلسه روی یک کانال هم‌پوشانی دارند و کیفیت VoIP افت کرده است. بهترین راه‌حل چیست؟',
     '',
-    ['Reconfigure the APs to use non-overlapping channels','Disable encryption','Add more APs on the same channel','Switch to WEP'],
-    ['AP ها را روی کانال‌های بدون هم‌پوشانی تنظیم کنیم','رمزنگاری را غیرفعال کنیم','AP بیشتری روی همان کانال اضافه کنیم','به WEP برویم'],
+    ['Set the APs to non-overlapping channels','Disable encryption to reduce the overhead','Add more APs on the same shared channel','Switch both APs to WEP for compatibility'],
+    ['APها را روی کانال‌های بدون هم‌پوشانی تنظیم کنیم','رمزنگاری را غیرفعال کنیم تا سربار کم شود','AP بیشتری روی همان کانال مشترک اضافه کنیم','هر دو AP را برای سازگاری روی WEP ببریم'],
     'Signal overlap causes channel interference and degraded performance. Site surveys reveal it, and AP channels or placement are then adjusted.',
     'هم‌پوشانی سیگنال باعث تداخل کانال و افت کارایی می‌شود. site survey آن را نشان می‌دهد و بعد کانال یا محل AP اصلاح می‌شود.');
 
@@ -502,16 +502,16 @@
   M('8',U3,'RADIUS provides which services?',
     'RADIUS چه سرویس‌هایی را فراهم می‌کند؟',
     '',
-    ['Centralized authentication, authorization and accounting (AAA)','Disk encryption and key rotation','Static code analysis','Asset tracking with RFID'],
-    ['احراز هویت، مجوزدهی و حسابرسی متمرکز (AAA)','رمزنگاری دیسک و چرخش کلید','تحلیل ایستای کد','ردیابی دارایی با RFID'],
+    ['Centralized authentication, authorization and accounting','Disk encryption and automatic key rotation for servers','Static code analysis for applications before release','Asset tracking with RFID tags on company equipment'],
+    ['احراز هویت، مجوزدهی و حسابرسی متمرکز (AAA)','رمزنگاری دیسک و چرخش خودکار کلید برای سرورها','تحلیل ایستای کد برنامه‌ها قبل از انتشار','ردیابی دارایی با برچسب RFID روی تجهیزات شرکت'],
     'RADIUS provides centralized AAA. TLS or IPsec secure communication between endpoints and authentication servers.',
     'RADIUS سرویس AAA متمرکز می‌دهد. TLS یا IPsec ارتباط بین endpoint و سرور احراز هویت را امن می‌کند.');
 
   M('8',U3,'A user sees a nearby Wi-Fi network using the company name that they do not recognize. Which risk best matches?',
     'کاربری شبکه‌ی Wi-Fi مجاوری با نام شرکت می‌بیند که نمی‌شناسد. کدام ریسک بیشتر می‌خورد؟',
     '',
-    ['A rogue access point enabling eavesdropping','SIM swapping','Buffer overflow','Cold start'],
-    ['Rogue access point که امکان شنود می‌دهد','SIM swapping','Buffer overflow','Cold start'],
+    ['A rogue access point used for eavesdropping','SIM swapping to take over the user\'s phone','A buffer overflow in the laptop\'s Wi-Fi driver','A cold start delay in the company\'s cloud app'],
+    ['Rogue Access Point که برای شنود استفاده می‌شود','SIM Swapping برای گرفتن کنترل گوشی کاربر','Buffer Overflow در درایور Wi-Fi لپ‌تاپ','تأخیر Cold Start در برنامه‌ی Cloud شرکت'],
     'Wi-Fi risks include weak encryption, rogue access points and eavesdropping. Cellular risks are SIM swapping and rogue base stations. Bluetooth needs secure pairing and discoverability turned off.',
     'ریسک‌های Wi-Fi شامل رمزنگاری ضعیف، rogue access point و شنود است. ریسک سلولی SIM swapping و rogue base station است. Bluetooth به pairing امن و خاموش کردن discoverability نیاز دارد.');
 
@@ -558,16 +558,16 @@
   M('8',U5,'A tool scans source code for insecure patterns without executing it, early in the development lifecycle. What is it?',
     'ابزاری در مراحل اولیه‌ی توسعه، source code را بدون اجرا کردن برای الگوهای ناامن اسکن می‌کند. این چیست؟',
     '',
-    ['Static code analysis (SAST) such as SonarQube','Dynamic penetration test','Sandboxing','Code signing'],
-    ['تحلیل ایستای کد (SAST) مثل SonarQube','تست نفوذ پویا','Sandboxing','Code signing'],
+    ['Static code analysis (SAST)','Dynamic penetration testing (DAST)','Sandboxing the running application','Code signing with a trusted certificate'],
+    ['تحلیل ایستای کد (SAST)','تست نفوذ پویا (DAST)','اجرای برنامه در Sandbox','امضای کد با یک گواهی مورد اعتماد'],
     'Static analysis (SonarQube, Fortify, Checkmarx) finds bugs and vulnerabilities without running the code.',
     'تحلیل ایستا (SonarQube، Fortify، Checkmarx) باگ و آسیب‌پذیری را بدون اجرای کد پیدا می‌کند.');
 
   M('8',U5,'What does code signing provide?',
     'code signing چه چیزی را فراهم می‌کند؟',
     '',
-    ['Verification of the code\'s authenticity and integrity','Faster execution','Automatic bug fixing','Network segmentation'],
-    ['تأیید اصالت و یکپارچگی کد','اجرای سریع‌تر','رفع خودکار باگ','segmentation شبکه'],
+    ['Proof of the code\'s authenticity and integrity','Faster execution of the signed program','Automatic fixing of bugs found in the code','Network segmentation for the application'],
+    ['اثبات اصالت و یکپارچگی کد','اجرای سریع‌تر برنامه‌ی امضاشده','رفع خودکار باگ‌های پیدا شده در کد','Segmentation شبکه برای برنامه'],
     'Code signing uses certificates (GPG, EV certificates) to verify authenticity and integrity, detect tampering and build trust in released software.',
     'code signing با گواهی (GPG، EV certificate) اصالت و یکپارچگی را تأیید می‌کند، دست‌کاری را تشخیص می‌دهد و اعتماد به نرم‌افزار منتشرشده را بالا می‌برد.');
 

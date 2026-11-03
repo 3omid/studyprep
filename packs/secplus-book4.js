@@ -16,8 +16,8 @@
   M(T1,'A caller says, "Everyone else on your team already reset their password through this link, you are the last one." Which principle is being used?',
     'تماس‌گیرنده می‌گوید: «همه‌ی هم‌تیمی‌هایت قبلاً با این لینک رمزشان را عوض کرده‌اند، فقط تو مانده‌ای.» از کدام اصل استفاده شده؟',
     'همه دارند این کار را می‌کنند.',
-    ['Consensus (social proof)','Scarcity','Authority','Intimidation'],
-    ['اجماع (اثبات اجتماعی)','کمیابی','اقتدار','ارعاب'],
+    ['Consensus (social proof)','Scarcity (limited time)','Authority (a boss\'s request)','Intimidation (a threat)'],
+    ['اجماع (اثبات اجتماعی)','کمیابی (وقت محدود)','اقتدار (درخواست رئیس)','ارعاب (تهدید)'],
     'Consensus, also called social proof, works because people tend to do what others are doing. Fake testimonials and "everyone already did it" messages use this principle.',
     'اجماع یا اثبات اجتماعی کار می‌کند چون آدم‌ها دوست دارند کاری را بکنند که دیگران می‌کنند. نظرهای جعلی و پیام «همه قبلاً انجامش داده‌اند» از این اصل استفاده می‌کنند.');
 
@@ -89,8 +89,8 @@
   M(T2,'A foreign government runs thousands of fake social media accounts that spread made-up stories to reduce trust in another country\'s election. What is this?',
     'یک دولت خارجی هزاران حساب جعلی در شبکه‌های اجتماعی اداره می‌کند که داستان‌های ساختگی پخش می‌کنند تا اعتماد به انتخابات کشور دیگری کم شود. این چیست؟',
     'دروغ عمدی برای تغییر افکار عمومی.',
-    ['A disinformation (influence) campaign','Misinformation','Typosquatting','Password spraying'],
-    ['کارزار Disinformation (نفوذ)','Misinformation','Typosquatting','Password spraying'],
+    ['A disinformation (influence) campaign','Misinformation shared by mistake','Typosquatting on election websites','Password spraying against voter accounts'],
+    ['کارزار Disinformation (نفوذ)','Misinformation که اشتباهی پخش شده','Typosquatting روی سایت‌های انتخابات','Password Spraying روی حساب رأی‌دهندگان'],
     'Influence campaigns try to shift public opinion. When the content is false on purpose, it is disinformation. CISA suggests the TRUST process: Tell your story, Ready your team, Understand and assess MDM, Strategize response, Track outcomes.',
     'کارزار نفوذ سعی می‌کند افکار عمومی را تغییر دهد. وقتی محتوا عمداً دروغ باشد، Disinformation است. CISA فرایند TRUST را پیشنهاد می‌کند: داستانت را بگو، تیمت را آماده کن، MDM را بفهم و ارزیابی کن، پاسخ را برنامه‌ریزی کن، نتیجه‌ها را پیگیری کن.');
 
@@ -105,8 +105,8 @@
   M(T2,'Accounts payable gets an email from the real mailbox of a regular supplier, saying their bank details changed and the next invoice should go to a new account. The supplier\'s mailbox had been hacked. What is this?',
     'بخش پرداخت از صندوق ایمیل واقعی یک تأمین‌کننده‌ی همیشگی ایمیلی می‌گیرد که می‌گوید حساب بانکی‌شان عوض شده و فاکتور بعدی باید به حساب جدید برود. صندوق ایمیل تأمین‌کننده هک شده بود. این چیست؟',
     'ایمیل واقعی و مورد اعتماد، اما در دست مهاجم.',
-    ['Business email compromise (BEC)','Typosquatting','Smishing','Misinformation'],
-    ['نفوذ به ایمیل تجاری (BEC)','Typosquatting','Smishing','Misinformation'],
+    ['Business email compromise (BEC)','Typosquatting of the supplier\'s domain','Smishing with a fake text message','Misinformation spread by mistake'],
+    ['نفوذ به ایمیل تجاری (BEC)','Typosquatting روی دامنه‌ی تأمین‌کننده','Smishing با یک پیامک جعلی','Misinformation که اشتباهی پخش شده'],
     'BEC uses legitimate-looking email (compromised accounts, spoofing, look-alike domains) for invoice scams, gift card scams and data theft. Defenses: MFA, awareness, and a policy to verify payment changes by phone using a known number.',
     'BEC از ایمیلی با ظاهر واقعی (حساب هک‌شده، جعل فرستنده، دامنه‌ی شبیه) برای کلاهبرداری فاکتور، کارت هدیه و دزدی داده استفاده می‌کند. دفاع: MFA، آموزش و سیاستی که تغییر حساب پرداخت با تماس به شماره‌ی شناخته‌شده تأیید شود.');
 
@@ -145,8 +145,8 @@
   M(T2,'What is the most effective general defense against phishing, vishing and smishing?',
     'مؤثرترین دفاع کلی در برابر فیشینگ، Vishing و Smishing چیست؟',
     'هدف این حمله‌ها انسان است.',
-    ['Security awareness training plus regular phishing exercises','Longer encryption keys','Disabling all email','Installing more web servers'],
-    ['آموزش آگاهی امنیتی به‌همراه تمرین‌های منظم فیشینگ','کلیدهای رمزگذاری طولانی‌تر','خاموش کردن کل ایمیل','نصب وب‌سرورهای بیشتر'],
+    ['Awareness training plus regular phishing exercises','Longer encryption keys on the mail servers','Disabling email and phones for all staff','Installing more web servers for redundancy'],
+    ['آموزش آگاهی امنیتی به‌همراه تمرین منظم فیشینگ','کلیدهای رمزگذاری طولانی‌تر روی سرورهای ایمیل','خاموش کردن ایمیل و تلفن برای همه‌ی کارمندان','نصب وب‌سرورهای بیشتر برای افزونگی'],
     'Because social engineering targets people, awareness and practice are the core defense. Technical filters (reputation, keyword and pattern matching) help catch messages before users see them.',
     'چون مهندسی اجتماعی انسان را هدف می‌گیرد، آگاهی و تمرین دفاع اصلی‌اند. فیلترهای فنی (اعتبار فرستنده، تطبیق کلمه و الگو) کمک می‌کنند پیام‌ها قبل از رسیدن به کاربر گرفته شوند.');
 
@@ -170,8 +170,8 @@
   M(T3,'A SOC analyst wants a SIEM rule that catches password spraying. What should the rule look for?',
     'تحلیلگر SOC قانونی در SIEM می‌خواهد که Password spraying را بگیرد. قانون دنبال چه باشد؟',
     'الگو را برعکس Brute force ببین.',
-    ['Failed logins with the same password across many different usernames','Many failed passwords for one username','Successful logins at lunchtime','Large file downloads'],
-    ['ورودهای ناموفق با یک رمز یکسان روی نام‌های کاربری زیاد','رمزهای ناموفق زیاد برای یک نام کاربری','ورود موفق در وقت ناهار','دانلود فایل‌های بزرگ'],
+    ['One password failing across many different usernames','Many failed passwords in a row for a single username','Successful logins by many users during the lunch hour','Very large file downloads from the file server at night'],
+    ['یک رمز که روی نام‌های کاربری زیاد ناموفق است','رمزهای ناموفق پشت سر هم برای یک نام کاربری','ورود موفق کاربران زیاد در وقت ناهار','دانلود فایل‌های خیلی بزرگ از فایل‌سرور در شب'],
     'Spraying = one password, many accounts. Classic brute force = many passwords, one account. If your logs do not store passwords, look for many accounts failing once each from the same source or in the same time window.',
     'Spraying = یک رمز، حساب‌های زیاد. Brute force کلاسیک = رمزهای زیاد، یک حساب. اگر لاگ‌ها رمز را ذخیره نمی‌کنند، دنبال حساب‌های زیادی بگرد که هر کدام یک بار از یک منبع یا در یک بازه‌ی زمانی شکست خورده‌اند.');
 
@@ -186,8 +186,8 @@
   M(T3,'What is the main difference between an online and an offline password attack?',
     'فرق اصلی حمله‌ی آنلاین و آفلاین به رمز چیست؟',
     'سیستم زنده یا فایل دزدیده‌شده؟',
-    ['Online attacks hit a live system with defenses like lockout; offline attacks crack a stolen password store','Online attacks need internet; offline attacks need a USB drive','Online attacks are always faster','Offline attacks only work against MFA'],
-    ['حمله‌ی آنلاین به سیستم زنده با دفاعی مثل قفل حساب می‌خورد؛ آفلاین یک فایل رمز دزدیده‌شده را می‌شکند','آنلاین اینترنت لازم دارد؛ آفلاین فلش USB','آنلاین همیشه سریع‌تر است','آفلاین فقط روی MFA کار می‌کند'],
+    ['Online attacks hit a live system with lockout; offline attacks crack a stolen file','Online attacks need the internet, while offline attacks need a USB drive','Online attacks are always faster, because the server does the work','Offline attacks only work against accounts that are protected by MFA'],
+    ['حمله‌ی آنلاین به سیستم زنده با قفل حساب می‌خورد؛ آفلاین یک فایل دزدیده‌شده را می‌شکند','حمله‌ی آنلاین اینترنت لازم دارد و حمله‌ی آفلاین فلش USB','حمله‌ی آنلاین همیشه سریع‌تر است، چون سرور کار را انجام می‌دهد','حمله‌ی آفلاین فقط روی حساب‌هایی کار می‌کند که MFA دارند'],
     'Online attacks are slow and visible in logs. Offline attacks on captured hashes can run at full speed with crackers like John the Ripper or rainbow tables, with no lockout to stop them. Strong salted hashing slows offline attacks.',
     'حمله‌ی آنلاین کند است و در لاگ دیده می‌شود. حمله‌ی آفلاین روی هش‌های دزدیده‌شده با ابزارهایی مثل John the Ripper یا Rainbow table با حداکثر سرعت اجرا می‌شود و هیچ قفلی جلویش نیست. هش قوی با Salt حمله‌ی آفلاین را کند می‌کند.');
 

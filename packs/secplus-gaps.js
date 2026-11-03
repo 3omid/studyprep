@@ -121,8 +121,8 @@
   M(T3,'A program checks that a user may open a file, but before it opens it, an attacker swaps the file for a link to /etc/shadow. What is this?',
     'یک برنامه چک می‌کند که کاربر اجازه‌ی باز کردن فایلی را دارد، اما قبل از باز کردنش مهاجم فایل را با لینکی به /etc/shadow عوض می‌کند. این چیست؟',
     'بین زمان «چک کردن» و زمان «استفاده» فاصله افتاده.',
-    ['Time-of-check to time-of-use (TOCTOU) race condition','Buffer overflow','Cross-site request forgery','Memory injection'],
-    ['TOCTOU (شرط رقابتی بین زمان چک و زمان استفاده)','Buffer overflow (سرریز بافر)','CSRF (جعل درخواست بین‌سایتی)','Memory injection (تزریق به حافظه)'],
+    ['A TOCTOU race condition','A buffer overflow in the file reader','Cross-site request forgery (CSRF)','Memory injection into the program'],
+    ['TOCTOU (شرط رقابتی بین زمان چک و زمان استفاده)','Buffer Overflow در خواننده‌ی فایل','CSRF (جعل درخواست بین‌سایتی)','تزریق به حافظه‌ی برنامه'],
     'A TOCTOU race condition happens when the state changes between the check and the use, so the program acts on something it never checked. Buffer overflow writes past memory limits; CSRF tricks a logged-in browser into sending a request.',
     'TOCTOU یعنی برنامه اول چک می‌کند و کمی بعد استفاده می‌کند؛ مهاجم در همان فاصله چیز را عوض می‌کند. مثل اینکه نگهبان بلیت را چک کند و بعد آدم دیگری وارد شود. Buffer overflow نوشتن بیش از ظرفیت حافظه است و CSRF مرورگر واردشده‌ی کاربر را فریب می‌دهد.');
 
@@ -202,8 +202,8 @@
   M(T4,'WPA3-Personal replaces the WPA2 pre-shared key handshake with which method that resists offline dictionary attacks?',
     'WPA3-Personal روش Handshake با کلید مشترک WPA2 را با کدام روش عوض کرده که در برابر حمله‌ی دیکشنری آفلاین مقاوم است؟',
     'یک «احراز هویت هم‌زمان بین برابرها» که اسم دیگرش Dragonfly است.',
-    ['SAE (Simultaneous Authentication of Equals)','TKIP','WEP shared key','EAP-MD5'],
-    ['SAE (احراز هویت هم‌زمان بین برابرها)','TKIP (پروتکل قدیمی WPA)','WEP (کلید مشترک قدیمی)','EAP-MD5 (روش احراز هویت ضعیف)'],
+    ['SAE (Simultaneous Authentication of Equals)','TKIP (Temporal Key Integrity Protocol)','WEP shared key authentication','EAP-MD5 challenge authentication'],
+    ['SAE (احراز هویت هم‌زمان بین برابرها)','TKIP (پروتکل قدیمی WPA)','احراز هویت با کلید مشترک WEP','احراز هویت چالشی EAP-MD5'],
     'SAE (Dragonfly) lets both sides prove they know the password without exposing anything an attacker can crack offline, and gives forward secrecy. TKIP and WEP are old and broken; EAP-MD5 is weak and used with 802.1X, not personal mode.',
     'SAE (یا Dragonfly) در WPA3 کاری می‌کند که حتی اگر مهاجم Handshake را ضبط کند، نتواند رمز Wi-Fi را آفلاین با دیکشنری حدس بزند. TKIP و WEP قدیمی و شکسته‌اند و EAP-MD5 ضعیف است.');
 

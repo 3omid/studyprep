@@ -81,8 +81,8 @@
   M(T2,'Which set of data elements is most attractive to criminals for identity theft?',
     'کدام مجموعه از داده‌ها برای سرقت هویت بیشتر از همه به درد مجرمان می‌خورد؟',
     'شناسه‌هایی که با آن‌ها می‌شود حساب بانکی باز کرد یا خود را جای کسی جا زد.',
-    ['Social Security/SIN number, bank card number and passport number','Favorite color, shoe size and hobby','Loyalty points balance and seat preference','Office floor number and desk color'],
-    ['شماره‌ی تأمین اجتماعی/SIN، شماره‌ی کارت بانکی و شماره‌ی پاسپورت','رنگ مورد علاقه، سایز کفش و سرگرمی','امتیاز باشگاه مشتریان و صندلی دلخواه','طبقه‌ی دفتر و رنگ میز'],
+    ['SIN number, bank card number and passport number','Favorite color, shoe size, hobbies and pet\'s name','Loyalty points balance, seat preference and meal choice','Office floor number, desk color and parking spot number'],
+    ['شماره‌ی SIN، شماره‌ی کارت بانکی و شماره‌ی پاسپورت','رنگ مورد علاقه، سایز کفش، سرگرمی و اسم حیوان خانگی','امتیاز باشگاه مشتریان، صندلی دلخواه و نوع غذا','طبقه‌ی دفتر، رنگ میز و شماره‌ی جای پارک'],
     'Identity thieves want PII that can open accounts or impersonate someone: government ID numbers (SSN, SIN), driver\'s license and passport numbers, and bank or credit card data. Organizations should inventory and protect these first.',
     'دزد هویت دنبال PII است که با آن بشود حساب باز کرد یا خود را جای کسی جا زد: شماره‌ی تأمین اجتماعی (در کانادا SIN)، گواهینامه، پاسپورت و اطلاعات بانکی. سازمان باید اول این‌ها را پیدا، فهرست و محافظت کند.');
 
@@ -114,8 +114,8 @@
   M(T3,'A store cannot meet one PCI DSS requirement and proposes its existing antivirus, which another PCI DSS requirement already demands, as the compensating control. What should the assessor say?',
     'فروشگاهی نمی‌تواند یکی از الزامات PCI DSS را اجرا کند و پیشنهاد می‌دهد آنتی‌ویروس فعلی‌اش، که یک الزام دیگر PCI DSS از قبل لازمش دارد، کنترل جبرانی باشد. ارزیاب چه باید بگوید؟',
     'کنترل جبرانی باید «اضافه بر» الزامات دیگر باشد.',
-    ['Not acceptable: it must go above and beyond the other requirements and match the original intent and rigor','Acceptable, because any existing control counts','Acceptable if the antivirus is updated weekly','Not needed: the requirement can simply be skipped'],
-    ['قابل قبول نیست: باید اضافه بر الزامات دیگر باشد و هدف و سخت‌گیری الزام اصلی را داشته باشد','قابل قبول است، چون هر کنترل موجودی حساب می‌شود','اگر آنتی‌ویروس هفتگی به‌روز شود قابل قبول است','لازم نیست؛ می‌شود آن الزام را نادیده گرفت'],
+    ['Not acceptable: it must go beyond other requirements and meet the original intent','Acceptable, because any control the store already has counts as compensating','Acceptable, as long as the antivirus signatures are updated every week','Not needed, because a requirement that cannot be met can simply be skipped'],
+    ['قابل قبول نیست: باید فراتر از الزامات دیگر باشد و هدف الزام اصلی را برآورده کند','قابل قبول است، چون هر کنترلی که فروشگاه از قبل دارد جایگزین حساب می‌شود','قابل قبول است، به شرطی که امضاهای آنتی‌ویروس هر هفته به‌روز شوند','لازم نیست، چون الزامی که نمی‌شود برآورده کرد را می‌شود نادیده گرفت'],
     'PCI DSS compensating controls must meet the intent and rigor of the original requirement, give a similar level of defense, and go "above and beyond" other requirements. A control you already need for another requirement does not count.',
     'کنترل جبرانی در PCI DSS باید: هدف و سخت‌گیری الزام اصلی را داشته باشد، دفاع مشابه بدهد، و «بیشتر از» الزامات دیگر باشد. کنترلی که برای یک الزام دیگر لازم است، به حساب نمی‌آید.');
 
@@ -179,8 +179,8 @@
   M(T4,'A school hashes student IDs in a list of failed courses. Why is this still risky?',
     'مدرسه‌ای شماره‌ی دانش‌آموزی را در فهرست درس‌های ردشده هش می‌کند. چرا هنوز خطر دارد؟',
     'اگر مهاجم فهرست همه‌ی شماره‌های ممکن را داشته باشد...',
-    ['Anyone with the list of all student IDs can hash them and match the results','Hashes can be decrypted with the school\'s public key','Hashing makes the file too large to store','Hashed values change every day'],
-    ['هر کس فهرست همه‌ی شماره‌ها را داشته باشد، می‌تواند هشان کند و نتیجه‌ها را تطبیق دهد','هش با کلید عمومی مدرسه رمزگشایی می‌شود','هش فایل را خیلی بزرگ می‌کند','مقدار هش هر روز عوض می‌شود'],
+    ['Anyone with all student IDs can hash them and match them','Hashes can be decrypted with the school\'s public key','Hashing makes the file too large to store or share','The hash of each ID changes every day, so it leaks'],
+    ['هر کس همه‌ی شماره‌ها را داشته باشد می‌تواند هشان کند و تطبیق دهد','هش با کلید عمومی مدرسه رمزگشایی می‌شود','هش فایل را برای ذخیره یا اشتراک خیلی بزرگ می‌کند','هش هر شماره هر روز عوض می‌شود، پس لو می‌رود'],
     'Hashing is one-way, but if the set of possible inputs is small and known, an attacker can hash every candidate and compare (a rainbow-table style attack). Salting or tokenization reduces this risk.',
     'Hash یک‌طرفه است، اما اگر ورودی‌های ممکن کم و معلوم باشند (مثل شماره‌ی دانش‌آموزی)، مهاجم همه را هش می‌کند و مقایسه می‌کند (شبیه حمله‌ی Rainbow table). Salt یا Tokenization این خطر را کم می‌کند.');
 

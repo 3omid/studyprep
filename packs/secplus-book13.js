@@ -16,8 +16,8 @@
   M(T1,'Field staff send company data over their phones\' 5G connection. How should the security team treat that path?',
     'کارمندان میدانی داده‌ی شرکت را از اتصال 5G گوشی‌شان می‌فرستند. تیم امنیت با این مسیر چطور باید رفتار کند؟',
     'شبکه مال چه کسی است؟',
-    ['As an external, third-party network (protect the traffic, e.g. VPN/TLS)','As part of the internal corporate network','As an air-gapped link','As a point-to-point link the company controls'],
-    ['مثل شبکه‌ی بیرونی و متعلق به دیگری (ترافیک را مثلاً با VPN/TLS محافظت کن)','مثل بخشی از شبکه‌ی داخلی شرکت','مثل یک لینک Air-gapped','مثل یک لینک نقطه‌به‌نقطه که شرکت کنترلش می‌کند'],
+    ['As an outside network, so protect the traffic','As part of the internal corporate network','As an air-gapped link with no exposure','As a private link that the company controls'],
+    ['مثل یک شبکه‌ی بیرونی، پس ترافیک را محافظت کن','مثل بخشی از شبکه‌ی داخلی شرکت','مثل یک لینک Air-gapped بدون در معرض بودن','مثل یک لینک خصوصی که شرکت کنترلش می‌کند'],
     'Cellular networks are run by carriers, not the organization, so traffic crosses a third-party network and should be treated like any external connection.',
     'شبکه‌ی سلولی را اپراتور اداره می‌کند نه سازمان، پس ترافیک از شبکه‌ی شخص ثالث رد می‌شود و باید مثل هر اتصال بیرونی با آن رفتار کرد.');
 
@@ -32,8 +32,8 @@
   M(T1,'A warehouse wants tags it can read from several meters away, quickly, for inventory. Which RFID type fits?',
     'یک انبار برچسب‌هایی می‌خواهد که از چند متری و سریع برای انبارداری خوانده شوند. کدام نوع RFID مناسب است؟',
     'بیشترین برد و سرعت.',
-    ['Ultra-high-frequency (UHF) RFID','Low-frequency RFID','NFC','Infrared'],
-    ['RFID با فرکانس خیلی بالا (UHF)','RFID با فرکانس پایین','NFC','مادون قرمز'],
+    ['Ultra-high-frequency (UHF) RFID','Low-frequency (LF) RFID','NFC tags read at a counter','Infrared barcode scanners'],
+    ['RFID با فرکانس خیلی بالا (UHF)','RFID با فرکانس پایین (LF)','برچسب NFC که کنار پیشخوان خوانده می‌شود','بارکدخوان مادون قرمز'],
     'UHF RFID is the fastest to read and has the longest range. Low-frequency tags are short range, common for door access. High-frequency (up to about a meter) underlies NFC, which is limited to a few centimeters.',
     'RFID با فرکانس UHF سریع‌ترین خواندن و بیشترین برد را دارد. برچسب فرکانس پایین برد کمی دارد و برای کارت ورود رایج است. فرکانس بالا (تا حدود یک متر) پایه‌ی NFC است که فقط چند سانتی‌متر برد دارد.');
 
@@ -90,8 +90,8 @@
   M(T3,'Which WPA3-Personal feature replaces the WPA2 pre-shared key exchange and makes offline brute-forcing of weak passwords much harder?',
     'کدام ویژگی WPA3-Personal جای تبادل کلید از پیش مشترک WPA2 را می‌گیرد و حدس زدن آفلاین رمزهای ضعیف را خیلی سخت‌تر می‌کند؟',
     'دو طرف «برابر» احراز می‌شوند.',
-    ['SAE (Simultaneous Authentication of Equals)','CCMP','TKIP','WPS'],
-    ['SAE','CCMP','TKIP','WPS'],
+    ['SAE (Simultaneous Authentication of Equals)','CCMP (Counter Mode CBC-MAC Protocol)','TKIP (Temporal Key Integrity Protocol)','WPS (Wi-Fi Protected Setup) PIN pairing'],
+    ['SAE','CCMP','TKIP','WPS (اتصال با PIN)'],
     'SAE requires interaction between client and network to validate both sides, which slows brute force, and it provides perfect forward secrecy. CCMP is WPA2\'s AES-based encryption protocol.',
     'SAE برای تأیید هر دو طرف تعامل بین کلاینت و شبکه لازم دارد که حدس زدن را کند می‌کند، و Perfect forward secrecy هم می‌دهد. CCMP پروتکل رمزگذاری مبتنی بر AES در WPA2 است.');
 
@@ -114,8 +114,8 @@
   M(T3,'A hotel wants guests to enter their email address before getting online, without giving out a Wi-Fi password. What should it use?',
     'یک هتل می‌خواهد مهمان‌ها قبل از وصل شدن آدرس ایمیلشان را وارد کنند، بدون اینکه رمز Wi-Fi داده شود. از چه استفاده کند؟',
     'صفحه‌ی ثبت‌نام قبل از اینترنت.',
-    ['A captive portal on an open network','WPA2-PSK','EAP-TLS','WPS'],
-    ['Captive portal روی شبکه‌ی باز','WPA2-PSK','EAP-TLS','WPS'],
+    ['A captive portal on an open network','WPA2-PSK with a shared guest password','EAP-TLS with a certificate per guest','WPS push-button pairing in each room'],
+    ['Captive Portal روی شبکه‌ی باز','WPA2-PSK با یک رمز مهمان مشترک','EAP-TLS با یک گواهی برای هر مهمان','اتصال دکمه‌ای WPS در هر اتاق'],
     'A captive portal redirects new users to a web page before granting access. Open networks are unencrypted unless Wi-Fi Enhanced Open (OWE) is used, so traffic should rely on HTTPS.',
     'Captive portal کاربر جدید را قبل از دادن دسترسی به یک صفحه‌ی وب می‌برد. شبکه‌ی باز رمزگذاری ندارد مگر اینکه Wi-Fi Enhanced Open (OWE) استفاده شود، پس ترافیک باید به HTTPS تکیه کند.');
 
@@ -148,24 +148,24 @@
   M(T5,'A stolen phone is immediately put in airplane mode inside an RF-blocking bag, so remote wipe never arrives. What protects the data now?',
     'یک گوشی دزدیده‌شده بلافاصله در حالت پرواز و داخل کیسه‌ی ضدسیگنال گذاشته می‌شود، پس دستور پاک‌سازی از راه دور هیچ‌وقت نمی‌رسد. حالا چه چیزی از داده محافظت می‌کند؟',
     'چیزی که روی خود دستگاه است و به شبکه نیاز ندارد.',
-    ['Full-device encryption with a strong passcode','Geofencing','Push notifications','Application management'],
-    ['رمزگذاری کامل دستگاه با رمز قوی','Geofencing','Push notification','مدیریت برنامه‌ها'],
+    ['Full-device encryption with a strong passcode','Geofencing that locks it outside the office','Push notifications that warn the user','Application management of company apps'],
+    ['رمزگذاری کامل دستگاه با رمز قوی','Geofencing که بیرون از اداره قفلش می‌کند','Push Notification که به کاربر هشدار می‌دهد','مدیریت برنامه‌های شرکت'],
     'Remote wipe needs a network connection. Encryption plus strong authentication works offline, which is why FDE and remote wipe are recommended together.',
     'پاک‌سازی از راه دور اتصال شبکه لازم دارد. رمزگذاری همراه با احراز هویت قوی بدون شبکه هم کار می‌کند؛ برای همین FDE و Remote wipe با هم پیشنهاد می‌شوند.');
 
   M(T5,'A defense contractor uses MDM to turn off GPS tagging on photos taken inside its sites. What is the main concern?',
     'یک پیمانکار نظامی با MDM برچسب GPS عکس‌هایی را که داخل سایت‌هایش گرفته می‌شود خاموش می‌کند. نگرانی اصلی چیست؟',
     'عکس نباید محل را لو بدهد.',
-    ['Privacy and leaking location data','Battery life','Chain of custody','Geofencing accuracy'],
-    ['حریم خصوصی و لو رفتن موقعیت','عمر باتری','زنجیره‌ی نگهداری مدرک','دقت Geofencing'],
+    ['Privacy and leaked location data','Battery life on employee phones','Chain of custody for the photos','Geofencing accuracy near the site'],
+    ['حریم خصوصی و لو رفتن موقعیت','عمر باتری گوشی کارمندان','زنجیره‌ی نگهداری عکس‌ها','دقت Geofencing نزدیک سایت'],
     'GPS tags embed where a photo or file was made, which can reveal sensitive locations (like the fitness tracker story in the book). MDM can also block cameras, microphones, SMS/MMS/RCS, USB OTG, tethering and hotspots.',
     'برچسب GPS محل گرفتن عکس یا ساخت فایل را داخلش می‌گذارد و ممکن است مکان‌های حساس را لو بدهد (مثل داستان ردیاب ورزشی در کتاب). MDM می‌تواند دوربین، میکروفون، SMS/MMS/RCS، USB OTG، Tethering و Hotspot را هم ببندد.');
 
   M(T5,'Which tool manages phones, tablets, laptops and desktops from a single platform?',
     'کدام ابزار گوشی، تبلت، لپ‌تاپ و دسکتاپ را از یک پلتفرم مدیریت می‌کند؟',
     'مدیریت «یکپارچه».',
-    ['UEM (unified endpoint management)','MDM limited to phones','MAM','CIS benchmark'],
-    ['UEM (مدیریت یکپارچه‌ی Endpoint)','MDM فقط برای گوشی','MAM (مدیریت برنامه‌های موبایل)','بنچمارک CIS'],
+    ['UEM (unified endpoint management)','MDM that covers phones only','MAM (mobile application management)','A CIS benchmark for each device type'],
+    ['UEM (مدیریت یکپارچه‌ی Endpoint)','MDM که فقط گوشی را پوشش می‌دهد','MAM (مدیریت برنامه‌های موبایل)','بنچمارک CIS برای هر نوع دستگاه'],
     'MDM targets mobile devices; UEM covers mobile devices, desktops, laptops and more in one platform; MAM focuses on managing apps. CIS benchmarks are hardening guides (including iOS and Android), not management tools.',
     'MDM برای دستگاه‌های موبایل است؛ UEM موبایل، دسکتاپ، لپ‌تاپ و بیشتر را در یک پلتفرم پوشش می‌دهد؛ MAM روی مدیریت برنامه‌ها تمرکز دارد. بنچمارک‌های CIS راهنمای Hardening هستند (از جمله iOS و Android)، نه ابزار مدیریت.');
 

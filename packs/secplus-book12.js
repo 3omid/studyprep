@@ -73,8 +73,8 @@
   M(T2,'Users on a laptop VPN browse the web through the hotel Wi-Fi directly, while only traffic for company servers goes through the tunnel. What is this, and what is the risk?',
     'کاربرها روی VPN لپ‌تاپ وب‌گردی را مستقیم از Wi-Fi هتل انجام می‌دهند و فقط ترافیک سرورهای شرکت از تونل می‌رود. این چیست و ریسکش چیست؟',
     'فقط بخشی از ترافیک داخل تونل است.',
-    ['Split tunnel; the other traffic is not protected or monitored','Full tunnel; it wastes bandwidth','Transport mode; the IP header is exposed','Always-on VPN; it cannot reconnect'],
-    ['Split tunnel؛ بقیه‌ی ترافیک محافظت و پایش نمی‌شود','Full tunnel؛ پهنای باند هدر می‌رود','Transport mode؛ هدر IP دیده می‌شود','Always-on VPN؛ نمی‌تواند دوباره وصل شود'],
+    ['Split tunnel; the rest of the traffic is unprotected','Full tunnel; it wastes the hotel\'s bandwidth','Transport mode; the IP header is left exposed','Always-on VPN; it cannot reconnect after sleep'],
+    ['Split Tunnel؛ بقیه‌ی ترافیک محافظت نمی‌شود','Full Tunnel؛ پهنای باند هتل هدر می‌رود','Transport Mode؛ هدر IP بیرون می‌ماند','Always-on VPN؛ بعد از خواب نمی‌تواند دوباره وصل شود'],
     'A split tunnel sends only company-bound traffic through the VPN, saving bandwidth but leaving other traffic unprotected on an untrusted network. A full tunnel sends everything through the VPN, which is safer on hotel or coffee-shop Wi-Fi.',
     'Split tunnel فقط ترافیک مقصد شرکت را از VPN می‌فرستد؛ پهنای باند صرفه‌جویی می‌شود ولی بقیه‌ی ترافیک روی شبکه‌ی نامطمئن بی‌محافظت است. Full tunnel همه چیز را از VPN می‌فرستد که روی Wi-Fi هتل یا کافه امن‌تر است.');
 
@@ -147,8 +147,8 @@
   M(T4,'A team rolls out DMARC for the first time. What does the book recommend to avoid blocking legitimate mail?',
     'تیمی برای اولین بار DMARC را راه می‌اندازد. کتاب برای جلوگیری از بلاک شدن ایمیل‌های درست چه پیشنهادی می‌دهد؟',
     'اول فقط گزارش بگیر.',
-    ['Start with policy "none" and review the reports first','Start with "reject" for all mail','Disable SPF before enabling DMARC','Publish DMARC only on internal DNS'],
-    ['با سیاست "none" شروع کن و اول گزارش‌ها را بررسی کن','از اول همه‌ی ایمیل‌ها را "reject" کن','قبل از DMARC، SPF را خاموش کن','DMARC را فقط در DNS داخلی منتشر کن'],
+    ['Start with policy "none" and review reports','Start with "reject" for all outgoing mail','Disable SPF before turning on DMARC','Publish DMARC only on the internal DNS'],
+    ['با سیاست "none" شروع کن و گزارش‌ها را بررسی کن','از اول برای همه‌ی ایمیل‌های خروجی "reject" بگذار','قبل از روشن کردن DMARC، SPF را خاموش کن','DMARC را فقط در DNS داخلی منتشر کن'],
     'Begin with p=none to collect aggregate reports without affecting delivery, fix any legitimate senders that fail SPF/DKIM, then move to quarantine and reject.',
     'با p=none شروع کن تا بدون اثر روی تحویل ایمیل گزارش جمع شود، فرستنده‌های درستی را که در SPF/DKIM رد می‌شوند درست کن، بعد به Quarantine و Reject برو.');
 
@@ -179,8 +179,8 @@
   M(T4,'Tripwire reports that a system binary changed overnight with no approved change. Which kind of tool is Tripwire?',
     'Tripwire گزارش می‌دهد که یک فایل اجرایی سیستم شبانه بدون تغییر تأییدشده عوض شده. Tripwire چه نوع ابزاری است؟',
     'اثر انگشت فایل‌ها را نگه می‌دارد.',
-    ['File integrity monitor','DLP','Web filter','NAC'],
-    ['File integrity monitor (پایش یکپارچگی فایل)','DLP','فیلتر وب','NAC'],
+    ['File integrity monitor','Data loss prevention (DLP)','Web content filter','Network access control (NAC)'],
+    ['File Integrity Monitor (پایش یکپارچگی فایل)','جلوگیری از نشت داده (DLP)','فیلتر محتوای وب','کنترل دسترسی به شبکه (NAC)'],
     'A file integrity monitor stores fingerprints (hashes) of files and alerts on unexpected changes, or restores them. It is valuable but can be noisy, so tune it to allow patching and normal changes.',
     'File integrity monitor اثر انگشت (هش) فایل‌ها را نگه می‌دارد و روی تغییر غیرمنتظره هشدار می‌دهد یا فایل را برمی‌گرداند. مفید است ولی ممکن است پرهشدار باشد، پس باید برای وصله و تغییرات عادی تنظیم شود.');
 

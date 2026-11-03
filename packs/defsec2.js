@@ -15,8 +15,8 @@
   var A='Audit basics',B='Audit phases',C='Audit execution',D='Post-audit';
 
   M('1',A,'What is an information system audit?','ممیزی سیستم اطلاعاتی (information system audit) چیست؟','',
-    ['A systematic process of assessing an organization\'s information systems, controls and processes for effectiveness, security and compliance','A one-time penetration test run by attackers','Installing antivirus on every device','A backup of all production data'],
-    ['فرآیند نظام‌مند ارزیابی سیستم‌ها، کنترل‌ها و فرآیندهای سازمان از نظر اثربخشی، امنیت و انطباق','یک تست نفوذ یک‌باره توسط مهاجمان','نصب آنتی‌ویروس روی همه‌ی دستگاه‌ها','بکاپ همه‌ی داده‌های production'],
+    ['A systematic review of systems and controls for security and compliance','A one-time penetration test carried out by outside attackers','Installing and updating antivirus software on every device','A complete backup of all production data to another site'],
+    ['بررسی نظام‌مند سیستم‌ها و کنترل‌ها از نظر امنیت و انطباق','یک تست نفوذ یک‌باره که مهاجمان بیرونی انجام می‌دهند','نصب و به‌روزرسانی آنتی‌ویروس روی همه‌ی دستگاه‌ها','بکاپ کامل همه‌ی داده‌های Production در یک سایت دیگر'],
     'An audit systematically examines systems, controls and processes to judge their effectiveness, security and compliance with standards and regulations.',
     'ممیزی به‌صورت نظام‌مند سیستم‌ها، کنترل‌ها و فرآیندها را بررسی می‌کند تا اثربخشی، امنیت و انطباق آن‌ها با استانداردها و مقررات سنجیده شود.');
 
@@ -27,8 +27,8 @@
     'هدف ممیزی شناسایی آسیب‌پذیری‌ها، ارزیابی ریسک‌ها و اطمینان از یکپارچگی، محرمانگی و در دسترس بودن داده است.');
 
   M('1',A,'What is the main role of an auditor?','نقش اصلی ممیز (auditor) چیست؟','',
-    ['Provide independent, objective assessments of controls and recommend improvements','Fix every vulnerability personally','Approve the budget for security tools','Operate the production systems daily'],
-    ['ارائه‌ی ارزیابی مستقل و بی‌طرفانه از کنترل‌ها و پیشنهاد بهبود','رفع شخصی همه‌ی آسیب‌پذیری‌ها','تأیید بودجه‌ی ابزارهای امنیتی','اداره‌ی روزانه‌ی سیستم‌های production'],
+    ['Give independent assessments of controls and recommend fixes','Fix every vulnerability personally during the audit','Approve the yearly budget for new security tools','Operate the production systems on a daily basis'],
+    ['ارزیابی مستقل کنترل‌ها و پیشنهاد اصلاح','رفع شخصی همه‌ی آسیب‌پذیری‌ها در طول ممیزی','تأیید بودجه‌ی سالانه‌ی ابزارهای امنیتی جدید','اداره‌ی روزانه‌ی سیستم‌های Production'],
     'Auditors examine controls, conduct tests and analyze data to give independent, objective assessments, identify gaps and recommend improvements. Management, not the auditor, takes the lead in making the changes.',
     'ممیز کنترل‌ها را بررسی می‌کند، تست می‌زند و داده را تحلیل می‌کند تا ارزیابی مستقل و بی‌طرفانه بدهد، شکاف‌ها را پیدا و بهبود پیشنهاد کند. اجرای تغییرات با مدیریت است، نه ممیز.');
 
@@ -39,14 +39,14 @@
     'COBIT (Control Objectives for Information and Related Technologies) حاکمیت و مدیریت IT سازمانی را پوشش می‌دهد و اهداف IT را با اهداف کسب‌وکار هم‌راستا می‌کند.');
 
   M('1',A,'ISO 27001 is an international standard for:','ISO 27001 یک استاندارد بین‌المللی برای چیست؟','',
-    ['Information security management systems (ISMS)','Wireless site surveys','Software code signing','Network cabling'],
-    ['سیستم‌های مدیریت امنیت اطلاعات (ISMS)','site survey بی‌سیم','code signing نرم‌افزار','کابل‌کشی شبکه'],
+    ['Information security management systems (ISMS)','Wireless site surveys and access point placement','Code signing of software before it is released','Structured network cabling in office buildings'],
+    ['سیستم‌های مدیریت امنیت اطلاعات (ISMS)','Site Survey بی‌سیم و جای Access Pointها','امضای کد نرم‌افزار قبل از انتشار','کابل‌کشی ساخت‌یافته‌ی شبکه در ساختمان‌های اداری'],
     'ISO 27001 defines how to establish, implement, maintain and continually improve an ISMS, helping organizations demonstrate commitment to security and meet legal and regulatory needs.',
     'ISO 27001 نحوه‌ی ایجاد، اجرا، نگهداری و بهبود مستمر ISMS را تعریف می‌کند و به سازمان کمک می‌کند تعهدش به امنیت را نشان دهد و الزامات قانونی را رعایت کند.');
 
   M('1',A,'Why do auditors adhere to standards such as COBIT and ISO 27001?','چرا ممیزها از استانداردهایی مثل COBIT و ISO 27001 پیروی می‌کنند؟','',
-    ['They give a common language and criteria, making audits consistent, reliable and credible','They remove the need for evidence','They guarantee that no vulnerabilities exist','They replace the audit report'],
-    ['زبان و معیار مشترک می‌دهند و ممیزی را یکنواخت، قابل‌اعتماد و معتبر می‌کنند','نیاز به مدرک را از بین می‌برند','تضمین می‌کنند هیچ آسیب‌پذیری‌ای وجود ندارد','جایگزین گزارش ممیزی می‌شوند'],
+    ['They give common criteria, so audits are consistent and credible','They remove the need for auditors to collect any evidence','They guarantee that no vulnerabilities exist in the systems','They replace the written audit report given to management'],
+    ['معیار مشترک می‌دهند، پس ممیزی یکنواخت و معتبر می‌شود','نیاز ممیز به جمع کردن هر مدرکی را از بین می‌برند','تضمین می‌کنند هیچ آسیب‌پذیری در سیستم‌ها نیست','جای گزارش کتبی ممیزی برای مدیریت را می‌گیرند'],
     'Standards act as benchmarks for assessing control effectiveness, risk management and compliance, and make audit outcomes consistent and credible.',
     'استانداردها معیار سنجش اثربخشی کنترل، مدیریت ریسک و انطباق هستند و نتیجه‌ی ممیزی را یکنواخت و معتبر می‌کنند.');
 
@@ -57,14 +57,14 @@
     'پیش از ممیزی شامل برنامه‌ریزی، تعیین دامنه و ارزیابی ریسک است. اجرا شامل جمع‌آوری داده، تحلیل و تست است. پس از ممیزی شامل گزارش، ارتباط و پیگیری است.');
 
   M('1',B,'Which activity belongs to the pre-audit phase?','کدام فعالیت مربوط به فاز پیش از ممیزی است؟','',
-    ['Defining scope and objectives, assessing risk and creating an audit plan and schedule','Interviewing staff and sampling records','Running a penetration test','Presenting findings to management'],
-    ['تعریف دامنه و اهداف، ارزیابی ریسک و ساخت برنامه و زمان‌بندی ممیزی','مصاحبه با کارکنان و نمونه‌گیری رکوردها','اجرای تست نفوذ','ارائه‌ی یافته‌ها به مدیریت'],
+    ['Defining scope and objectives and making an audit plan','Interviewing staff and sampling records from systems','Running a penetration test against the network','Presenting the final findings to senior management'],
+    ['تعریف دامنه و اهداف و ساخت برنامه‌ی ممیزی','مصاحبه با کارکنان و نمونه‌گیری رکورد از سیستم‌ها','اجرای تست نفوذ روی شبکه','ارائه‌ی یافته‌های نهایی به مدیریت ارشد'],
     'Pre-audit: define scope and objectives, allocate resources (people, time, tools), assess risk to prioritize higher-risk areas, and develop the audit plan and schedule.',
     'پیش از ممیزی: تعریف دامنه و اهداف، تخصیص منابع (نیرو، زمان، ابزار)، ارزیابی ریسک برای اولویت‌بندی بخش‌های پرریسک و تهیه‌ی برنامه و زمان‌بندی.');
 
   M('1',B,'Why is a risk assessment done during pre-audit?','چرا در مرحله‌ی پیش از ممیزی ارزیابی ریسک انجام می‌شود؟','',
-    ['To focus audit effort on the areas with the highest risk','To decide the auditors\' salaries','To skip testing of low-risk systems entirely','To write the final report early'],
-    ['تا تلاش ممیزی روی بخش‌های پرریسک‌تر متمرکز شود','برای تعیین حقوق ممیزها','برای کلاً رد کردن تست سیستم‌های کم‌ریسک','برای زودتر نوشتن گزارش نهایی'],
+    ['To focus audit effort on the highest-risk areas','To decide how much each auditor should be paid','To skip all testing of low-risk systems entirely','To write the final audit report before testing'],
+    ['تا تلاش ممیزی روی پرریسک‌ترین بخش‌ها متمرکز شود','برای تعیین اینکه به هر ممیز چقدر پول داده شود','برای کلاً رد کردن همه‌ی تست‌های سیستم‌های کم‌ریسک','برای نوشتن گزارش نهایی قبل از تست'],
     'Risk assessment identifies threats and vulnerabilities that could affect systems, data and operations, so audit efforts can be prioritized on higher-risk areas.',
     'ارزیابی ریسک تهدیدها و آسیب‌پذیری‌هایی را که می‌توانند سیستم‌ها، داده و عملیات را تحت تأثیر قرار دهند شناسایی می‌کند تا تلاش ممیزی روی بخش‌های پرریسک‌تر اولویت بگیرد.');
 
@@ -75,14 +75,14 @@
     'مصاحبه به ممیز دید می‌دهد، ابهام را برطرف می‌کند، فهم او را تأیید می‌کند و شکاف‌ها را نشان می‌دهد. روش‌های دیگر: نمونه‌گیری، بررسی مستندات و استخراج لاگ و audit trail.');
 
   M('1',C,'Why do auditors review system logs and audit trails?','چرا ممیزها لاگ سیستم و audit trail را بررسی می‌کنند؟','',
-    ['To detect anomalies, unauthorized activity and deviations from procedures','To increase disk space','To rewrite security policy','To train new employees'],
-    ['برای تشخیص ناهنجاری، فعالیت غیرمجاز و انحراف از رویه‌ها','برای افزایش فضای دیسک','برای بازنویسی سیاست امنیتی','برای آموزش کارکنان جدید'],
+    ['To detect unauthorized activity and anomalies','To free up disk space on the log servers','To rewrite the company\'s security policy','To train new employees on how systems work'],
+    ['برای تشخیص فعالیت غیرمجاز و ناهنجاری','برای آزاد کردن فضای دیسک سرورهای لاگ','برای بازنویسی سیاست امنیتی شرکت','برای آموزش کارکنان جدید درباره‌ی کار سیستم‌ها'],
     'Logs and audit trails show system activity, helping evaluate monitoring and access controls and identify potential breaches or deviations from established procedures.',
     'لاگ و audit trail فعالیت سیستم را نشان می‌دهند و به ارزیابی مانیتورینگ و کنترل دسترسی و شناسایی نفوذ احتمالی یا انحراف از رویه کمک می‌کنند.');
 
   M('1',C,'What is the difference between a vulnerability assessment and penetration testing?','تفاوت vulnerability assessment و penetration testing چیست؟','',
-    ['A vulnerability assessment identifies and evaluates weaknesses; penetration testing simulates real-world attacks to test resilience','They are identical','Penetration testing only reads documentation','Vulnerability assessment exploits systems to steal data'],
-    ['vulnerability assessment ضعف‌ها را شناسایی و ارزیابی می‌کند؛ penetration testing حمله‌ی واقعی را برای سنجش تاب‌آوری شبیه‌سازی می‌کند','هر دو یکی هستند','penetration testing فقط مستندات را می‌خواند','vulnerability assessment برای دزدیدن داده exploit می‌کند'],
+    ['An assessment finds weaknesses; a pen test simulates real attacks','They are the same activity, just done by different teams','A penetration test only reads documentation and policies','A vulnerability assessment exploits systems to steal data'],
+    ['Vulnerability Assessment ضعف‌ها را پیدا می‌کند؛ تست نفوذ حمله‌ی واقعی را شبیه‌سازی می‌کند','هر دو یک کارند، فقط تیم‌های متفاوت انجامش می‌دهند','تست نفوذ فقط مستندات و سیاست‌ها را می‌خواند','Vulnerability Assessment برای دزدیدن داده Exploit می‌کند'],
     'Both are proactive. Vulnerability assessment identifies and evaluates potential weaknesses; penetration testing simulates real-world attacks to see how the system resists and where entry points exist.',
     'هر دو پیش‌دستانه‌اند. vulnerability assessment ضعف‌های بالقوه را شناسایی و ارزیابی می‌کند؛ penetration testing حمله‌ی واقعی را شبیه‌سازی می‌کند تا مقاومت سیستم و نقاط ورود دیده شود.');
 
@@ -99,8 +99,8 @@
     'بازبینی کنترل‌های اپلیکیشن شامل کنترل دسترسی، مجوز کاربران، تفکیک وظایف و audit trail است تا دقت، کامل بودن و محرمانگی داده تضمین شود.');
 
   M('1',C,'When reviewing backup and disaster recovery plans, an auditor mainly checks whether the plans are:','در بازبینی برنامه‌های بکاپ و disaster recovery، ممیز بیشتر چه چیزی را بررسی می‌کند؟','',
-    ['Comprehensive, regularly tested and able to restore critical systems and data','Printed in color','Written by the auditor','Stored only on the production server'],
-    ['جامع، به‌طور منظم تست‌شده و قادر به بازیابی سیستم‌ها و داده‌ی حیاتی','رنگی چاپ شده','توسط ممیز نوشته شده','فقط روی سرور production ذخیره شده'],
+    ['Complete, tested regularly and able to restore key systems','Printed in color and posted in every office','Written by the auditor personally for the company','Stored only on the production server they protect'],
+    ['کامل، به‌طور منظم تست‌شده و قادر به بازیابی سیستم‌های کلیدی','رنگی چاپ شده و در همه‌ی دفترها نصب شده','شخصاً توسط ممیز برای شرکت نوشته شده','فقط روی همان سرور Production که از آن محافظت می‌کنند ذخیره شده'],
     'Auditors evaluate whether backup and DR plans are comprehensive, regularly tested and capable of recovering critical systems to minimize downtime.',
     'ممیز می‌سنجد برنامه‌های backup و DR جامع، به‌طور منظم تست‌شده و قادر به بازیابی سیستم‌های حیاتی باشند تا downtime کم شود.');
 
@@ -111,14 +111,14 @@
     'گزارش باید بر شواهد واقعی بنا شود (دقیق)، ارزیابی بی‌طرفانه باشد (objective) و توصیه‌های عملی بدهد (actionable). همچنین باید واضح و مختصر باشد.');
 
   M('1',D,'After the report is presented, what is the auditor\'s role in remediation?','بعد از ارائه‌ی گزارش، نقش ممیز در اصلاح (remediation) چیست؟','',
-    ['Provide expertise and guidance while management leads the changes','Implement every fix alone','Ignore the issues','Cancel the audit'],
-    ['ارائه‌ی تخصص و راهنمایی در حالی که مدیریت اجرای تغییرات را رهبری می‌کند','اجرای تنها همه‌ی اصلاحات','نادیده گرفتن مشکلات','لغو ممیزی'],
+    ['Give guidance while management leads the changes','Implement every fix alone without management','Ignore the issues once the report is delivered','Cancel the audit if fixes are not done in a week'],
+    ['راهنمایی، در حالی که مدیریت تغییرات را رهبری می‌کند','اجرای تنهای همه‌ی اصلاحات بدون مدیریت','نادیده گرفتن مشکلات بعد از تحویل گزارش','لغو ممیزی اگر اصلاحات در یک هفته انجام نشود'],
     'Auditors collaborate with management and provide expertise and guidance, while management takes the lead in driving the changes. Actions are prioritized by severity.',
     'ممیز با مدیریت همکاری می‌کند و تخصص و راهنمایی می‌دهد، اما رهبری تغییرات با مدیریت است. اقدامات بر اساس شدت مشکل اولویت‌بندی می‌شوند.');
 
   M('1',D,'What is the purpose of follow-up audits?','هدف ممیزی‌های پیگیری (follow-up) چیست؟','',
-    ['Verify that recommended actions were implemented and compliance is sustained','Replace the original audit','Hire new auditors','Delete old logs'],
-    ['تأیید اینکه اقدامات پیشنهادی اجرا شده و انطباق پایدار مانده','جایگزین ممیزی اصلی','استخدام ممیز جدید','پاک کردن لاگ‌های قدیمی'],
+    ['Verify that recommended fixes were made','Replace the original audit with a new one','Hire new auditors for the next year','Delete old logs that are no longer needed'],
+    ['تأیید اینکه اصلاحات پیشنهادی انجام شده','جایگزین کردن ممیزی اصلی با یک ممیزی جدید','استخدام ممیزهای جدید برای سال بعد','پاک کردن لاگ‌های قدیمی که دیگر لازم نیستند'],
     'Follow-up audits monitor progress of corrective actions, assess whether remediation worked, identify new risks and give assurance of continuous improvement: a continuous feedback loop.',
     'ممیزی پیگیری پیشرفت اقدامات اصلاحی را رصد می‌کند، اثربخشی اصلاح را می‌سنجد، ریسک‌های جدید را پیدا می‌کند و اطمینان بهبود مستمر می‌دهد؛ یک حلقه‌ی بازخورد پیوسته.');
 
@@ -141,8 +141,8 @@
   var I='IAM best practices',R='RBAC',Q='Rule-based access control',X='Mandatory access control',T='IAM tools';
 
   M('2',I,'What does IAM ensure?','IAM چه چیزی را تضمین می‌کند؟','',
-    ['The right individuals have appropriate access to the right resources at the right time','Everyone can access everything','Passwords never expire','Only administrators can log in'],
-    ['افراد درست به منابع درست در زمان درست دسترسی مناسب دارند','همه به همه‌چیز دسترسی دارند','رمزها هرگز منقضی نمی‌شوند','فقط administratorها می‌توانند وارد شوند'],
+    ['The right people have the right access at the right time','Everyone can access everything so work is never blocked','Passwords never expire, so users are not locked out','Only administrators can log in to company systems'],
+    ['افراد درست در زمان درست دسترسی درست دارند','همه به همه‌چیز دسترسی دارند تا کار هیچ‌وقت متوقف نشود','رمزها هرگز منقضی نمی‌شوند تا کاربر قفل نشود','فقط Administratorها می‌توانند وارد سیستم‌های شرکت شوند'],
     'IAM covers the processes, technologies and policies used to manage identities, authentication and access, while enforcing security and reducing the risk of unauthorized access or data breaches.',
     'IAM شامل فرآیندها، فناوری‌ها و سیاست‌هایی است که برای مدیریت هویت، احراز هویت و دسترسی استفاده می‌شوند و ریسک دسترسی غیرمجاز یا نشت داده را کم می‌کنند.');
 
@@ -153,14 +153,14 @@
     'یک سیستم متمرکز برای مدیریت هویت‌ها، حقوق و مجوزها کنترل و دید را بهتر می‌کند.');
 
   M('2',I,'MFA combines multiple factors to verify identity. Which set is a valid example of different factors?','MFA چند عامل را برای تأیید هویت ترکیب می‌کند. کدام مجموعه نمونه‌ی درستی از عامل‌های متفاوت است؟','',
-    ['Password plus biometric or hardware token','Two different passwords','Username plus password only','Two security questions'],
-    ['رمز عبور به‌علاوه‌ی بیومتریک یا token سخت‌افزاری','دو رمز عبور مختلف','فقط نام کاربری و رمز','دو سؤال امنیتی'],
+    ['A password plus a fingerprint or hardware token','Two different passwords entered one after another','A username plus a long and complex password','Two security questions about the user\'s past'],
+    ['رمز عبور به‌علاوه‌ی اثر انگشت یا Token سخت‌افزاری','دو رمز عبور مختلف که پشت سر هم وارد می‌شوند','نام کاربری به‌علاوه‌ی یک رمز طولانی و پیچیده','دو سؤال امنیتی درباره‌ی گذشته‌ی کاربر'],
     'MFA combines factors such as something you know (password), something you are (biometrics) and something you have (token). Two passwords are still one factor.',
     'MFA عامل‌هایی مثل چیزی که می‌دانی (رمز)، چیزی که هستی (بیومتریک) و چیزی که داری (token) را ترکیب می‌کند. دو رمز هنوز یک عامل است.');
 
   M('2',I,'Automated user provisioning and de-provisioning mainly ensures that:','provisioning و de-provisioning خودکار کاربران بیشتر چه چیزی را تضمین می‌کند؟','',
-    ['Access is promptly granted or revoked as users join, move or leave','Users never change roles','Passwords are never reset','Logs are deleted'],
-    ['دسترسی هنگام پیوستن، جابه‌جایی یا خروج کاربر سریعاً داده یا لغو می‌شود','کاربران هرگز نقش عوض نمی‌کنند','رمزها هرگز ریست نمی‌شوند','لاگ‌ها پاک می‌شوند'],
+    ['Access is granted or removed promptly as users join or leave','Users never change roles once their account is created','Passwords never have to be reset by the help desk','Logs of account changes are deleted automatically'],
+    ['دسترسی هنگام آمدن یا رفتن کاربر سریع داده یا گرفته می‌شود','کاربر بعد از ساخت حساب هرگز نقش عوض نمی‌کند','Help Desk هرگز لازم نیست رمزی را ریست کند','لاگ تغییرات حساب‌ها خودکار پاک می‌شود'],
     'Automated creation, modification and disabling of accounts streamlines management and prevents leftover access when people leave.',
     'ایجاد، تغییر و غیرفعال‌سازی خودکار حساب‌ها مدیریت را ساده می‌کند و جلوی باقی ماندن دسترسی بعد از خروج افراد را می‌گیرد.');
 
@@ -171,14 +171,14 @@
     'راهکارهای PAM حساب‌های دارای دسترسی بالا را مدیریت، مانیتور و امن می‌کنند تا سوءاستفاده یا دسترسی غیرمجاز رخ ندهد.');
 
   M('2',I,'Why are regular access reviews performed?','چرا بازبینی‌های منظم دسترسی (access review) انجام می‌شود؟','',
-    ['To validate and recertify access rights and reduce stale or excessive access','To reset everyone\'s password','To increase the number of accounts','To remove MFA'],
-    ['برای تأیید و بازتصدیق حقوق دسترسی و کم کردن دسترسی کهنه یا اضافی','برای ریست رمز همه','برای افزایش تعداد حساب‌ها','برای حذف MFA'],
+    ['To confirm access rights and remove stale access','To reset every user\'s password at the same time','To increase the number of accounts in the system','To remove MFA from accounts that rarely log in'],
+    ['برای تأیید حقوق دسترسی و حذف دسترسی کهنه','برای ریست هم‌زمان رمز همه‌ی کاربران','برای افزایش تعداد حساب‌های سیستم','برای حذف MFA از حساب‌هایی که کم وارد می‌شوند'],
     'Periodic reviews ensure permissions remain appropriate over time and reduce the risk of stale or excessive access.',
     'بازبینی دوره‌ای تضمین می‌کند مجوزها در طول زمان مناسب بمانند و ریسک دسترسی کهنه یا اضافی کم شود.');
 
   M('2',R,'In RBAC, permissions are assigned based on:','در RBAC مجوزها بر اساس چه چیزی داده می‌شوند؟','',
-    ['Job roles, responsibilities and least privilege','The user\'s computer brand','Random selection','Seniority only'],
-    ['نقش شغلی، مسئولیت‌ها و least privilege','برند کامپیوتر کاربر','انتخاب تصادفی','فقط ارشدیت'],
+    ['Job roles and least privilege','The brand of the user\'s computer','Random selection by the system','The user\'s seniority in the company'],
+    ['نقش شغلی و Least Privilege','برند کامپیوتر کاربر','انتخاب تصادفی توسط سیستم','سابقه‌ی کاربر در شرکت'],
     'Role-Based Access Control grants access according to job roles and responsibilities, limiting users to what they need for their job.',
     'RBAC دسترسی را بر اساس نقش‌ها و مسئولیت‌های شغلی می‌دهد و کاربر را به آنچه برای کارش لازم است محدود می‌کند.');
 
@@ -207,14 +207,14 @@
     'Constraint RBAC شروطی (زمانی، مکانی، زمینه‌ای) برای تعیین مجوز دسترسی اضافه می‌کند.');
 
   M('2',Q,'How does rule-based access control differ from role-based access control?','کنترل دسترسی مبتنی بر قاعده (rule-based) چه تفاوتی با مبتنی بر نقش (role-based) دارد؟','',
-    ['Rule-based evaluates predefined rules and conditions (time, location, device) at request time; role-based derives access from static roles','They are identical','Role-based uses labels and clearance levels','Rule-based never uses attributes'],
-    ['rule-based در لحظه‌ی درخواست قواعد و شروط از پیش‌تعریف‌شده (زمان، مکان، دستگاه) را ارزیابی می‌کند؛ role-based دسترسی را از نقش‌های ایستا می‌گیرد','هر دو یکی هستند','role-based از برچسب و سطح مجوز استفاده می‌کند','rule-based هرگز از ویژگی‌ها استفاده نمی‌کند'],
+    ['Rule-based checks conditions such as time at request; role-based uses roles','They are identical models that use different names in different products','Role-based access control uses labels and clearance levels for each file','Rule-based access control never looks at any conditions or attributes'],
+    ['Rule-based شرط‌هایی مثل زمان را موقع درخواست بررسی می‌کند؛ Role-based از نقش‌ها استفاده می‌کند','یک مدل‌اند که در محصولات مختلف اسم متفاوت دارند','Role-based برای هر فایل از برچسب و سطح مجوز استفاده می‌کند','Rule-based هرگز به هیچ شرط یا ویژگی‌ای نگاه نمی‌کند'],
     'Role-based grants access via roles that are static unless manually modified. Rule-based decides access dynamically by evaluating logical rules over attributes such as time of day, location, behavior or device type.',
     'Role-based دسترسی را از طریق نقش‌هایی می‌دهد که تا تغییر دستی ثابت‌اند. Rule-based با ارزیابی قواعد منطقی روی ویژگی‌هایی مثل ساعت، مکان، رفتار یا نوع دستگاه به‌صورت پویا تصمیم می‌گیرد.');
 
   M('2',Q,'"Allow access if user role is Manager AND location is Headquarters." Which model evaluates user, resource and environment attributes in policies like this?','«اجازه بده اگر نقش کاربر Manager و مکان Headquarters باشد.» کدام مدل ویژگی‌های کاربر، منبع و محیط را در سیاست‌هایی مثل این ارزیابی می‌کند؟','',
-    ['ABAC (attribute-based access control)','TBAC','MAC','Clark-Wilson'],
-    ['ABAC (کنترل دسترسی مبتنی بر ویژگی)','TBAC','MAC','Clark-Wilson'],
+    ['ABAC (attribute-based access control)','TBAC (task-based access control)','MAC (mandatory access control)','The Clark-Wilson integrity model'],
+    ['ABAC (کنترل دسترسی مبتنی بر ویژگی)','TBAC (کنترل دسترسی مبتنی بر وظیفه)','MAC (کنترل دسترسی اجباری)','مدل یکپارچگی Clark-Wilson'],
     'ABAC evaluates requests based on attributes of the user, resource and environment (role, department, time, location) combined into logical rules.',
     'ABAC درخواست را بر اساس ویژگی‌های کاربر، منبع و محیط (نقش، بخش، زمان، مکان) که در قواعد منطقی ترکیب شده‌اند ارزیابی می‌کند.');
 
@@ -237,8 +237,8 @@
     'LBAC موقعیت جغرافیایی یا نزدیکی فیزیکی را هنگام اعطا یا رد دسترسی در نظر می‌گیرد.');
 
   M('2',X,'In MAC, who decides access permissions?','در MAC چه کسی مجوزهای دسترسی را تعیین می‌کند؟','',
-    ['The system administrator or security policy, based on labels and security levels','Each user for their own files','The file owner','Any user who is logged in'],
-    ['مدیر سیستم یا سیاست امنیتی، بر اساس برچسب‌ها و سطوح امنیتی','هر کاربر برای فایل‌های خودش','مالک فایل','هر کاربر واردشده'],
+    ['The security policy, based on labels and levels','Each user decides for the files they create','The owner of each file decides who can open it','Any logged-in user can change the permissions'],
+    ['سیاست امنیتی، بر اساس برچسب‌ها و سطوح','هر کاربر برای فایل‌هایی که می‌سازد تصمیم می‌گیرد','مالک هر فایل تصمیم می‌گیرد چه کسی بازش کند','هر کاربر واردشده می‌تواند مجوزها را عوض کند'],
     'MAC enforces predefined policies where subjects and objects carry labels (Top Secret, Confidential, Unclassified). Users have limited control over permissions. It is used in government, defense and highly regulated environments.',
     'MAC سیاست‌های از پیش تعریف‌شده را اعمال می‌کند و کاربر و منبع برچسب (Top Secret، Confidential، Unclassified) دارند. کنترل کاربر روی مجوزها محدود است. در دولت، دفاع و صنایع بسیار مقررات‌مند استفاده می‌شود.');
 
@@ -302,8 +302,8 @@
     'Predictive analytics به سازمان اجازه می‌دهد اقدام پیش‌دستانه بکند و یک قدم جلوتر از مهاجمان بماند.');
 
   M('3',AI,'How does automating responses with AI help security teams?','خودکارسازی پاسخ با AI چه کمکی به تیم امنیت می‌کند؟','',
-    ['It can isolate affected systems quickly, reducing response times and giving consistent handling','It removes the need for any monitoring','It guarantees no attacks occur','It deletes all logs'],
-    ['می‌تواند سیستم‌های آسیب‌دیده را سریع ایزوله کند، زمان پاسخ را کم کند و رفتار یکنواخت بدهد','نیاز به هر نوع مانیتورینگ را از بین می‌برد','تضمین می‌کند هیچ حمله‌ای رخ نمی‌دهد','همه‌ی لاگ‌ها را پاک می‌کند'],
+    ['It can isolate affected systems quickly and consistently','It removes the need for any human monitoring at all','It guarantees that no attacks will ever succeed','It deletes old logs so analysts have less to read'],
+    ['می‌تواند سیستم‌های آسیب‌دیده را سریع و یکنواخت ایزوله کند','نیاز به هر نوع پایش انسانی را کلاً از بین می‌برد','تضمین می‌کند هیچ حمله‌ای هرگز موفق نشود','لاگ‌های قدیمی را پاک می‌کند تا تحلیلگر کمتر بخواند'],
     'AI can automate responses such as isolating affected systems, thereby significantly reducing response times and ensuring a consistent, reliable approach.',
     'AI می‌تواند پاسخ‌هایی مثل ایزوله کردن سیستم‌های آسیب‌دیده را خودکار کند، زمان پاسخ را به‌طور محسوس کم کند و رویکردی یکنواخت و قابل‌اتکا بدهد.');
 
@@ -314,8 +314,8 @@
     'AI با تحلیل رفتار کاربر و تکنیک‌های پیشرفته احراز هویت را قوی‌تر و دسترسی غیرمجاز را سخت‌تر می‌کند.');
 
   M('3',AP,'Why can machine learning-based antivirus detect threats that signature-based tools miss?','چرا آنتی‌ویروس مبتنی بر یادگیری ماشین تهدیدهایی را می‌بیند که ابزار مبتنی بر signature نمی‌بیند؟','',
-    ['It uses AI algorithms that learn from new data to detect new and evolving threats','It stores more signatures','It scans only known files','It runs only offline'],
-    ['از الگوریتم‌های AI استفاده می‌کند که از داده‌ی جدید یاد می‌گیرند و تهدیدهای جدید و در حال تکامل را می‌بیند','signature بیشتری ذخیره می‌کند','فقط فایل‌های شناخته‌شده را اسکن می‌کند','فقط آفلاین کار می‌کند'],
+    ['It learns from new data, so it can spot new threats','It stores many more signatures than older tools','It scans only files that are already known to be bad','It runs only offline, so attackers cannot disable it'],
+    ['از داده‌ی جدید یاد می‌گیرد، پس تهدیدهای جدید را می‌بیند','Signatureهای خیلی بیشتری از ابزارهای قدیمی ذخیره می‌کند','فقط فایل‌هایی را اسکن می‌کند که از قبل معلوم است بدند','فقط آفلاین کار می‌کند، پس مهاجم نمی‌تواند خاموشش کند'],
     'ML-based antivirus and antimalware detect new and evolving threats that traditional signature-based approaches may miss, and improve as they learn from new data.',
     'آنتی‌ویروس و antimalware مبتنی بر ML تهدیدهای جدید و در حال تکامل را که روش‌های signature-محور شاید از دست بدهند تشخیص می‌دهند و با یادگیری از داده‌ی جدید بهتر می‌شوند.');
 
@@ -326,44 +326,44 @@
     'تشخیص phishing با AI محتوای ایمیل و رفتار فرستنده را تحلیل می‌کند و قبل از فریب گیرنده آن را مسدود می‌کند.');
 
   M('3',AP,'What do AI-integrated SIEM systems add to traditional SIEM?','سیستم‌های SIEM یکپارچه با AI چه چیزی به SIEM سنتی اضافه می‌کنند؟','',
-    ['Enhanced threat detection, incident response and compliance reporting','Physical door locks','Wi-Fi heat maps','Disk encryption'],
-    ['تشخیص تهدید، پاسخ به حادثه و گزارش انطباق بهتر','قفل فیزیکی در','heat map شبکه‌ی Wi-Fi','رمزنگاری دیسک'],
+    ['Better threat detection, response and reporting','Physical door locks for the server room','Wi-Fi heat maps for the office floors','Full-disk encryption for analyst laptops'],
+    ['تشخیص تهدید، پاسخ و گزارش بهتر','قفل فیزیکی در برای اتاق سرور','Heat Map شبکه‌ی Wi-Fi برای طبقه‌های اداره','رمزنگاری کامل دیسک برای لپ‌تاپ تحلیلگرها'],
     'AI-integrated SIEM combines AI with traditional SIEM to enhance threat detection, incident response and compliance reporting.',
     'SIEM یکپارچه با AI، هوش مصنوعی را با SIEM سنتی ترکیب می‌کند تا تشخیص تهدید، پاسخ به حادثه و گزارش انطباق بهتر شود.');
 
   M('3',UE,'What is UEBA?','UEBA چیست؟','',
-    ['A process that uses analytics to learn normal behavior of users and entities and flag deviations that may signal threats','A firewall rule language','A disk encryption standard','A backup technique'],
-    ['فرآیندی که با تحلیل، رفتار عادی کاربران و entityها را یاد می‌گیرد و انحراف‌هایی را که می‌توانند تهدید باشند علامت می‌زند','یک زبان قاعده‌ی firewall','یک استاندارد رمزنگاری دیسک','یک روش بکاپ'],
+    ['Analytics that learn normal user behavior and flag deviations','A rule language for writing firewall access control lists','A standard for encrypting disks on laptops and servers','A backup technique that copies only changed user files'],
+    ['تحلیلی که رفتار عادی کاربر را یاد می‌گیرد و انحراف را علامت می‌زند','یک زبان برای نوشتن ACLهای فایروال','یک استاندارد برای رمزنگاری دیسک لپ‌تاپ و سرور','یک روش بکاپ که فقط فایل‌های تغییرکرده‌ی کاربر را کپی می‌کند'],
     'User and Entity Behavior Analytics establishes a baseline of normal activity for users and entities (devices, systems) and continuously monitors for deviations.',
     'User and Entity Behavior Analytics یک baseline از فعالیت عادی کاربران و entityها (دستگاه‌ها، سیستم‌ها) می‌سازد و مدام انحراف‌ها را زیر نظر دارد.');
 
   M('3',UE,'Which threats is UEBA especially good at finding?','UEBA در پیدا کردن کدام تهدیدها مخصوصاً خوب است؟','',
-    ['Insider threats, compromised accounts and lateral movement','Power outages','Printer jams','Hardware failures'],
-    ['تهدید داخلی، حساب‌های نفوذشده و lateral movement','قطعی برق','گیر کردن پرینتر','خرابی سخت‌افزار'],
+    ['Insider threats and compromised accounts','Power outages in the data center','Paper jams in the office printers','Failing hard drives in old servers'],
+    ['تهدید داخلی و حساب‌های نفوذشده','قطعی برق در دیتاسنتر','گیر کردن کاغذ در پرینترهای اداره','خراب شدن هارد سرورهای قدیمی'],
     'By focusing on behavior patterns, UEBA detects insider attacks, compromised accounts and external attackers moving laterally, including advanced unknown threats that traditional measures miss.',
     'UEBA با تمرکز بر الگوی رفتار، حمله‌ی داخلی، حساب نفوذشده و مهاجم خارجی در حال lateral movement را پیدا می‌کند، از جمله تهدیدهای پیشرفته‌ی ناشناخته که اقدامات سنتی نمی‌بینند.');
 
   M('3',UE,'A senior analyst\'s credentials are suddenly used from an unrecognized device in a distant location, and the system demands stronger authentication. This is an example of:','اعتبارنامه‌ی یک تحلیلگر ارشد ناگهان از یک دستگاه ناشناس در مکانی دور استفاده می‌شود و سیستم احراز هویت قوی‌تری می‌خواهد. این نمونه‌ی چیست؟','',
-    ['Behavior-based (adaptive) detection of anomalous account use','Static RBAC','Data masking','Journaling'],
-    ['تشخیص رفتاری (adaptive) استفاده‌ی غیرعادی از حساب','Static RBAC','Data masking','Journaling'],
+    ['Adaptive, behavior-based anomaly detection','Static role-based access control (RBAC)','Data masking of the analyst\'s records','Journaling of the account\'s activity'],
+    ['تشخیص ناهنجاری رفتاری و تطبیقی','کنترل دسترسی ایستا مبتنی بر نقش (RBAC)','پوشاندن داده‌ی رکوردهای تحلیلگر','Journaling فعالیت حساب'],
     'In the pre-read, Okta\'s adaptive authentication identified an anomaly in user behavior and dynamically increased authentication requirements, blocking the malicious login.',
     'در متن پیش‌مطالعه، احراز هویت adaptive شرکت Okta ناهنجاری رفتار کاربر را تشخیص داد، الزامات احراز هویت را پویا بالا برد و ورود مخرب را مسدود کرد.');
 
   M('3',BD,'What does "big data" in cybersecurity refer to?','«داده‌ی بزرگ» (big data) در امنیت سایبری به چه معناست؟','',
-    ['Vast, complex datasets from many sources such as network traffic, server logs and security systems','Only data larger than 1 TB on one disk','Only encrypted data','Only backup data'],
-    ['مجموعه‌داده‌های حجیم و پیچیده از منابع متعدد مثل ترافیک شبکه، لاگ سرور و سیستم‌های امنیتی','فقط داده‌ی بزرگ‌تر از ۱ ترابایت روی یک دیسک','فقط داده‌ی رمزنگاری‌شده','فقط داده‌ی بکاپ'],
+    ['Huge, complex data from many sources such as logs','Only data larger than 1 TB stored on a single disk','Only data that has been encrypted before storage','Only the backup copies kept at a second site'],
+    ['داده‌ی حجیم و پیچیده از منابع زیاد مثل لاگ‌ها','فقط داده‌ی بزرگ‌تر از ۱ ترابایت روی یک دیسک','فقط داده‌ای که قبل از ذخیره رمزنگاری شده','فقط نسخه‌های بکاپ در یک سایت دوم'],
     'Big data covers vast and complex datasets generated from multiple sources within the IT environment. Types include structured, unstructured, semi-structured, geospatial, machine/operational logging and open-source data.',
     'big data مجموعه‌داده‌های حجیم و پیچیده از منابع متعدد در محیط IT است. انواع: ساخت‌یافته، بدون‌ساختار، نیمه‌ساخت‌یافته، جغرافیایی، لاگ ماشین/عملیاتی و متن‌باز.');
 
   M('3',BD,'What is a data lake?','data lake چیست؟','',
-    ['A centralized repository that stores vast amounts of raw data in its native format','A firewall zone','A type of backup tape','An encrypted password store'],
-    ['مخزن متمرکزی که حجم زیادی داده‌ی خام را در قالب اصلی ذخیره می‌کند','یک zone در firewall','یک نوع نوار بکاپ','مخزن رمز عبور رمزنگاری‌شده'],
+    ['A central store of raw data in its original format','A firewall zone that sits between two networks','A type of magnetic tape used for backups','An encrypted vault that stores admin passwords'],
+    ['مخزن مرکزی داده‌ی خام در قالب اصلی','یک Zone فایروال بین دو شبکه','نوعی نوار مغناطیسی برای بکاپ','گاوصندوق رمزنگاری‌شده برای رمزهای ادمین'],
     'A data lake stores logs, network traffic, threat intelligence feeds and more in native format. In security it aggregates diverse data, supports scalable analytics and machine learning, and stays flexible and accessible to different tools and teams.',
     'data lake لاگ، ترافیک شبکه، فید اطلاعات تهدید و غیره را در قالب اصلی ذخیره می‌کند. در امنیت، داده‌ی متنوع را جمع می‌کند، تحلیل و ML مقیاس‌پذیر را ممکن می‌کند و برای ابزارها و تیم‌های مختلف انعطاف‌پذیر و در دسترس است.');
 
   M('3',BD,'Which is a benefit of automated data collection into a data lake?','کدام یک مزیت جمع‌آوری خودکار داده در data lake است؟','',
-    ['Real-time ingestion from many sources, scalable and with less manual effort','It requires a person to copy logs by hand','It only works on one device','It stops all analysis'],
-    ['ورود لحظه‌ای داده از منابع مختلف، مقیاس‌پذیر و با تلاش دستی کمتر','نیاز دارد کسی لاگ‌ها را دستی کپی کند','فقط روی یک دستگاه کار می‌کند','همه‌ی تحلیل‌ها را متوقف می‌کند'],
+    ['Real-time intake from many sources with less manual work','A person must copy the logs into it by hand every day','It works only with data coming from a single device','It stops all analysis until the collection is finished'],
+    ['ورود لحظه‌ای داده از منابع زیاد با کار دستی کمتر','یک نفر باید هر روز لاگ‌ها را دستی در آن کپی کند','فقط با داده‌ی یک دستگاه کار می‌کند','تا تمام شدن جمع‌آوری همه‌ی تحلیل‌ها را متوقف می‌کند'],
     'Automated collection integrates data from network devices, servers, applications and security systems, ingests it in real time, and scales to large volumes while reducing manual work.',
     'جمع‌آوری خودکار داده را از دستگاه‌های شبکه، سرورها، اپلیکیشن‌ها و سیستم‌های امنیتی یکپارچه می‌کند، لحظه‌ای وارد می‌کند و با کم کردن کار دستی برای حجم بالا مقیاس‌پذیر است.');
 

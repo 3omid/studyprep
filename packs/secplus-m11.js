@@ -59,24 +59,24 @@
   M(T1,'SAST and DAST run automatically on every code build, and any build with a critical flaw is blocked from deployment. What is this?',
     'SAST و DAST خودکار روی هر build کد اجرا می‌شوند و هر build با ضعف بحرانی اجازه‌ی انتشار نمی‌گیرد. این چیست؟',
     'تست دائمی در pipeline برنامه‌نویسی.',
-    ['Continuous integration testing','Tabletop exercise','Chain of custody','Escalation'],
-    ['تست خودکار در CI (Continuous integration)','تمرین روی میز','زنجیره‌ی نگه‌داری مدرک','ارجاع'],
+    ['Continuous integration testing','A tabletop exercise for developers','Chain of custody for the source code','Escalation to the security manager'],
+    ['تست خودکار در CI (Continuous integration)','تمرین روی میز برای برنامه‌نویس‌ها','زنجیره‌ی نگه‌داری برای کد منبع','ارجاع به مدیر امنیت'],
     'Continuous integration testing builds security tests into the DevOps pipeline to catch vulnerabilities early in the SDLC.',
     'یعنی هر بار که برنامه‌نویس کد را ذخیره می‌کند، تست امنیتی خودکار اجرا می‌شود. اگر ضعف جدی پیدا شود، کد منتشر نمی‌شود. زودتر پیدا کردن یعنی ارزان‌تر درست کردن.');
 
   M(T2,'What is the main purpose of security automation?',
     'هدف اصلی خودکارسازی امنیت چیست؟',
     'کارهای تکراری را ماشین انجام دهد.',
-    ['Faster, consistent response that frees analysts for complex work','Replacing every security analyst','Removing the need for any logs','Making incidents impossible'],
-    ['پاسخ سریع‌تر و یکسان، تا تحلیلگر وقت کارهای سخت را داشته باشد','جایگزین کردن همه‌ی تحلیلگرها','دیگر لاگ لازم نباشد','غیرممکن کردن هر حادثه'],
+    ['Faster, consistent response, so analysts can focus on hard work','Replacing every security analyst with scripts and playbooks','Removing the need to collect or keep any security logs','Making security incidents impossible once it is turned on'],
+    ['پاسخ سریع‌تر و یکسان، تا تحلیلگرها روی کارهای سخت تمرکز کنند','جایگزین کردن همه‌ی تحلیلگرهای امنیت با اسکریپت و Playbook','حذف نیاز به جمع‌آوری یا نگه داشتن هر لاگ امنیتی','غیرممکن کردن حادثه‌ی امنیتی وقتی روشن شد'],
     'Automation runs repetitive, predefined tasks without manual work. It cuts response time, reduces human error, enforces consistency and lets analysts focus on complex threats.',
     'خودکارسازی کارهای تکراری را به ماشین می‌دهد: سریع‌تر، بدون خستگی و بدون اشتباه. آدم‌ها وقت آزاد می‌کنند برای کارهای سخت مثل شکار تهدید.');
 
   M(T2,'Which is a benefit of automation for the security team itself?',
     'کدام فایده‌ی خودکارسازی برای خود تیم امنیت است؟',
     'کار یکنواخت کمتر = خستگی کمتر.',
-    ['Better employee retention because analysts do less monotonous work','Analysts no longer need training','The team never needs managers','Logs no longer need to be stored'],
-    ['کارمندها بیشتر می‌مانند چون کار یکنواخت کمتری دارند','تحلیلگرها دیگر آموزش لازم ندارند','تیم دیگر مدیر لازم ندارد','لازم نیست لاگ نگه داشته شود'],
+    ['Analysts stay longer because they do less boring work','Analysts no longer need any security training','The team no longer needs managers or team leads','Security logs no longer need to be stored at all'],
+    ['تحلیلگرها بیشتر می‌مانند چون کار خسته‌کننده‌ی کمتری دارند','تحلیلگرها دیگر هیچ آموزش امنیتی لازم ندارند','تیم دیگر مدیر یا سرپرست لازم ندارد','دیگر اصلاً لازم نیست لاگ امنیتی نگه داشته شود'],
     'Automation removes repetitive work, reducing burnout and improving job satisfaction and retention. It also supports scalability without proportional staff increases.',
     'وقتی کارهای تکراری و خسته‌کننده را ماشین انجام دهد، تحلیلگرها کمتر فرسوده می‌شوند و راحت‌تر در شرکت می‌مانند.');
 
@@ -107,8 +107,8 @@
   M(T2,'Why should critical or destructive automated actions keep human oversight?',
     'چرا کارهای خودکار مهم یا خطرناک باید زیر نظر انسان باشند؟',
     'ماشین هم اشتباه می‌کند، ولی خیلی سریع.',
-    ['To prevent accidental service disruption from a wrong automatic action','Because automation is always illegal','So that no logs are created','To slow the team down on purpose'],
-    ['تا یک کار خودکار اشتباه، سرویس را تصادفی از کار نیندازد','چون خودکارسازی همیشه غیرقانونی است','تا هیچ لاگی ساخته نشود','تا عمداً تیم کند شود'],
+    ['So a wrong automatic action does not break a service','Because automating security actions is always illegal','So that the actions leave no logs behind for auditors','To slow the team down on purpose during an incident'],
+    ['تا یک کار خودکار اشتباه سرویسی را از کار نیندازد','چون خودکار کردن کارهای امنیتی همیشه غیرقانونی است','تا آن کارها هیچ لاگی برای ممیزها باقی نگذارند','تا عمداً سرعت تیم در زمان حادثه کم شود'],
     'Automation should have fail-safes and human approval for critical or destructive actions, such as shutting down production servers.',
     'ماشین اگر اشتباه کند، در چند ثانیه صدها سرور را خاموش می‌کند. برای کارهای بزرگ و خطرناک، یک آدم باید دکمه‌ی آخر را بزند.');
 
@@ -171,8 +171,8 @@
   M(T3,'Which action is part of short-term containment?',
     'کدام کار جزو مهار کوتاه‌مدت است؟',
     'همین الان، سریع.',
-    ['Immediately disconnect the infected laptop from the network','Rebuild all servers from golden images','Write the post-incident report','Update the IR playbook'],
-    ['فوراً لپ‌تاپ آلوده را از شبکه جدا کن','همه‌ی سرورها را از golden image دوباره بساز','گزارش بعد از حادثه را بنویس','دستورالعمل IR را به‌روز کن'],
+    ['Disconnect the infected laptop from the network now','Rebuild every server from a golden image','Write the post-incident report for management','Update the incident response playbook'],
+    ['همین حالا لپ‌تاپ آلوده را از شبکه جدا کن','همه‌ی سرورها را از Golden Image دوباره بساز','گزارش بعد از حادثه را برای مدیریت بنویس','دستورالعمل پاسخ به حادثه را به‌روز کن'],
     'Short-term containment is immediate: isolate infected systems, disable compromised accounts, block malicious IPs. Long-term containment adds segmentation, targeted firewall rules and patching.',
     'مهار کوتاه‌مدت یعنی همان لحظه: کابل را بکش، حساب را ببند، IP را مسدود کن. مهار بلندمدت یعنی کارهای محکم‌تر مثل بخش‌بندی شبکه و وصله کردن.');
 
@@ -211,16 +211,16 @@
   M(T3,'Why is eradication essential before recovery?',
     'چرا ریشه‌کنی باید قبل از بازیابی کامل شود؟',
     'اگر در باز مانده باشد چه؟',
-    ['Without it, attackers can re-enter through leftover access and cause repeat incidents','Because recovery is optional','Because eradication creates the backups','Because the law forbids recovery'],
-    ['بدون آن، هکر از راه باقی‌مانده دوباره وارد می‌شود','چون بازیابی اختیاری است','چون ریشه‌کنی نسخه‌ی پشتیبان می‌سازد','چون قانون بازیابی را ممنوع کرده'],
+    ['Otherwise attackers can come back through leftover access','Because recovery is optional once containment is finished','Because eradication is the step that creates the backups','Because the law forbids recovery until a report is filed'],
+    ['وگرنه هکر از راه دسترسی باقی‌مانده برمی‌گردد','چون بعد از مهار، بازیابی اختیاری است','چون ریشه‌کنی همان مرحله‌ای است که بکاپ می‌سازد','چون قانون تا ثبت گزارش بازیابی را ممنوع کرده'],
     'If backdoors, persistence or the original vulnerability remain, restored systems will be compromised again.',
     'اگر قبل از تعمیر خانه، دزد هنوز در زیرزمین قایم شده باشد، فردا دوباره دزدی می‌کند. اول مطمئن شو چیزی جا نمانده.');
 
   M(T4,'What is digital forensics?',
     'جرم‌شناسی دیجیتال (Digital forensics) چیست؟',
     'کار کارآگاه، ولی روی کامپیوتر.',
-    ['Collecting, preserving and analyzing digital evidence while keeping its integrity','Deleting logs after an incident','Writing new firewall rules','Installing antivirus on every laptop'],
-    ['جمع‌آوری، نگه‌داری و تحلیل مدرک دیجیتال بدون از بین بردن درستی‌اش','پاک کردن لاگ‌ها بعد از حادثه','نوشتن قانون جدید فایروال','نصب آنتی‌ویروس روی همه‌ی لپ‌تاپ‌ها'],
+    ['Collecting, preserving and analyzing digital evidence','Deleting logs after an incident to protect privacy','Writing new firewall rules to block the attacker','Installing antivirus on every laptop after an attack'],
+    ['جمع‌آوری، نگه‌داری و تحلیل مدرک دیجیتال','پاک کردن لاگ‌ها بعد از حادثه برای حفظ حریم خصوصی','نوشتن قانون جدید فایروال برای مسدود کردن مهاجم','نصب آنتی‌ویروس روی همه‌ی لپ‌تاپ‌ها بعد از حمله'],
     'Digital forensics identifies, collects, preserves and analyzes digital evidence so it stays admissible in court and helps find the root cause.',
     'Digital forensics یعنی کارآگاه‌بازی روی کامپیوتر: مدرک جمع می‌کنی، دستش نمی‌زنی، تحلیلش می‌کنی و ثابت می‌کنی چه کسی، کِی و چطور کاری کرده.');
 
@@ -251,16 +251,16 @@
   M(T4,'Investigators need an exact copy of a suspect\'s drive, including deleted files and slack space. What should they make?',
     'بازرس‌ها یک کپی دقیق از هارد مظنون می‌خواهند، شامل فایل‌های پاک‌شده و فضای خالی بین فایل‌ها. چه چیزی بسازند؟',
     'کپی تک‌تک بیت‌ها.',
-    ['A bit-by-bit (forensic) image using a write blocker','A normal file copy with drag and drop','A screenshot of the desktop','A zip file of the Documents folder'],
-    ['کپی بیت‌به‌بیت با write blocker','کپی معمولی فایل‌ها با کشیدن و رها کردن','عکس از صفحه‌ی دسکتاپ','فایل zip از پوشه‌ی Documents'],
+    ['A bit-by-bit forensic image made with a write blocker','A normal copy of the files made with drag and drop','A set of screenshots of the desktop and open windows','A zip archive of the user\'s Documents and Desktop folders'],
+    ['کپی بیت‌به‌بیت جرم‌شناسی با Write Blocker','کپی معمولی فایل‌ها با کشیدن و رها کردن','چند عکس از صفحه‌ی دسکتاپ و پنجره‌های باز','فایل zip از پوشه‌های Documents و Desktop کاربر'],
     'A bit-by-bit image copies every sector, including deleted files, slack space and unallocated areas. A write blocker prevents changes to the original drive.',
     'کپی بیت‌به‌بیت یعنی همه چیز، حتی چیزهایی که پاک شده‌اند، کپی می‌شود. Write blocker مثل دستکش است: نمی‌گذارد هیچ چیزی روی هارد اصلی نوشته شود.');
 
   M(T4,'How do investigators prove a forensic image has not changed since it was collected?',
     'بازرس‌ها چطور ثابت می‌کنند کپی جرم‌شناسی از لحظه‌ی جمع‌آوری تغییر نکرده؟',
     'اثر انگشت دیجیتال فایل.',
-    ['Record a cryptographic hash such as SHA-256 and compare it later','Rename the file every day','Compress the image','Print the image on paper'],
-    ['یک hash مثل SHA-256 ثبت می‌کنند و بعداً مقایسه می‌کنند','هر روز اسم فایل را عوض می‌کنند','فایل را فشرده می‌کنند','فایل را روی کاغذ چاپ می‌کنند'],
+    ['Record a SHA-256 hash and compare it later','Rename the image file every day it is stored','Compress the image so it cannot be edited','Print the image\'s file list on paper'],
+    ['یک Hash مثل SHA-256 ثبت می‌کنند و بعداً مقایسه می‌کنند','هر روز اسم فایل Image را عوض می‌کنند','Image را فشرده می‌کنند تا قابل ویرایش نباشد','فهرست فایل‌های Image را روی کاغذ چاپ می‌کنند'],
     'A hash value (e.g. SHA-256) is generated and documented for each evidence item. If the hash still matches later, the evidence is unchanged.',
     'Hash مثل اثر انگشت فایل است. اگر حتی یک حرف عوض شود، hash کاملاً فرق می‌کند. پس اگر hash امروز با hash روز اول یکی باشد، مدرک دست نخورده.');
 
@@ -307,32 +307,32 @@
   M(T5,'How do vulnerability scans help an investigation?',
     'اسکن آسیب‌پذیری چطور به تحقیقات کمک می‌کند؟',
     'هکر از کدام در وارد شد؟',
-    ['They show exploitable weaknesses that may be the attack vector','They show the attacker\'s real name','They restore deleted files','They encrypt the evidence'],
-    ['ضعف‌هایی را نشان می‌دهند که شاید راه ورود هکر بوده','اسم واقعی هکر را نشان می‌دهند','فایل‌های پاک‌شده را برمی‌گردانند','مدرک را رمزگذاری می‌کنند'],
+    ['They show weaknesses that may be the attack vector','They reveal the attacker\'s real name and location','They restore files the attacker deleted from disks','They encrypt the evidence so it cannot be changed'],
+    ['ضعف‌هایی را نشان می‌دهند که شاید راه ورود حمله بوده','اسم و محل واقعی مهاجم را نشان می‌دهند','فایل‌هایی را که مهاجم پاک کرده برمی‌گردانند','مدرک را رمزنگاری می‌کنند تا تغییر نکند'],
     'Vulnerability scans highlight misconfigurations, outdated software and unpatched flaws, which can be mapped to incident indicators to find the likely entry point.',
     'اسکن آسیب‌پذیری پنجره‌های باز خانه را نشان می‌دهد. اگر دزد آمده، احتمالاً از یکی از همین پنجره‌ها آمده.');
 
   M(T5,'In the example workflow, what happens right after the SIEM alerts on a suspicious login from an unusual location?',
     'در فرایند نمونه، درست بعد از اینکه SIEM برای یک ورود مشکوک از مکان غیرعادی هشدار می‌دهد، چه اتفاقی می‌افتد؟',
     'ماشین در چند ثانیه کار می‌کند، قبل از آدم.',
-    ['Automation blocks the IP, disables the account and notifies the SOC','The forensics team images the drive','Lessons learned meeting is held','The company buys cyber insurance'],
-    ['سیستم خودکار IP را مسدود، حساب را غیرفعال و به SOC خبر می‌دهد','تیم جرم‌شناسی از هارد کپی می‌گیرد','جلسه‌ی درس‌آموزی برگزار می‌شود','شرکت بیمه‌ی سایبری می‌خرد'],
+    ['Automation blocks the IP, disables the account and alerts the SOC','The forensics team takes a bit-by-bit image of the user\'s drive','A lessons-learned meeting is held with everyone who was involved','The company contacts its insurer and buys more cyber insurance'],
+    ['سیستم خودکار IP را مسدود، حساب را غیرفعال و به SOC خبر می‌دهد','تیم جرم‌شناسی از هارد کاربر کپی بیت‌به‌بیت می‌گیرد','جلسه‌ی درس‌آموزی با همه‌ی افراد درگیر برگزار می‌شود','شرکت با بیمه تماس می‌گیرد و بیمه‌ی سایبری بیشتری می‌خرد'],
     'Workflow: SIEM detection and alert, automated response (block IP, disable account, notify SOC), analyst review of logs and packet captures, then forensic imaging with hashing.',
     'ترتیب: SIEM هشدار می‌دهد ← سیستم خودکار IP را می‌بندد و حساب را قفل می‌کند ← تحلیلگر لاگ‌ها را بررسی می‌کند ← تیم جرم‌شناسی کپی بیت‌به‌بیت با hash می‌گیرد.');
 
   M(T5,'In the ransomware case study, how did the attack start?',
     'در مطالعه‌ی موردی باج‌افزار، حمله از کجا شروع شد؟',
     'رایج‌ترین راه ورود.',
-    ['A phishing email with a malicious attachment','An open DMZ web server','A stolen laptop','A misconfigured printer'],
-    ['یک ایمیل فیشینگ با پیوست مخرب','یک سرور وب باز در DMZ','یک لپ‌تاپ دزدیده‌شده','یک پرینتر بد تنظیم‌شده'],
+    ['A phishing email with a malicious attachment','An exposed web server in the DMZ with no patches','A stolen laptop with saved VPN credentials','A misconfigured network printer on the guest VLAN'],
+    ['یک ایمیل فیشینگ با پیوست مخرب','یک وب‌سرور باز و وصله‌نشده در DMZ','یک لپ‌تاپ دزدیده‌شده با رمز VPN ذخیره‌شده','یک پرینتر شبکه‌ی بد تنظیم‌شده روی VLAN مهمان'],
     'Forensics traced the compromise to a phishing email attachment. Email server logs, firewall records and endpoint telemetry confirmed the path. Clean backups avoided paying the ransom, and awareness training was updated.',
     'یک ایمیل فیشینگ با پیوست آلوده. چون نسخه‌ی پشتیبان سالم داشتند، باج ندادند و در چند ساعت برگشتند. بعد آموزش کارمندها درباره‌ی فیشینگ را بهتر کردند.');
 
   M(T5,'Why should investigators correlate several data sources instead of relying on one?',
     'چرا بازرس‌ها باید چند منبع داده را کنار هم بگذارند و فقط به یکی تکیه نکنند؟',
     'تکه‌های پازل.',
-    ['Each source shows part of the story; together they reveal the full scope and root cause','One log is always enough','It makes the evidence inadmissible','Correlation deletes duplicates'],
-    ['هر منبع یک تکه از داستان را نشان می‌دهد؛ با هم کل ماجرا و علت اصلی معلوم می‌شود','یک لاگ همیشه کافی است','باعث می‌شود مدرک پذیرفته نشود','کنار هم گذاشتن، تکراری‌ها را پاک می‌کند'],
+    ['Each source shows part of the story; together they show the whole','One complete log is always enough to explain any incident','Combining sources makes the evidence inadmissible in court','Correlation deletes duplicate events, so evidence is lost'],
+    ['هر منبع یک تکه از داستان را نشان می‌دهد؛ با هم کل ماجرا معلوم می‌شود','یک لاگ کامل همیشه برای توضیح هر حادثه کافی است','کنار هم گذاشتن منابع باعث می‌شود مدرک در دادگاه پذیرفته نشود','همبسته کردن، رویدادهای تکراری را پاک می‌کند و مدرک از بین می‌رود'],
     'Logs, metadata and scans each give unique insight. Correlated, they form a comprehensive picture of the incident.',
     'هر منبع یک تکه‌ی پازل است: فایروال می‌گوید از کجا آمد، لاگ دستگاه می‌گوید چه کرد، metadata می‌گوید کِی. با هم تصویر کامل ساخته می‌شود.');
 

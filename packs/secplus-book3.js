@@ -16,8 +16,8 @@
   M(T1,'A user installs a free "PDF converter" from a forum. It converts files as promised, but it also opens a hidden connection that lets an attacker control the PC. What is it?',
     'کاربری یک «مبدل PDF» رایگان را از یک انجمن نصب می‌کند. فایل‌ها را واقعاً تبدیل می‌کند، اما یک اتصال مخفی هم باز می‌کند که مهاجم کامپیوتر را کنترل کند. این چیست؟',
     'ظاهر مفید، کار مخفی؛ کاربر خودش اجرایش کرد.',
-    ['A remote access Trojan (RAT)','A worm','A logic bomb','Bloatware'],
-    ['تروجان دسترسی از راه دور (RAT)','کرم (Worm)','بمب منطقی','Bloatware'],
+    ['A remote access Trojan (RAT)','A worm that spreads over the network','A logic bomb that waits for a date','Bloatware installed by the vendor'],
+    ['تروجان دسترسی از راه دور (RAT)','کرمی که در شبکه پخش می‌شود','بمب منطقی که منتظر یک تاریخ است','Bloatware نصب‌شده توسط سازنده'],
     'A Trojan disguises itself as legitimate software and depends on the user running it. A RAT is a Trojan that gives the attacker remote control. Awareness, software restrictions and EDR are the main defenses.',
     'تروجان خودش را نرم‌افزار سالم جا می‌زند و به اجرا شدن توسط کاربر وابسته است. RAT نوعی تروجان است که به مهاجم کنترل از راه دور می‌دهد. آموزش کاربر، محدود کردن نرم‌افزار و EDR دفاع‌های اصلی‌اند.');
 
@@ -64,8 +64,8 @@
   M(T1,'New laptops arrive with a trial game, a toolbar and a "PC optimizer" installed by the manufacturer. Nobody asked for them. What is the main issue and fix?',
     'لپ‌تاپ‌های جدید با یک بازی آزمایشی، یک نوار ابزار و یک «بهینه‌ساز» که سازنده نصب کرده می‌رسند. کسی آن‌ها را نخواسته. مشکل اصلی و راه‌حل چیست؟',
     'بدخواه نیست، فقط ناخواسته است.',
-    ['Bloatware; it wastes resources and adds attack surface, so remove it or use a clean image','Ransomware; restore from backup','A rootkit; rebuild the BIOS','A worm; isolate the network segment'],
-    ['Bloatware؛ منابع را هدر می‌دهد و سطح حمله را زیاد می‌کند، پس حذفش کن یا ایمیج تمیز نصب کن','باج‌افزار؛ از پشتیبان بازگردانی کن','روت‌کیت؛ BIOS را بازسازی کن','کرم؛ آن بخش شبکه را جدا کن'],
+    ['Bloatware; it wastes resources and adds attack surface, so remove it','Ransomware; restore the laptops from the latest clean backup','A rootkit; reflash the BIOS on every laptop before use','A worm; isolate the network segment the laptops are on'],
+    ['Bloatware؛ منابع را هدر می‌دهد و سطح حمله را زیاد می‌کند، پس حذفش کن','باج‌افزار؛ لپ‌تاپ‌ها را از آخرین پشتیبان سالم بازگردانی کن','روت‌کیت؛ قبل از استفاده BIOS همه‌ی لپ‌تاپ‌ها را دوباره بنویس','کرم؛ بخشی از شبکه را که لپ‌تاپ‌ها در آن هستند جدا کن'],
     'Bloatware is unwanted software preinstalled by manufacturers. It is not usually malicious and has no real IoCs, but it uses disk, memory and CPU and may be vulnerable. Uninstall it or deploy a clean OS image.',
     'Bloatware نرم‌افزار ناخواسته‌ای است که سازنده از قبل نصب کرده. معمولاً بدخواه نیست و IoC واقعی ندارد، اما دیسک، حافظه و CPU مصرف می‌کند و ممکن است آسیب‌پذیر باشد. حذفش کن یا یک ایمیج تمیز سیستم‌عامل نصب کن.');
 
@@ -88,8 +88,8 @@
   M(T1,'Thousands of home routers infected with the same malware wait for instructions from a central server, then all flood one website at once. What are the infected routers?',
     'هزاران روتر خانگی آلوده به یک بدافزار منتظر دستور از یک سرور مرکزی می‌مانند و بعد همه با هم یک سایت را غرق درخواست می‌کنند. روترهای آلوده چه هستند؟',
     'زیر فرمان مرکزی.',
-    ['Bots in a botnet controlled by command and control (C&C)','Logic bombs','Bloatware','Keyloggers'],
-    ['بات‌هایی در یک بات‌نت تحت کنترل سرور فرماندهی (C&C)','بمب‌های منطقی','Bloatware','Keyloggerها'],
+    ['Bots in a botnet run from a C&C server','Logic bombs set to go off on a date','Bloatware added by the router maker','Keyloggers that record typed passwords'],
+    ['بات‌هایی در یک بات‌نت که از سرور C&C کنترل می‌شوند','بمب‌های منطقی که در یک تاریخ فعال می‌شوند','Bloatware که سازنده‌ی روتر اضافه کرده','Keyloggerهایی که رمزهای تایپ‌شده را ضبط می‌کنند'],
     'A bot is a system under an attacker\'s central control; a group of bots is a botnet. Command and control (C&C) often uses encrypted HTTP to changing hosts, though IRC (port 6667) is still seen.',
     'بات سیستمی است زیر کنترل مرکزی مهاجم؛ گروهی از بات‌ها بات‌نت است. فرماندهی و کنترل (C&C) اغلب از HTTP رمزگذاری‌شده به میزبان‌های متغیر استفاده می‌کند، هرچند IRC (پورت ۶۶۶۷) هنوز دیده می‌شود.');
 
@@ -105,8 +105,8 @@
   M(T2,'Users see a note on their screens demanding Bitcoin, and their files now end in ".locked" and will not open. Which malware does this indicate?',
     'کاربران روی صفحه یادداشتی می‌بینند که بیت‌کوین می‌خواهد و فایل‌هایشان حالا با «.locked» تمام می‌شوند و باز نمی‌شوند. این نشانه‌ی کدام بدافزار است؟',
     'رمزگذاری + درخواست پول.',
-    ['Ransomware (crypto malware)','Spyware','Bloatware','A rootkit'],
-    ['باج‌افزار (Crypto malware)','جاسوس‌افزار','Bloatware','روت‌کیت'],
+    ['Ransomware (crypto malware)','Spyware that watches the user','Bloatware from the vendor','A rootkit hiding in the kernel'],
+    ['باج‌افزار (Crypto malware)','جاسوس‌افزار که کاربر را می‌پاید','Bloatware از طرف سازنده','روت‌کیتی که در هسته پنهان شده'],
     'Ransomware IoCs include encrypted files, ransom notes, C&C traffic, lateral movement, misuse of legitimate tools and large outbound transfers (data stolen before encryption for extra pressure).',
     'IoCهای باج‌افزار: فایل‌های رمزگذاری‌شده، یادداشت باج، ترافیک C&C، حرکت جانبی، سوءاستفاده از ابزارهای سالم و انتقال حجم زیاد داده به بیرون (دزدیدن داده قبل از رمزگذاری برای فشار بیشتر).');
 
@@ -121,8 +121,8 @@
   M(T2,'The firewall shows a workstation repeatedly connecting to an unknown host on TCP port 6667. What is the most likely explanation?',
     'فایروال نشان می‌دهد یک کامپیوتر مرتب به یک میزبان ناشناس روی پورت TCP ۶۶۶۷ وصل می‌شود. محتمل‌ترین توضیح چیست؟',
     'پورت IRC.',
-    ['The workstation is a bot talking to command and control','The user is browsing secure websites','A backup job is running','The workstation is downloading OS updates'],
-    ['کامپیوتر یک بات است که با سرور C&C حرف می‌زند','کاربر سایت‌های امن را مرور می‌کند','یک کار پشتیبان‌گیری در حال اجراست','کامپیوتر آپدیت سیستم‌عامل می‌گیرد'],
+    ['The workstation is a bot talking to a C&C server','The user is browsing secure HTTPS websites','A scheduled backup job is copying files','The workstation is downloading OS updates'],
+    ['کامپیوتر یک بات است که با سرور C&C حرف می‌زند','کاربر سایت‌های امن HTTPS را مرور می‌کند','یک کار پشتیبان‌گیری زمان‌بندی‌شده فایل کپی می‌کند','کامپیوتر آپدیت سیستم‌عامل دانلود می‌کند'],
     'Port 6667 is the classic IRC port, long used for botnet command and control. Unexpected outbound connections to unknown hosts are a sign a system may be part of a botnet.',
     'پورت ۶۶۶۷ پورت کلاسیک IRC است که مدت‌ها برای فرماندهی بات‌نت استفاده شده. اتصال‌های غیرمنتظره به میزبان‌های ناشناس نشانه‌ی این است که سیستم ممکن است عضو بات‌نت باشد.');
 
@@ -146,32 +146,32 @@
   M(T3,'What is the single most important preparation for surviving a ransomware attack?',
     'مهم‌ترین آمادگی برای جان سالم به در بردن از حمله‌ی باج‌افزار چیست؟',
     'اگر فایل‌ها قفل شدند، از کجا برشان می‌گردانی؟',
-    ['Backups stored separately where the ransomware cannot reach them','Paying the ransom quickly','A larger hard drive','Turning off antivirus updates'],
-    ['پشتیبان در جای جدا که باج‌افزار به آن نرسد','پرداخت سریع باج','هارد بزرگ‌تر','خاموش کردن آپدیت آنتی‌ویروس'],
+    ['Separate backups the ransomware cannot reach','Paying the ransom quickly to get the key','A larger hard drive with more free space','Turning off antivirus updates to save time'],
+    ['پشتیبان جدا که باج‌افزار به آن نرسد','پرداخت سریع باج برای گرفتن کلید','هارد بزرگ‌تر با فضای خالی بیشتر','خاموش کردن آپدیت آنتی‌ویروس برای صرفه‌جویی وقت'],
     'Separate (offline or isolated) backups let you restore without paying. Paying does not guarantee files back; sometimes attackers just ask for more. Some ransomware families have public decryption tools.',
     'پشتیبان جدا (آفلاین یا ایزوله) اجازه می‌دهد بدون پرداخت بازگردانی کنی. پرداخت تضمینی برای برگشتن فایل‌ها نیست؛ گاهی مهاجمان فقط پول بیشتری می‌خواهند. برای بعضی خانواده‌های باج‌افزار ابزار رمزگشایی عمومی وجود دارد.');
 
   M(T3,'Antimalware on a suspected rootkit machine reports "no threats," but network logs still show C&C traffic. What should the analyst do next?',
     'ضدبدافزار روی کامپیوتری که به روت‌کیت مشکوک است «هیچ تهدیدی» گزارش می‌دهد، اما لاگ شبکه هنوز ترافیک C&C نشان می‌دهد. تحلیلگر بعد چه کند؟',
     'به سیستم‌عامل آلوده اعتماد نکن.',
-    ['Remove the drive and scan it from a trusted system','Run the same scan again','Disable the antivirus','Close the case as a false alarm'],
-    ['دیسک را جدا کن و از یک سیستم مطمئن اسکنش کن','همان اسکن را دوباره اجرا کن','آنتی‌ویروس را خاموش کن','پرونده را به‌عنوان هشدار اشتباه ببند'],
+    ['Remove the drive and scan it from a trusted system','Run the same scan again to confirm the result','Disable the antivirus so the rootkit shows itself','Close the case, since the scan found no threats'],
+    ['دیسک را جدا کن و از یک سیستم مطمئن اسکنش کن','همان اسکن را دوباره اجرا کن تا نتیجه تأیید شود','آنتی‌ویروس را خاموش کن تا روت‌کیت خودش را نشان دهد','پرونده را ببند، چون اسکن تهدیدی پیدا نکرد'],
     'A rootkit can make the running OS lie to security tools. Mounting the drive on another system (or scanning a VM snapshot) means the rootkit is not running and cannot hide.',
     'روت‌کیت می‌تواند سیستم‌عامل در حال اجرا را وادار کند به ابزارهای امنیتی دروغ بگوید. وصل کردن دیسک به سیستم دیگر (یا اسکن Snapshot ماشین مجازی) یعنی روت‌کیت اجرا نمی‌شود و نمی‌تواند پنهان شود.');
 
   M(T3,'A team wants to be certain a complex infection is fully gone from a workstation. What is the most reliable approach?',
     'تیمی می‌خواهد مطمئن شود یک آلودگی پیچیده کاملاً از یک کامپیوتر پاک شده. قابل اعتمادترین روش چیست؟',
     'شروع از صفر.',
-    ['Wipe the drive and reinstall or reimage from known good media','Run three different antivirus tools','Quarantine every detected file','Delete the user profile'],
-    ['دیسک را پاک کن و از رسانه‌ی سالم دوباره نصب یا Reimage کن','سه آنتی‌ویروس مختلف اجرا کن','همه‌ی فایل‌های شناسایی‌شده را قرنطینه کن','پروفایل کاربر را حذف کن'],
+    ['Wipe the drive and reimage from known good media','Run three different antivirus tools one after another','Quarantine every file that the scanners detect','Delete the user\'s profile and create a new one'],
+    ['دیسک را پاک کن و از رسانه‌ی سالم Reimage کن','سه آنتی‌ویروس مختلف را پشت سر هم اجرا کن','همه‌ی فایل‌هایی را که اسکنرها پیدا می‌کنند قرنطینه کن','پروفایل کاربر را حذف کن و یک پروفایل تازه بساز'],
     'It is very hard to prove every part of a complex infection was removed by tools. Wiping and reimaging (or restoring a known good backup) is standard practice. Rare BIOS/UEFI malware may survive even that.',
     'ثابت کردن اینکه ابزارها همه‌ی بخش‌های یک آلودگی پیچیده را پاک کرده‌اند خیلی سخت است. پاک کردن و Reimage (یا بازگردانی پشتیبان سالم) روش استاندارد است. بدافزار نادر BIOS/UEFI ممکن است حتی از این هم جان سالم به در ببرد.');
 
   M(T3,'Which control best stops a worm from spreading between departments once one machine is infected?',
     'وقتی یک کامپیوتر آلوده شد، کدام کنترل بهتر جلوی پخش کرم بین دپارتمان‌ها را می‌گیرد؟',
     'اگر دستگاه‌ها نتوانند با هم حرف بزنند…',
-    ['Network segmentation with firewall and IPS rules','Security awareness posters','Longer passwords','Code review'],
-    ['بخش‌بندی شبکه با قوانین فایروال و IPS','پوستر آموزش امنیت','رمزهای طولانی‌تر','بازبینی کد'],
+    ['Network segmentation with firewall and IPS rules','Security awareness posters in every department','Longer passwords for every user account','Code review of the department\'s applications'],
+    ['بخش‌بندی شبکه با قوانین فایروال و IPS','پوستر آموزش امنیت در همه‌ی بخش‌ها','رمز طولانی‌تر برای همه‌ی حساب‌های کاربری','بازبینی کد برنامه‌های آن بخش'],
     'Worms need to reach other vulnerable systems. Firewalls, IPS and segmentation block that path, and patching removes the hole. After infection, antimalware/EDR or a full reinstall cleans up.',
     'کرم باید به سیستم‌های آسیب‌پذیر دیگر برسد. فایروال، IPS و بخش‌بندی این مسیر را می‌بندند و وصله سوراخ را از بین می‌برد. بعد از آلودگی، ضدبدافزار/EDR یا نصب مجدد کامل پاک‌سازی می‌کند.');
 

@@ -19,8 +19,8 @@
   M(T1,'What is security governance?',
     'حاکمیت امنیت (Security governance) چیست؟',
     'قانون‌ها، نقش‌ها و اینکه چه کسی تصمیم می‌گیرد.',
-    ['The framework of policies, processes and decision-making authority that makes security meet business and legal goals','A tool that scans for vulnerabilities','A type of firewall rule','Encrypting all company data'],
-    ['چارچوب قانون‌ها، روندها و اختیار تصمیم‌گیری که امنیت را با اهداف کسب‌وکار و قانون هماهنگ می‌کند','ابزاری برای اسکن آسیب‌پذیری','نوعی قانون فایروال','رمزگذاری همه‌ی داده‌های شرکت'],
+    ['The policies, processes and decision rights that align security with business and law','A tool that scans the network every week for known software vulnerabilities','A set of firewall rules that controls traffic between business units','A company-wide program for encrypting all data at rest and in transit'],
+    ['قانون‌ها، روندها و اختیار تصمیم که امنیت را با کسب‌وکار و قانون هماهنگ می‌کند','ابزاری که هر هفته شبکه را برای آسیب‌پذیری‌های شناخته‌شده اسکن می‌کند','مجموعه‌ای از قوانین فایروال که ترافیک بین واحدها را کنترل می‌کند','یک برنامه‌ی سراسری برای رمزگذاری همه‌ی داده‌های ذخیره‌شده و در حال انتقال'],
     'Governance aligns security with business goals, laws and best practices through accountability, responsibility and oversight.',
     'Governance یعنی «چه کسی رئیس است و قانون چیست». مثل قانون اساسی و دولت یک کشور: مشخص می‌کند چه کسی تصمیم می‌گیرد، چه کسی مسئول است و چه کسی نظارت می‌کند.');
 
@@ -59,7 +59,7 @@
   M(T1,'Which plan keeps critical business operations running during a disruption, while another plan restores IT systems afterward?',
     'کدام برنامه کارهای حیاتی شرکت را در زمان اختلال سرپا نگه می‌دارد، در حالی که برنامه‌ی دیگری بعد از آن سیستم‌های IT را برمی‌گرداند؟',
     'Continuity = ادامه دادن.',
-    ['Business Continuity Plan (BCP); the other is the Disaster Recovery Plan (DRP)','DRP; the other is the BCP','AUP; the other is the SDLC policy','Incident response policy; the other is the AUP'],
+    ['The BCP; the other one is the DRP','The DRP; the other one is the BCP','The AUP; the other one is the SDLC policy','The incident response policy; the other is the AUP'],
     ['BCP (تداوم کسب‌وکار)؛ دیگری DRP است','DRP؛ دیگری BCP است','AUP؛ دیگری سیاست SDLC است','سیاست پاسخ به حادثه؛ دیگری AUP است'],
     'BCP keeps the business operating during disruptions. DRP is the set of steps to restore systems after a major incident.',
     'BCP = چطور کار را ادامه بدهیم وقتی همه چیز به هم ریخته (مثلاً با کاغذ و تلفن). DRP = چطور سرورها و سیستم‌ها را دوباره راه بیندازیم.');
@@ -123,16 +123,16 @@
   M(T2,'What does SLE (Single Loss Expectancy) measure?',
     'SLE (انتظار ضرر یک‌باره) چه چیزی را اندازه می‌گیرد؟',
     'Single = یک بار.',
-    ['The expected money lost from one occurrence of a risk','How many times a risk happens per year','The yearly expected loss','The time to repair a system'],
-    ['پولی که از یک بار اتفاق افتادن ریسک از دست می‌رود','چند بار در سال اتفاق می‌افتد','ضرر سالانه','زمان تعمیر سیستم'],
+    ['The money lost from one occurrence of a risk','How many times the risk is expected each year','The total expected loss from the risk per year','The time it takes to repair the damaged system'],
+    ['پولی که از یک بار رخ دادن ریسک از دست می‌رود','چند بار در سال انتظار می‌رود ریسک رخ دهد','کل ضرر مورد انتظار از ریسک در یک سال','زمانی که تعمیر سیستم آسیب‌دیده طول می‌کشد'],
     'SLE = expected monetary loss from a single incident. It can be calculated as asset value x exposure factor (EF).',
     'SLE یعنی اگر «یک بار» این اتفاق بیفتد چقدر ضرر می‌کنی. مثلاً اگر یک لپ‌تاپ دزدیده شود و ۲۰۰۰ دلار خرج دارد، SLE = ۲۰۰۰ دلار.');
 
   M(T2,'A risk is expected to happen 3 times a year. Which value is 3?',
     'انتظار می‌رود یک ریسک سالی ۳ بار اتفاق بیفتد. عدد ۳ کدام مقدار است؟',
     'Rate = نرخ، Annual = سالانه.',
-    ['ARO (Annualized Rate of Occurrence)','SLE','ALE','EF'],
-    ['ARO (تعداد بار در سال)','SLE','ALE','EF'],
+    ['ARO (annualized rate of occurrence)','SLE (single loss expectancy)','ALE (annualized loss expectancy)','EF (exposure factor)'],
+    ['ARO (تعداد بار در سال)','SLE (ضرر یک بار)','ALE (ضرر سالانه)','EF (ضریب آسیب)'],
     'ARO is how often a risk is expected to occur in one year.',
     'ARO یعنی «سالی چند بار». اگر سالی ۳ بار اتفاق بیفتد، ARO = ۳. اگر هر ۱۰ سال یک بار، ARO = ۰٫۱.');
 
@@ -155,8 +155,8 @@
   M(T2,'What is the exposure factor (EF)?',
     'Exposure factor (EF) چیست؟',
     'چند درصد از دست می‌رود؟',
-    ['The percentage of an asset lost if the risk occurs','The number of attacks per year','The cost of insurance','The recovery time'],
-    ['درصدی از دارایی که اگر ریسک رخ دهد از دست می‌رود','تعداد حمله در سال','هزینه‌ی بیمه','زمان بازیابی'],
+    ['The percentage of an asset lost if the risk occurs','The number of attacks expected against the asset per year','The yearly cost of insuring the asset against the risk','The time needed to recover the asset after an incident'],
+    ['درصدی از دارایی که اگر ریسک رخ دهد از دست می‌رود','تعداد حمله‌ی مورد انتظار به دارایی در سال','هزینه‌ی سالانه‌ی بیمه‌ی دارایی در برابر ریسک','زمان لازم برای بازیابی دارایی بعد از حادثه'],
     'EF is the percentage of asset value lost in one incident. SLE = asset value x EF.',
     'EF یعنی «چند درصد خراب می‌شود». اگر آتش نصف انبار را بسوزاند، EF = ۵۰٪.');
 
@@ -219,8 +219,8 @@
   M(T2,'What is the difference between risk appetite and risk tolerance?',
     'فرق risk appetite و risk tolerance چیست؟',
     'یکی «چقدر می‌خواهی»، یکی «چقدر انحراف قبول است».',
-    ['Appetite is the risk you are willing to take for your goals; tolerance is the acceptable variation around it','They are exactly the same','Tolerance is only for insurance','Appetite is a legal requirement'],
-    ['Appetite یعنی چقدر ریسک برای هدف‌هایت قبول می‌کنی؛ Tolerance یعنی چقدر انحراف از آن قابل قبول است','دقیقاً یکی هستند','Tolerance فقط برای بیمه است','Appetite یک الزام قانونی است'],
+    ['Appetite is the risk you accept for your goals; tolerance is the allowed deviation','They mean exactly the same thing and can be used in place of each other','Tolerance applies only to insurance, while appetite applies to everything else','Appetite is a legal requirement set by regulators for each industry'],
+    ['Appetite ریسکی است که برای هدف‌هایت قبول می‌کنی؛ Tolerance انحراف مجاز از آن است','دقیقاً یک معنی دارند و می‌شود به جای هم به کار برد','Tolerance فقط برای بیمه است و Appetite برای بقیه‌ی چیزها','Appetite یک الزام قانونی است که ناظر برای هر صنعت تعیین می‌کند'],
     'Risk appetite is the overall level of risk an organization accepts in pursuit of goals. Risk tolerance is the acceptable variation in performance relative to those objectives.',
     'Appetite مثل اینکه بگویی «من غذای کمی تند دوست دارم». Tolerance یعنی «تا این حد تندی را تحمل می‌کنم، بیشتر نه».');
 
@@ -267,16 +267,16 @@
   M(T3,'What is the purpose of a Business Impact Analysis (BIA)?',
     'هدف تحلیل اثر بر کسب‌وکار (BIA) چیست؟',
     'اگر این سیستم بخوابد، چه به سر کار می‌آید؟',
-    ['Predict the effects of disruptions and prioritize recovery','Find every software bug','Choose a new logo','Test employees with phishing emails'],
-    ['پیش‌بینی اثر اختلال‌ها و اولویت‌بندی بازیابی','پیدا کردن همه‌ی باگ‌های نرم‌افزار','انتخاب لوگوی جدید','امتحان کارمندها با ایمیل فیشینگ'],
+    ['Predict the effects of disruptions and set recovery priorities','Find every bug in the company\'s in-house software','Choose a new logo and brand after a public incident','Test employees by sending them fake phishing emails'],
+    ['پیش‌بینی اثر اختلال‌ها و تعیین اولویت بازیابی','پیدا کردن همه‌ی باگ‌های نرم‌افزارهای داخلی شرکت','انتخاب لوگو و برند جدید بعد از یک حادثه‌ی عمومی','امتحان کارمندها با فرستادن ایمیل فیشینگ جعلی'],
     'A BIA predicts how disruptions affect operations and sets recovery priorities using metrics like RTO, RPO, MTTR and MTBF. It feeds DR and BC planning.',
     'BIA می‌پرسد: اگر هر سیستم خراب شود، چقدر ضرر می‌کنیم و کدام را باید اول درست کنیم؟ جواب‌ها برنامه‌ی بازیابی را می‌سازند.');
 
   M(T4,'Attackers break into a small HVAC vendor that has remote access to a retailer\'s network, and then reach the retailer\'s payment systems. Which risk is this?',
     'هکرها وارد یک شرکت کوچک تعمیر تهویه می‌شوند که به شبکه‌ی یک فروشگاه بزرگ دسترسی از راه دور دارد، و از آنجا به سیستم پرداخت فروشگاه می‌رسند. این کدام ریسک است؟',
     'از راه «شخص ثالث».',
-    ['Third-party (vendor access) risk','Privilege creep','Data sovereignty','False negative'],
-    ['ریسک شخص ثالث (دسترسی فروشنده)','جمع شدن دسترسی','حاکمیت داده','False negative'],
+    ['Third-party (vendor access) risk','Privilege creep on employee accounts','Data sovereignty for payment data','A false negative in the retailer\'s IDS'],
+    ['ریسک شخص ثالث (دسترسی فروشنده)','جمع شدن دسترسی روی حساب کارمندان','حاکمیت داده برای داده‌ی پرداخت','False Negative در IDS فروشگاه'],
     'Third parties with access can be exploited by attackers. Supply chain compromises can cascade into the organization.',
     'ریسک شخص ثالث یعنی دزد از در پشتی که به پیمانکار داده‌ای وارد می‌شود. امنیت تو به اندازه‌ی ضعیف‌ترین شریکت است.');
 
@@ -299,32 +299,32 @@
   M(T4,'Which agreement defines a vendor\'s uptime, response times and penalties if it misses them?',
     'کدام توافق‌نامه زمان روشن بودن سرویس، زمان پاسخ و جریمه در صورت کوتاهی فروشنده را مشخص می‌کند؟',
     'سطح سرویس.',
-    ['SLA (Service-Level Agreement)','NDA','MOU','BPA'],
-    ['SLA (توافق سطح خدمات)','NDA','MOU','BPA'],
+    ['SLA (service-level agreement)','NDA (non-disclosure agreement)','MOU (memorandum of understanding)','BPA (business partner agreement)'],
+    ['SLA (توافق سطح خدمات)','NDA (توافق عدم افشا)','MOU (تفاهم‌نامه)','BPA (توافق شریک تجاری)'],
     'An SLA defines performance metrics, availability, response times and penalties for non-compliance.',
     'SLA مثل قول پیتزافروشی است: «۳۰ دقیقه‌ای می‌رسانیم، وگرنه مجانی». اعداد دقیق و جریمه دارد.');
 
   M(T4,'Two companies want to write down their shared intentions before a formal contract, without it being legally binding. Which document fits?',
     'دو شرکت می‌خواهند قبل از قرارداد رسمی، قصد مشترکشان را بنویسند بدون اینکه از نظر قانونی الزام‌آور باشد. کدام سند مناسب است؟',
     'تفاهم‌نامه.',
-    ['MOU (Memorandum of Understanding)','SLA','NDA','BPA'],
-    ['MOU (تفاهم‌نامه)','SLA','NDA','BPA'],
+    ['MOU (memorandum of understanding)','SLA (service-level agreement)','NDA (non-disclosure agreement)','BPA (business partner agreement)'],
+    ['MOU (تفاهم‌نامه)','SLA (توافق سطح خدمات)','NDA (توافق عدم افشا)','BPA (توافق شریک تجاری)'],
     'An MOU is a non-binding document expressing mutual intentions, often before formal contracts.',
     'MOU تفاهم‌نامه است: «ما قصد داریم با هم کار کنیم». هنوز قرارداد محکم نیست و الزام قانونی ندارد.');
 
   M(T4,'Which agreement legally stops a vendor from sharing your confidential information?',
     'کدام توافق‌نامه از نظر قانونی جلوی فاش کردن اطلاعات محرمانه‌ی تو توسط فروشنده را می‌گیرد؟',
     'عدم افشا.',
-    ['NDA (Non-Disclosure Agreement)','MOU','SLA','AUP'],
-    ['NDA (توافق عدم افشا)','MOU','SLA','AUP'],
+    ['NDA (non-disclosure agreement)','MOU (memorandum of understanding)','SLA (service-level agreement)','AUP (acceptable use policy)'],
+    ['NDA (توافق عدم افشا)','MOU (تفاهم‌نامه)','SLA (توافق سطح خدمات)','AUP (سیاست استفاده‌ی قابل قبول)'],
     'An NDA legally prohibits unauthorized sharing or use of confidential information.',
     'NDA یعنی «قول می‌دهم رازت را به کسی نگویم» و اگر بگوید، می‌شود از او شکایت کرد.');
 
   M(T4,'Two firms enter a long-term partnership and write down each side\'s roles, shared obligations and joint security requirements. Which agreement is this?',
     'دو شرکت وارد یک شراکت بلندمدت می‌شوند و نقش هر طرف، تعهدهای مشترک و الزامات امنیتی مشترک را می‌نویسند. کدام توافق‌نامه است؟',
     'توافق «شریک تجاری».',
-    ['BPA (Business Partner Agreement)','SLA','NDA','MOU'],
-    ['BPA (توافق شریک تجاری)','SLA','NDA','MOU'],
+    ['BPA (business partner agreement)','SLA (service-level agreement)','NDA (non-disclosure agreement)','MOU (memorandum of understanding)'],
+    ['BPA (توافق شریک تجاری)','SLA (توافق سطح خدمات)','NDA (توافق عدم افشا)','MOU (تفاهم‌نامه)'],
     'A BPA outlines roles, responsibilities and shared obligations in a long-term partnership, often including joint security and compliance requirements.',
     'BPA قرارداد شراکت است: چه کسی چه کاری می‌کند، سود و مسئولیت چطور تقسیم می‌شود.');
 
@@ -339,8 +339,8 @@
   M(T5,'What can happen to an organization that fails to comply with regulations?',
     'سازمانی که قوانین را رعایت نکند، چه اتفاقی ممکن است برایش بیفتد؟',
     'پول، مجوز، آبرو.',
-    ['Fines, sanctions, loss of licenses and reputational damage','Automatic tax refunds','Faster network speed','Nothing, compliance is optional'],
-    ['جریمه، تحریم، از دست دادن مجوز و آسیب به آبرو','بازگشت خودکار مالیات','شبکه‌ی سریع‌تر','هیچ؛ انطباق اختیاری است'],
+    ['Fines, sanctions, lost licenses and reputation damage','Automatic tax refunds for reporting the failure','Faster network speed after the audit is closed','Nothing, because compliance is always optional'],
+    ['جریمه، تحریم، از دست دادن مجوز و آسیب به آبرو','بازگشت خودکار مالیات برای گزارش دادن کوتاهی','شبکه‌ی سریع‌تر بعد از بسته شدن ممیزی','هیچ، چون انطباق همیشه اختیاری است'],
     'Non-compliance can bring financial penalties, sanctions, operational restrictions, loss of licenses and severe reputational damage.',
     'اگر قانون را رعایت نکنی: جریمه می‌شوی، ممکن است مجوز کارت را بگیرند، و مشتری‌ها دیگر به تو اعتماد نمی‌کنند.');
 
@@ -355,8 +355,8 @@
   M(T5,'Why should an organization keep a data inventory and retention schedule for personal data?',
     'چرا سازمان باید فهرست داده‌ها و برنامه‌ی مدت نگه‌داری برای داده‌های شخصی داشته باشد؟',
     'بدانی چه داری و تا کی نگهش داری.',
-    ['To know what personal data it holds and keep it only as long as needed','To keep all data forever','To share data with partners freely','To avoid encrypting data'],
-    ['تا بداند چه داده‌ی شخصی دارد و فقط به اندازه‌ی لازم نگهش دارد','تا همه‌ی داده‌ها را برای همیشه نگه دارد','تا داده را آزادانه با شریک‌ها به اشتراک بگذارد','تا داده را رمزگذاری نکند'],
+    ['To know what personal data it has and keep it only as long as needed','To keep every record forever in case it is ever needed again later','To share personal data freely with partners once it is inventoried','To avoid encrypting the data, since it is already listed and tracked'],
+    ['تا بداند چه داده‌ی شخصی دارد و فقط به اندازه‌ی لازم نگهش دارد','تا همه‌ی رکوردها را برای همیشه نگه دارد، شاید بعداً لازم شود','تا بعد از فهرست کردن، داده‌ی شخصی را آزادانه با شریک‌ها به اشتراک بگذارد','تا داده را رمزگذاری نکند، چون از قبل فهرست و پیگیری شده'],
     'A data inventory records what personal data is collected, processed and stored. Retention schedules keep data only as long as necessary, balancing business and legal needs.',
     'اگر ندانی چه داده‌ای کجاست، نمی‌توانی از آن محافظت کنی یا به موقع پاکش کنی. داده‌ای که بی‌دلیل نگه داشته شود فقط خطر نشت را بیشتر می‌کند.');
 
@@ -443,32 +443,32 @@
   M(T7,'Why do organizations run security awareness training?',
     'چرا سازمان‌ها آموزش آگاهی امنیتی برگزار می‌کنند؟',
     'ضعیف‌ترین حلقه کیست؟',
-    ['To reduce human-factor risk by adding a human layer to defense in depth','To replace all firewalls','Because training removes the need for MFA','To increase alert fatigue'],
-    ['تا ریسک خطای انسانی کم شود و یک لایه‌ی انسانی به دفاع اضافه شود','تا جای همه‌ی فایروال‌ها را بگیرد','چون آموزش نیاز به MFA را حذف می‌کند','تا هشدارهای بیشتری بیاید'],
+    ['To reduce human error by adding a human layer to the defense','To replace the company\'s firewalls with trained employees','Because trained staff no longer need MFA on their accounts','To create more alerts so the SOC stays busy and alert'],
+    ['تا خطای انسانی کم شود و یک لایه‌ی انسانی به دفاع اضافه شود','تا کارمندان آموزش‌دیده جای فایروال‌های شرکت را بگیرند','چون کارمندان آموزش‌دیده دیگر روی حسابشان MFA لازم ندارند','تا هشدار بیشتری بیاید و SOC همیشه مشغول و هوشیار بماند'],
     'Awareness programs teach people to recognize and respond to threats. They complement technical controls as part of defense in depth.',
     'بیشتر حمله‌ها با یک آدم شروع می‌شوند که روی لینک بد کلیک می‌کند. آموزش، کارمندها را به یک لایه‌ی دفاعی تبدیل می‌کند.');
 
   M(T7,'Which is a common sign of a phishing email?',
     'کدام یک نشانه‌ی رایج ایمیل فیشینگ است؟',
     'فوری، عجیب، اشتباه تایپی.',
-    ['An urgent request from a mismatched sender address with a generic greeting','A message from a coworker you were expecting','A newsletter you subscribed to','An email with a correct, known sender and no links'],
-    ['درخواست فوری از آدرس فرستنده‌ی عجیب با سلام کلی','پیامی از همکاری که منتظرش بودی','خبرنامه‌ای که عضوش شدی','ایمیل از فرستنده‌ی درست و شناخته‌شده بدون لینک'],
+    ['An urgent request from an odd sender address','A message from a coworker you were expecting','A monthly newsletter you signed up for yourself','An email from a known sender with no links in it'],
+    ['درخواست فوری از یک آدرس فرستنده‌ی عجیب','پیامی از همکاری که منتظرش بودی','خبرنامه‌ی ماهانه‌ای که خودت عضوش شدی','ایمیل از یک فرستنده‌ی آشنا بدون هیچ لینکی'],
     'Phishing signs: mismatched sender addresses, urgency or too-good-to-be-true offers, poor grammar, generic greetings and links whose real URL differs (hover to check).',
     'نشانه‌های فیشینگ: آدرس فرستنده کمی عجیب است، می‌گوید «فوری!»، غلط املایی دارد، می‌نویسد «مشتری عزیز» به جای اسمت، و لینکش به جای دیگری می‌رود. قبل از کلیک، موس را روی لینک نگه دار.');
 
   M(T7,'An employee receives a suspicious email. What should they do?',
     'یک کارمند ایمیل مشکوکی دریافت می‌کند. چه کار باید بکند؟',
     'پاکش نکن؛ گزارشش بده.',
-    ['Report it with the reporting button and keep it in its original form','Forward it to all coworkers to warn them','Reply and ask if it is real','Delete it immediately and tell no one'],
-    ['با دکمه‌ی گزارش اعلام کند و ایمیل را به همان شکل اصلی نگه دارد','برای همه‌ی همکارها بفرستد تا خبردار شوند','جواب بدهد و بپرسد واقعی است یا نه','فوراً پاکش کند و به کسی نگوید'],
+    ['Report it with the report button and keep it as it is','Forward it to all coworkers so everyone is warned about it','Reply to the sender and ask whether the message is real','Delete it right away and do not mention it to anyone'],
+    ['با دکمه‌ی گزارش اعلامش کند و ایمیل را همان‌طور نگه دارد','برای همه‌ی همکارها بفرستد تا همه درباره‌اش خبردار شوند','به فرستنده جواب بدهد و بپرسد پیام واقعی است یا نه','فوراً پاکش کند و به هیچ‌کس چیزی نگوید'],
     'Use the designated reporting tool to alert the security team, and preserve the email in its original format for investigation.',
     'از دکمه‌ی «گزارش فیشینگ» استفاده کن و ایمیل را پاک نکن، چون تیم امنیت برای تحقیق به همان ایمیل اصلی نیاز دارد.');
 
   M(T7,'Why do companies send fake phishing emails to their own staff?',
     'چرا شرکت‌ها برای کارمندان خودشان ایمیل فیشینگ جعلی می‌فرستند؟',
     'امتحان تمرینی.',
-    ['To test readiness and give targeted training to people who click','To steal employee passwords','To punish employees publicly','To test the mail server speed'],
-    ['تا آمادگی را بسنجند و به کسانی که کلیک می‌کنند آموزش هدفمند بدهند','تا رمز کارمندها را بدزدند','تا کارمندها را جلوی همه تنبیه کنند','تا سرعت سرور ایمیل را تست کنند'],
+    ['To test readiness and train the people who click','To collect employee passwords for the IT help desk','To find and publicly punish employees who make mistakes','To measure how fast the mail server delivers messages'],
+    ['تا آمادگی را بسنجند و به کسانی که کلیک می‌کنند آموزش بدهند','تا رمز کارمندها را برای Help Desk جمع کنند','تا کارمندانی را که اشتباه می‌کنند پیدا و جلوی همه تنبیه کنند','تا ببینند سرور ایمیل پیام‌ها را با چه سرعتی می‌رساند'],
     'Phishing simulations measure readiness, identify who needs help and reinforce training.',
     'شبیه‌سازی فیشینگ مثل مانور آتش‌نشانی است: امتحان می‌کنی مردم درست واکنش نشان می‌دهند یا نه، و به کسانی که اشتباه کردند دوباره آموزش می‌دهی.');
 
