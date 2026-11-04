@@ -31,8 +31,8 @@
   M(T1,'A company stores data with a cloud provider. Which contract term best ensures it can get forensic data from the provider after an incident?',
     'شرکتی داده‌اش را نزد یک ارائه‌دهنده‌ی ابری نگه می‌دارد. کدام بند قرارداد بهتر تضمین می‌کند بعد از حادثه بتواند داده‌ی جرم‌شناسی از ارائه‌دهنده بگیرد؟',
     'از قبل در قرارداد بنویس.',
-    ['A right-to-audit / forensic cooperation clause','A nondisclosure agreement only','A shorter SLA response time','Choosing the cheapest region'],
-    ['بند حق حسابرسی / همکاری جرم‌شناسی','فقط یک NDA','زمان پاسخ کوتاه‌تر در SLA','انتخاب ارزان‌ترین منطقه'],
+    ['A right-to-audit and forensic cooperation clause','A nondisclosure agreement with the provider only','A shorter response time in the provider\'s SLA','Choosing the cheapest region for the data'],
+    ['بند حق حسابرسی و همکاری جرم‌شناسی','فقط یک NDA با ارائه‌دهنده','زمان پاسخ کوتاه‌تر در SLA ارائه‌دهنده','انتخاب ارزان‌ترین منطقه برای داده'],
     'In the cloud you usually cannot image the provider\'s hardware, so contracts should cover right to audit, access to forensic data, breach notification timeframes and which jurisdiction applies. Data location also matters for jurisdiction.',
     'در ابر معمولاً نمی‌توانی از سخت‌افزار ارائه‌دهنده Image بگیری، پس قرارداد باید حق حسابرسی، دسترسی به داده‌ی جرم‌شناسی، مهلت اطلاع‌رسانی نفوذ و قانون حاکم (Jurisdiction) را پوشش دهد. محل داده هم روی قانون حاکم اثر دارد.');
 
@@ -40,16 +40,16 @@
   M(T2,'A responder reaches a running server. Following the order of volatility, what should be captured first?',
     'یک پاسخ‌دهنده به یک سرور روشن می‌رسد. طبق ترتیب فرّاری (Order of volatility) اول چه چیزی باید گرفته شود؟',
     'چیزی که زودتر از همه از بین می‌رود.',
-    ['CPU cache, registers and RAM contents','The hard drive image','Backup tapes','Printed logs'],
-    ['Cache و رجیسترهای CPU و محتوای RAM','Image هارد دیسک','نوارهای پشتیبان','لاگ‌های چاپ‌شده'],
+    ['CPU cache, registers and RAM','A full image of the hard drive','The server\'s backup tapes','Printed copies of the logs'],
+    ['Cache و رجیسترهای CPU و RAM','Image کامل از هارد دیسک','نوارهای پشتیبان سرور','نسخه‌ی چاپی لاگ‌ها'],
     'Capture the most volatile data first: CPU registers and cache, then RAM, routing/ARP tables and running processes, temporary files, then disk, then remote logs and monitoring data, and finally backups and archives.',
     'اول فرّارترین داده را بگیر: رجیستر و Cache پردازنده، بعد RAM، جدول مسیریابی/ARP و پردازه‌های در حال اجرا، فایل‌های موقت، بعد دیسک، بعد لاگ‌های راه دور، و در آخر پشتیبان‌ها و بایگانی.');
 
   M(T2,'Which acquisition copies a drive bit by bit, including unallocated and slack space, so deleted data can be recovered later?',
     'کدام روش برداشت، دیسک را بیت به بیت کپی می‌کند، از جمله فضای تخصیص‌نیافته و Slack، تا بعداً بتوان داده‌ی پاک‌شده را بازیابی کرد؟',
     'فقط کپی فایل‌ها کافی نیست.',
-    ['A forensic disk image (e.g., dd or FTK Imager)','Copying the user folders','A file-level backup','Exporting the event log'],
-    ['Image جرم‌شناسی از دیسک (مثل dd یا FTK Imager)','کپی پوشه‌های کاربر','پشتیبان در سطح فایل','خروجی گرفتن از Event log'],
+    ['A forensic disk image (e.g., dd)','Copying the user folders to a USB drive','A file-level backup of the whole drive','Exporting the Windows event logs'],
+    ['Image جرم‌شناسی از دیسک (مثل dd)','کپی پوشه‌های کاربر روی فلش USB','پشتیبان در سطح فایل از کل دیسک','خروجی گرفتن از Event Logهای Windows'],
     'Imaging tools such as dd, FTK Imager and WinHex copy every sector, so slack space and deleted files remain available for recovery. Normal file copies miss them and also change metadata.',
     'ابزارهای Image مثل dd، FTK Imager و WinHex همه‌ی سکتورها را کپی می‌کنند، پس فضای Slack و فایل‌های پاک‌شده برای بازیابی می‌مانند. کپی معمولی فایل این‌ها را ندارد و متادیتا را هم عوض می‌کند.');
 
@@ -81,8 +81,8 @@
   M(T3,'Before and after copying a drive, an examiner computes a SHA-256 value of both the original and the image. Why?',
     'یک بازرس قبل و بعد از کپی دیسک، مقدار SHA-256 هم نسخه‌ی اصلی و هم Image را حساب می‌کند. چرا؟',
     'ثابت کن هیچ بیتی عوض نشده.',
-    ['To prove the image matches the original and has not changed','To encrypt the evidence','To compress the image','To remove malware from the image'],
-    ['برای اثبات اینکه Image با اصل یکی است و تغییر نکرده','برای رمز کردن مدرک','برای فشرده کردن Image','برای پاک کردن بدافزار از Image'],
+    ['To prove the image matches the original','To encrypt the evidence before storage','To compress the image to save space','To remove malware from the copied image'],
+    ['برای اثبات اینکه Image با اصل یکی است','برای رمز کردن مدرک قبل از نگهداری','برای فشرده کردن Image و صرفه‌جویی فضا','برای پاک کردن بدافزار از Image کپی‌شده'],
     'Matching hashes show the copy is identical and unchanged, which supports admissibility. MD5 and SHA-1 are still common in forensics; checksums detect changes but do not give the same unique fingerprint as a hash.',
     'یکی بودن هش‌ها نشان می‌دهد کپی دقیقاً همان اصل است و تغییر نکرده، که به پذیرش در دادگاه کمک می‌کند. MD5 و SHA-1 هنوز در جرم‌شناسی رایج‌اند؛ Checksum تغییر را نشان می‌دهد ولی اثر انگشت یکتای هش را نمی‌دهد.');
 
@@ -97,16 +97,16 @@
   M(T3,'For evidence to be admissible, which of these matters most?',
     'برای اینکه مدرک در دادگاه پذیرفته شود، کدام از همه مهم‌تر است؟',
     'مربوط بودن + دست‌نخورده بودن.',
-    ['It is relevant and has stayed unaltered, with documented handling','It was collected by the most senior manager','It is stored only in the cloud','It was compressed to save space'],
-    ['مربوط به پرونده باشد و دست‌نخورده مانده باشد، با ثبت نحوه‌ی نگهداری','مدیر ارشد آن را جمع کرده باشد','فقط در ابر ذخیره شده باشد','برای صرفه‌جویی فشرده شده باشد'],
+    ['It is relevant, unaltered and its handling is documented','It was collected personally by the most senior manager','It is stored only with a trusted cloud storage provider','It was compressed and archived to save storage space'],
+    ['مربوط باشد، دست‌نخورده باشد و نحوه‌ی نگهداری‌اش ثبت شده باشد','شخصاً توسط ارشدترین مدیر جمع شده باشد','فقط نزد یک ارائه‌دهنده‌ی ذخیره‌سازی ابری مطمئن باشد','برای صرفه‌جویی فضا فشرده و بایگانی شده باشد'],
     'Admissible evidence must be relevant, reliably collected and unchanged, which is shown through hashes, write blockers, documented tools and procedures, and an intact chain of custody.',
     'مدرک قابل‌پذیرش باید مربوط باشد، درست جمع شده باشد و تغییر نکرده باشد؛ این با هش، Write blocker، ثبت ابزارها و روش‌ها و یک Chain of custody کامل نشان داده می‌شود.');
 
   M(T3,'A forensic workstation log notes the tool name, version and patch level used for each step. Why is this recorded?',
     'لاگ ایستگاه جرم‌شناسی نام ابزار، نسخه و سطح وصله‌ی آن را برای هر مرحله ثبت می‌کند. چرا؟',
     'دیگران باید بتوانند کار را تکرار و بررسی کنند.',
-    ['So the process can be repeated and defended, including known tool limitations','To pass a vulnerability scan','To speed up imaging','Because licenses require it'],
-    ['تا روند قابل تکرار و قابل دفاع باشد، از جمله محدودیت‌های شناخته‌شده‌ی ابزار','برای قبول شدن در اسکن آسیب‌پذیری','برای سریع‌تر شدن Image گرفتن','چون مجوز نرم‌افزار می‌خواهد'],
+    ['So the process can be repeated and defended','To pass the workstation\'s vulnerability scan','To make the imaging process run faster','Because the software licenses require it'],
+    ['تا روند قابل تکرار و قابل دفاع باشد','برای قبول شدن در اسکن آسیب‌پذیری ایستگاه کار','برای سریع‌تر شدن Image گرفتن','چون مجوز نرم‌افزارها آن را می‌خواهد'],
     'Documenting tools, versions and settings lets another examiner reproduce the results and lets the report explain any limitations that affect the findings.',
     'ثبت ابزار، نسخه و تنظیمات اجازه می‌دهد بازرس دیگری نتیجه را تکرار کند و گزارش بتواند محدودیت‌هایی را که روی یافته‌ها اثر دارند توضیح دهد.');
 
@@ -114,32 +114,32 @@
   M(T4,'In what order does a typical forensic report present its content?',
     'یک گزارش جرم‌شناسی معمولاً محتوا را به چه ترتیبی ارائه می‌دهد؟',
     'اول خلاصه، آخر نتیجه‌گیری.',
-    ['Summary → process, tools and limitations → findings with evidence → conclusions/recommendations','Raw logs → summary → tools','Recommendations only','Timeline → invoice → summary'],
-    ['خلاصه ← روش، ابزار و محدودیت‌ها ← یافته‌ها با مدرک ← نتیجه‌گیری/پیشنهاد','لاگ خام ← خلاصه ← ابزار','فقط پیشنهادها','خط زمانی ← فاکتور ← خلاصه'],
+    ['Summary → process and tools → findings → conclusions','Raw logs → summary → tools used → invoice','Recommendations only, with no other sections','Timeline → invoice → summary → raw evidence'],
+    ['خلاصه ← روش و ابزار ← یافته‌ها ← نتیجه‌گیری','لاگ خام ← خلاصه ← ابزار ← فاکتور','فقط پیشنهادها، بدون بخش دیگر','خط زمانی ← فاکتور ← خلاصه ← مدرک خام'],
     'A good report starts with a short summary of key findings, then explains methods, tools, assumptions and limitations, then details findings with supporting evidence, and ends with conclusions and recommendations.',
     'یک گزارش خوب با خلاصه‌ی کوتاه یافته‌ها شروع می‌شود، بعد روش‌ها، ابزارها، فرض‌ها و محدودیت‌ها را توضیح می‌دهد، بعد یافته‌ها را با مدرک می‌آورد و با نتیجه‌گیری و پیشنهاد تمام می‌شود.');
 
   M(T4,'A national defense team analyzes an APT\'s malware and infrastructure to understand and counter the adversary. What use of forensics is this?',
     'یک تیم دفاع ملی بدافزار و زیرساخت یک APT را تحلیل می‌کند تا دشمن را بشناسد و با آن مقابله کند. این کدام کاربرد جرم‌شناسی است؟',
     'هدف دادگاه نیست، شناخت دشمن است.',
-    ['Strategic intelligence and counterintelligence','E-discovery','Legal hold','Data recovery for users'],
-    ['اطلاعات راهبردی و ضدجاسوسی','E-discovery','Legal hold','بازیابی داده برای کاربران'],
+    ['Strategic intelligence and counterintelligence','E-discovery for a civil lawsuit','A legal hold on company records','Data recovery for users who lost files'],
+    ['اطلاعات راهبردی و ضدجاسوسی','E-Discovery برای یک دعوای حقوقی','Legal Hold روی سوابق شرکت','بازیابی داده برای کاربرانی که فایل گم کرده‌اند'],
     'Besides legal cases and incident response, forensics supports intelligence (understanding adversary tools and methods) and counterintelligence (detecting and countering their operations).',
     'جرم‌شناسی علاوه بر پرونده‌ی حقوقی و پاسخ به حادثه، به اطلاعات (شناخت ابزار و روش دشمن) و ضدجاسوسی (کشف و خنثی کردن عملیاتش) کمک می‌کند.');
 
   M(T4,'Which forensic tool is a full suite that images drives, indexes them and lets the examiner search and build a case?',
     'کدام ابزار جرم‌شناسی یک مجموعه‌ی کامل است که از دیسک Image می‌گیرد، فهرست‌سازی می‌کند و به بازرس اجازه‌ی جست‌وجو و ساختن پرونده می‌دهد؟',
     'نه فقط کپی، بلکه تحلیل کامل.',
-    ['Autopsy or a similar forensic suite','dd','Wireshark','A write blocker'],
-    ['Autopsy یا مجموعه‌ی جرم‌شناسی مشابه','dd','Wireshark','Write blocker'],
+    ['Autopsy or a similar forensic suite','dd for making raw disk copies','Wireshark for capturing packets','A hardware write blocker'],
+    ['Autopsy یا مجموعه‌ی جرم‌شناسی مشابه','dd برای کپی خام دیسک','Wireshark برای ضبط بسته‌ها','Write Blocker سخت‌افزاری'],
     'Forensic suites such as Autopsy (and commercial ones like FTK or EnCase) combine acquisition, indexing, timelines, keyword search, file recovery and reporting. dd only copies; Wireshark analyzes network traffic.',
     'مجموعه‌های جرم‌شناسی مثل Autopsy (و نمونه‌های تجاری مثل FTK و EnCase) برداشت، فهرست‌سازی، خط زمانی، جست‌وجوی کلمه، بازیابی فایل و گزارش را با هم دارند. dd فقط کپی می‌کند؛ Wireshark ترافیک شبکه را تحلیل می‌کند.');
 
   M(T4,'A deleted file\'s directory entry is gone but its data blocks have not been overwritten. What can recover it?',
     'ورودی پوشه‌ی یک فایل پاک‌شده رفته ولی بلاک‌های داده‌اش هنوز بازنویسی نشده‌اند. با چه چیزی می‌شود آن را برگرداند؟',
     'دنبال امضای شروع فایل در بلاک‌ها بگرد.',
-    ['File carving / data recovery tools on a forensic image','A legal hold','A write blocker alone','Reinstalling the OS'],
-    ['File carving / ابزار بازیابی داده روی Image جرم‌شناسی','Legal hold','فقط Write blocker','نصب دوباره‌ی سیستم‌عامل'],
+    ['File carving on a forensic image','A legal hold on the user\'s account','A write blocker used on its own','Reinstalling the operating system'],
+    ['File Carving روی Image جرم‌شناسی','Legal Hold روی حساب کاربر','فقط یک Write Blocker به‌تنهایی','نصب دوباره‌ی سیستم‌عامل'],
     'Deleting usually removes only the pointer. Recovery tools and file carving search unallocated space for file headers and structure. This is why bit-by-bit images matter.',
     'پاک کردن معمولاً فقط اشاره‌گر را حذف می‌کند. ابزارهای بازیابی و File carving فضای تخصیص‌نیافته را برای سرآیند و ساختار فایل جست‌وجو می‌کنند. برای همین Image بیت‌به‌بیت مهم است.');
 

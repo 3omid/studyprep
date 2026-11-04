@@ -24,8 +24,8 @@
   M(T1,'Malware is written into a laptop\'s SPI flash chip. The team reinstalls the operating system and replaces the disk, but the infection returns. Why?',
     'بدافزاری داخل چیپ SPI flash یک لپ‌تاپ نوشته شده. تیم سیستم‌عامل را دوباره نصب می‌کند و دیسک را عوض می‌کند، ولی آلودگی برمی‌گردد. چرا؟',
     'بدافزار کجا نشسته؟ روی دیسک یا روی خود سخت‌افزار؟',
-    ['It lives in firmware, which an OS reinstall does not touch','The new disk came pre-infected','The OS installer was not patched','The TPM re-installed it'],
-    ['در Firmware است و نصب دوباره‌ی سیستم‌عامل به آن دست نمی‌زند','دیسک جدید از قبل آلوده بوده','نصب‌کننده‌ی سیستم‌عامل وصله نشده','TPM دوباره نصبش کرده'],
+    ['It lives in firmware, which a reinstall does not touch','The replacement disk came from the factory infected','The OS installer was an old version without patches','The TPM chip copied the malware back onto the disk'],
+    ['در Firmware است و نصب دوباره به آن دست نمی‌زند','دیسک جایگزین از کارخانه آلوده آمده بود','نصب‌کننده‌ی سیستم‌عامل نسخه‌ی قدیمی و بدون وصله بود','تراشه‌ی TPM بدافزار را دوباره روی دیسک کپی کرد'],
     'Firmware malware (like the MoonBounce UEFI implant) survives reboots, disk swaps and OS reinstalls because it sits in the board\'s flash memory. Defenses are firmware validation, secure/measured boot and trusted firmware updates.',
     'بدافزار Firmware (مثل MoonBounce در UEFI) روی حافظه‌ی فلش مادربورد است، پس با ری‌استارت، عوض کردن دیسک یا نصب دوباره‌ی سیستم‌عامل پاک نمی‌شود. راه دفاع: بررسی صحت Firmware، Secure/Measured boot و آپدیت Firmware فقط از منبع مطمئن.');
 
@@ -106,8 +106,8 @@
   M(T3,'Which of these is the best reason to uninstall unused software instead of only disabling it?',
     'بهترین دلیل برای حذف کامل نرم‌افزار بی‌استفاده، به جای فقط غیرفعال کردنش، کدام است؟',
     'چیزی که هست، می‌شود دوباره روشنش کرد.',
-    ['It cannot be re-enabled, and it shrinks the attack surface and patch load','It makes the firewall rules shorter','It speeds up incident response reports','It is required by SELinux'],
-    ['دیگر نمی‌شود دوباره فعالش کرد و سطح حمله و تعداد وصله‌ها کم می‌شود','قوانین فایروال کوتاه‌تر می‌شود','گزارش پاسخ به حادثه سریع‌تر می‌شود','SELinux آن را الزامی کرده'],
+    ['It cannot be re-enabled, and it shrinks the attack surface','It makes the firewall rule set shorter and easier to read','It speeds up the writing of incident response reports','It is a requirement of SELinux on every Linux system'],
+    ['دیگر نمی‌شود دوباره فعالش کرد و سطح حمله کم می‌شود','مجموعه‌ی قوانین فایروال کوتاه‌تر و خواناتر می‌شود','نوشتن گزارش‌های پاسخ به حادثه سریع‌تر می‌شود','روی همه‌ی سیستم‌های لینوکس الزام SELinux است'],
     'Removing software removes the chance that a disabled tool is turned back on, reduces the attack surface, and cuts how much must be patched and monitored. Many organizations reimage new devices to strip vendor bloatware.',
     'حذف نرم‌افزار احتمال روشن شدن دوباره‌ی ابزار غیرفعال را از بین می‌برد، سطح حمله را کم می‌کند و تعداد چیزهایی که باید وصله و پایش شوند کم می‌شود. خیلی سازمان‌ها روی دستگاه نو، Image خودشان را نصب می‌کنند تا نرم‌افزارهای اضافه‌ی فروشنده پاک شود.');
 
@@ -122,8 +122,8 @@
   M(T3,'An admin wants to enforce password length, disable guest accounts and block software installs on 3,000 domain-joined Windows PCs from one place. Which tool fits?',
     'یک مدیر می‌خواهد طول رمز، غیرفعال بودن حساب Guest و منع نصب نرم‌افزار را روی ۳۰۰۰ کامپیوتر ویندوزی عضو دامنه از یک جا اعمال کند. کدام ابزار مناسب است؟',
     'ابزار داخلی Active Directory.',
-    ['Group Policy Objects (GPOs)','SELinux','EDR','A HIPS'],
-    ['Group Policy (GPO)','SELinux','EDR','HIPS'],
+    ['Group Policy Objects (GPOs)','SELinux policies on each PC','EDR agents on every laptop','A host intrusion prevention system'],
+    ['Group Policy (GPO)','سیاست‌های SELinux روی هر کامپیوتر','Agentهای EDR روی هر لپ‌تاپ','سیستم جلوگیری از نفوذ میزبان (HIPS)'],
     'Group Policy applies settings through GPOs, locally or across an Active Directory domain. Microsoft\'s Security Compliance Toolkit can compare GPOs with Microsoft\'s security baselines. SELinux is the Linux equivalent area of control (mandatory access control).',
     'Group Policy تنظیمات را با GPO اعمال می‌کند، چه محلی و چه روی کل دامنه‌ی Active Directory. ابزار Security Compliance Toolkit مایکروسافت هم GPOها را با Baseline امنیتی مقایسه می‌کند. SELinux مربوط به لینوکس است (کنترل دسترسی اجباری).');
 
@@ -138,8 +138,8 @@
   M(T3,'A team takes the CIS benchmark for Windows 11, adjusts a few settings for business needs, pushes it with a management tool, and the tool keeps resetting any drift. Which baseline phase is the last part?',
     'تیمی بنچمارک CIS ویندوز ۱۱ را برمی‌دارد، چند تنظیم را برای نیاز کسب‌وکار تغییر می‌دهد، با ابزار مدیریت پخش می‌کند و ابزار هر تغییر ناخواسته را برمی‌گرداند. بخش آخر کدام مرحله‌ی Baseline است؟',
     'سه مرحله: Establish، Deploy، Maintain.',
-    ['Maintain (with configuration enforcement)','Establish','Deploy','Decommission'],
-    ['Maintain (نگهداری، با Configuration enforcement)','Establish (تعریف)','Deploy (پخش)','Decommission (کنار گذاشتن)'],
+    ['Maintain (with configuration enforcement)','Establish (defining the baseline)','Deploy (pushing out the settings)','Decommission (retiring old systems)'],
+    ['Maintain (نگهداری، با Configuration Enforcement)','Establish (تعریف Baseline)','Deploy (پخش تنظیمات)','Decommission (کنار گذاشتن سیستم‌های قدیمی)'],
     'Establish = build the baseline, often from CIS or NIST guides adjusted to your needs. Deploy = push it with central tools. Maintain = keep it in place with enforcement that corrects drift, and update the baseline when needs change.',
     'Establish = ساختن Baseline، معمولاً از روی راهنمای CIS یا NIST با تغییرات لازم. Deploy = پخش آن با ابزار مرکزی. Maintain = نگه داشتن آن با Enforcement که تغییرات ناخواسته را برمی‌گرداند، و به‌روز کردن Baseline وقتی نیاز تغییر کند.');
 
@@ -179,8 +179,8 @@
   M(T4,'Which statement about embedded systems is true?',
     'کدام جمله درباره‌ی سیستم‌های نهفته (Embedded) درست است؟',
     'به محدودیت‌ها فکر کن: پردازش، شبکه، احراز هویت.',
-    ['They often rely on implied trust: physical access is treated as authorization','They always have enough CPU for strong encryption','They are always connected and easy to patch','They always require multifactor login'],
-    ['اغلب به اعتماد ضمنی تکیه می‌کنند: دسترسی فیزیکی یعنی مجاز بودن','همیشه پردازنده‌ی کافی برای رمزگذاری قوی دارند','همیشه وصل‌اند و وصله کردنشان آسان است','همیشه ورود چندعاملی لازم دارند'],
+    ['They often treat physical access as authorization','They always have enough CPU for strong encryption','They are always online and easy to patch remotely','They always require a multifactor login to operate'],
+    ['اغلب دسترسی فیزیکی را به معنی مجاز بودن می‌گیرند','همیشه پردازنده‌ی کافی برای رمزگذاری قوی دارند','همیشه آنلاین‌اند و وصله‌ی از راه دورشان آسان است','برای کار کردن همیشه ورود چندعاملی لازم دارند'],
     'Embedded systems often have little compute, memory and storage, may have no network (so no remote patching), and may have no authentication. Many assume anyone with physical access is allowed to change them, which is a risk to plan for.',
     'سیستم‌های نهفته معمولاً پردازش، حافظه و فضای کمی دارند، شاید شبکه نداشته باشند (پس وصله‌ی از راه دور ممکن نیست) و شاید احراز هویت نداشته باشند. خیلی‌هاشان فرض می‌کنند هرکس دسترسی فیزیکی دارد مجاز است تغییرشان دهد؛ این ریسکی است که باید برایش برنامه داشت.');
 
@@ -196,8 +196,8 @@
   M(T5,'Old SSDs are being retired. Why is a standard multi-pass overwrite tool not enough?',
     'SSDهای قدیمی کنار گذاشته می‌شوند. چرا یک ابزار معمولی بازنویسی چندمرحله‌ای کافی نیست؟',
     'SSD فضای پنهان دارد.',
-    ['Wear leveling keeps copies in areas the tool cannot reach','SSDs cannot be written to more than once','Degaussing is faster for SSDs','Overwriting voids the warranty'],
-    ['Wear leveling کپی‌هایی در جاهایی نگه می‌دارد که ابزار به آن‌ها نمی‌رسد','روی SSD بیشتر از یک بار نمی‌شود نوشت','Degauss برای SSD سریع‌تر است','بازنویسی گارانتی را باطل می‌کند'],
+    ['Wear leveling keeps copies the tool cannot reach','SSDs cannot be written to more than one time','Degaussing is a faster method for wiping SSDs','Overwriting an SSD voids the maker\'s warranty'],
+    ['Wear Leveling کپی‌هایی نگه می‌دارد که ابزار به آن‌ها نمی‌رسد','روی SSD بیشتر از یک بار نمی‌شود نوشت','Degauss روش سریع‌تری برای پاک کردن SSD است','بازنویسی SSD گارانتی سازنده را باطل می‌کند'],
     'SSDs spread writes over more cells than their listed capacity, so overwriting every visible block can leave data remanence. Use the drive\'s built-in secure erase, crypto-erase (destroy the FDE key), or physical destruction. Degaussers only work on magnetic media.',
     'SSD نوشتن را روی سلول‌هایی بیشتر از ظرفیت اعلام‌شده پخش می‌کند، پس بازنویسی همه‌ی بلاک‌های قابل دیدن ممکن است داده‌ی باقی‌مانده (Remanence) بگذارد. از Secure erase داخلی دیسک، پاک کردن کلید FDE یا نابودی فیزیکی استفاده کن. Degausser فقط روی رسانه‌ی مغناطیسی کار می‌کند.');
 

@@ -40,8 +40,8 @@
   M(T1,'In Kerberos, what does a client send to the ticket-granting service when it wants to use a file server?',
     'در Kerberos، کلاینت وقتی می‌خواهد از یک فایل‌سرور استفاده کند، چه چیزی را برای Ticket-granting service می‌فرستد؟',
     'بلیتی که بعد از ورود اول گرفته.',
-    ['Its ticket-granting ticket (TGT) and the name of the service','Its password in clear text','A SAML assertion from the identity provider','An OAuth access token'],
-    ['TGT خودش و نام سرویس','رمز عبورش به صورت متن ساده','یک SAML assertion از IdP','یک OAuth access token'],
+    ['Its TGT and the name of the service','Its password, sent in clear text','A SAML assertion from the identity provider','An OAuth access token from the web portal'],
+    ['TGT خودش و نام سرویس','رمز عبورش، به صورت متن ساده','یک SAML Assertion از IdP','یک OAuth Access Token از پورتال وب'],
     'After the first login the authentication server gives the client a TGT, encrypted with the TGS key. To reach a service, the client sends the TGT and the service name to the TGS (usually part of the KDC), which returns a service ticket and session key. The password is not sent across the network.',
     'بعد از ورود اول، سرور احراز هویت یک TGT به کلاینت می‌دهد که با کلید TGS رمز شده. برای رسیدن به یک سرویس، کلاینت TGT و نام سرویس را به TGS (معمولاً بخشی از KDC) می‌فرستد و بلیت سرویس و کلید نشست می‌گیرد. رمز عبور روی شبکه فرستاده نمی‌شود.');
 
@@ -113,8 +113,8 @@
   M(T2,'What is the main security trade-off of single sign-on (SSO)?',
     'اصلی‌ترین بده‌بستان امنیتی SSO چیست؟',
     'یک کلید برای همه‌ی درها.',
-    ['One stolen login can open many systems, so strong MFA and extra checks for sensitive systems are needed','Users must remember more passwords','It cannot work with cloud services','It removes the need for authorization'],
-    ['یک ورود دزدیده‌شده می‌تواند درِ خیلی از سیستم‌ها را باز کند؛ پس MFA قوی و بررسی اضافه برای سیستم‌های حساس لازم است','کاربر باید رمزهای بیشتری به خاطر بسپارد','با سرویس‌های ابری کار نمی‌کند','دیگر به Authorization نیازی نیست'],
+    ['One stolen login opens many systems, so strong MFA is needed','Users must remember more passwords than they did before SSO','It cannot be used with cloud, SaaS or other web-based services','It removes the need to check authorization for each application'],
+    ['یک ورود دزدیده‌شده درِ خیلی از سیستم‌ها را باز می‌کند، پس MFA قوی لازم است','کاربر باید رمزهای بیشتری از قبل از SSO به خاطر بسپارد','با سرویس‌های ابری، SaaS یا سرویس‌های وب قابل استفاده نیست','نیاز به بررسی Authorization برای هر برنامه را از بین می‌برد'],
     'SSO means fewer passwords and smoother work, but fewer identity boundaries. If the single login is compromised, the attacker reaches everything it covers. Organizations add MFA and may require extra authentication or a separate privileged account for high-security systems.',
     'SSO یعنی رمز کمتر و کار راحت‌تر، اما مرزهای هویتی کمتر. اگر همان یک ورود لو برود، مهاجم به همه‌ی سیستم‌های زیر پوشش آن می‌رسد. سازمان‌ها MFA اضافه می‌کنند و برای سیستم‌های خیلی حساس احراز هویت اضافه یا حساب مدیریتی جدا می‌خواهند.');
 
@@ -122,8 +122,8 @@
   M(T3,'Which of these is in line with NIST SP 800-63B password guidance?',
     'کدام یک با راهنمای رمز عبور NIST SP 800-63B هم‌خوان است؟',
     'NIST طول را مهم‌تر از پیچیدگی می‌داند.',
-    ['Favor long passwords, allow pasting, and block passwords found in breach lists','Require at least one special character in every password','Give users password hints to reduce help desk calls','Block pasting into password fields to stop malware'],
-    ['رمز طولانی را ترجیح بده، Paste را اجازه بده و رمزهای لو رفته را رد کن','در هر رمز حداقل یک کاراکتر خاص اجباری باشد','برای کم کردن تماس با Help desk راهنمای رمز (Hint) بده','Paste در فیلد رمز را ببند تا بدافزار جلویش گرفته شود'],
+    ['Favor long passwords and block ones found in breaches','Require at least one special character in every password','Give users password hints to cut help desk calls','Block pasting into password fields to stop malware'],
+    ['رمز طولانی را ترجیح بده و رمزهای لو رفته را رد کن','در هر رمز حداقل یک کاراکتر خاص اجباری باشد','برای کم کردن تماس با Help Desk راهنمای رمز بده','Paste در فیلد رمز را ببند تا جلوی بدافزار گرفته شود'],
     'NIST favors length over complexity, does not require special characters, allows ASCII and Unicode, allows pasting so password managers work, checks new passwords against known-compromised lists, and drops password hints. It also recommends MFA, lockout after repeated failures, and salted secure hashing.',
     'NIST طول را بر پیچیدگی ترجیح می‌دهد، کاراکتر خاص را اجباری نمی‌کند، ASCII و Unicode را قبول می‌کند، Paste را اجازه می‌دهد تا Password manager کار کند، رمز جدید را با فهرست رمزهای لو رفته چک می‌کند و Hint را حذف می‌کند. MFA، قفل حساب بعد از تلاش‌های ناموفق و هش امن با Salt را هم توصیه می‌کند.');
 
@@ -162,8 +162,8 @@
   M(T3,'At 2 a.m. an attacker who knows a user\'s password sends dozens of push approval requests until the tired user taps "Approve." What is this attack, and what helps stop it?',
     'ساعت ۲ بامداد مهاجمی که رمز کاربر را می‌داند ده‌ها درخواست تأیید Push می‌فرستد تا کاربرِ خسته «تأیید» را بزند. این چه حمله‌ای است و چه چیزی کمک می‌کند جلویش گرفته شود؟',
     'خسته کردن کاربر با درخواست زیاد.',
-    ['MFA fatigue; use number matching or phishing-resistant security keys','SIM cloning; use longer passwords','Pass-the-hash; use password expiration','Brute force; use password hints'],
-    ['MFA fatigue (خسته کردن با درخواست)؛ Number matching یا کلید امنیتی مقاوم در برابر فیشینگ','شبیه‌سازی SIM؛ رمز طولانی‌تر','Pass-the-hash؛ انقضای رمز','Brute force؛ راهنمای رمز'],
+    ['MFA fatigue; number matching or security keys','SIM cloning; longer and more complex passwords','Pass-the-hash; shorter password expiration','Brute force; password hints for the user'],
+    ['MFA Fatigue؛ Number Matching یا کلید امنیتی','شبیه‌سازی SIM؛ رمز طولانی‌تر و پیچیده‌تر','Pass-the-Hash؛ انقضای کوتاه‌تر رمز','Brute Force؛ راهنمای رمز برای کاربر'],
     'Flooding a user with prompts until they approve one is MFA fatigue (push bombing). Number matching makes the user type a code shown on the login screen, and FIDO2 security keys cannot be approved remotely. SMS codes have their own risk: SIM cloning or VoIP redirection.',
     'غرق کردن کاربر با درخواست تا یکی را تأیید کند MFA fatigue (Push bombing) است. Number matching کاربر را مجبور می‌کند کدی را که روی صفحه‌ی ورود است وارد کند، و کلید امنیتی FIDO2 از راه دور قابل تأیید نیست. کد پیامکی هم خطر خودش را دارد: شبیه‌سازی SIM یا هدایت از طریق VoIP.');
 
@@ -203,32 +203,32 @@
   M(T4,'Three night-shift operators all log in with the same "ops" account. What is the biggest security problem?',
     'سه اپراتور شیفت شب همه با یک حساب مشترک «ops» وارد می‌شوند. بزرگ‌ترین مشکل امنیتی چیست؟',
     'بعد از یک حادثه، چه کسی چه کرده؟',
-    ['No one can tell which person performed an action (no accountability)','The account will run out of storage','It breaks the time-of-day restriction','The account cannot use MFA at all'],
-    ['نمی‌شود فهمید کدام نفر چه کاری کرده (پاسخگویی از بین می‌رود)','فضای ذخیره‌ی حساب پر می‌شود','محدودیت ساعت را می‌شکند','حساب اصلاً نمی‌تواند MFA داشته باشد'],
+    ['No one can tell who did what (no accountability)','The shared account will run out of storage space','It breaks the account\'s time-of-day restriction','A shared account is never able to use MFA'],
+    ['نمی‌شود فهمید چه کسی چه کاری کرده (بدون پاسخگویی)','فضای ذخیره‌ی حساب مشترک پر می‌شود','محدودیت ساعت ورود حساب را می‌شکند','حساب مشترک هیچ‌وقت نمی‌تواند MFA داشته باشد'],
     'Shared and generic accounts break accountability because logs show only the account, not the person. The password is also known by many people and rarely changed. Give each person their own account and use delegation or groups for shared rights.',
     'حساب‌های مشترک پاسخگویی را از بین می‌برند چون لاگ فقط حساب را نشان می‌دهد نه آدم را. رمز هم دست چند نفر است و کمتر عوض می‌شود. به هر نفر حساب خودش را بده و برای حق‌های مشترک از Delegation یا گروه استفاده کن.');
 
   M(T4,'A backup application runs under its own account. Which rule is most important for this account?',
     'یک برنامه‌ی پشتیبان‌گیری با حساب مخصوص خودش اجرا می‌شود. مهم‌ترین قاعده برای این حساب چیست؟',
     'حساب برنامه است، نه آدم.',
-    ['It should be a service account that is not used for interactive logins','It should be added to the guest group','It should share its password with the help desk','It should be deleted after each backup'],
-    ['باید Service account باشد و برای ورود تعاملی (لاگین آدم) استفاده نشود','باید به گروه مهمان اضافه شود','رمزش باید با Help desk به اشتراک گذاشته شود','بعد از هر پشتیبان‌گیری باید حذف شود'],
+    ['A service account with no interactive logins','Added to the guest group with limited rights','Its password shared with the help desk team','Deleted and created again after every backup'],
+    ['Service Account بدون ورود تعاملی','اضافه شدن به گروه مهمان با دسترسی محدود','اشتراک رمزش با تیم Help Desk','حذف و ساخت دوباره بعد از هر پشتیبان‌گیری'],
     'Service accounts belong to applications and services. They should have only the rights the service needs and should not be used by people to log in, so misuse stands out in logs. Their credentials are often kept in a password vault.',
     'Service account مال برنامه‌ها و سرویس‌هاست. فقط باید حق‌هایی را داشته باشد که سرویس لازم دارد و آدم‌ها نباید با آن وارد شوند، تا سوءاستفاده در لاگ معلوم شود. رمزش اغلب در Password vault نگه داشته می‌شود.');
 
   M(T4,'An employee moved from sales to finance to IT over five years and still has access from all three jobs. What is this, and what control finds it?',
     'کارمندی در پنج سال از فروش به مالی و بعد به IT رفته و هنوز دسترسی هر سه شغل را دارد. این چیست و کدام کنترل آن را پیدا می‌کند؟',
     'دسترسی‌ها مثل خزه جمع شده‌اند.',
-    ['Permission creep; regular access reviews with least privilege','Identity proofing; a new government ID check','Federation; adding a new identity provider','Password reuse; a longer password history'],
-    ['Permission creep (انباشت مجوز)؛ بازبینی منظم دسترسی‌ها با اصل کمترین دسترسی','Identity proofing؛ بررسی دوباره‌ی کارت شناسایی','Federation؛ اضافه کردن IdP جدید','استفاده‌ی دوباره از رمز؛ تاریخچه‌ی رمز طولانی‌تر'],
+    ['Permission creep; regular access reviews','Identity proofing; a new government ID check','Federation; adding a second identity provider','Password reuse; a longer password history'],
+    ['Permission Creep (انباشت مجوز)؛ بازبینی منظم دسترسی','Identity Proofing؛ بررسی دوباره‌ی کارت شناسایی دولتی','Federation؛ اضافه کردن یک IdP دوم','استفاده‌ی دوباره از رمز؛ تاریخچه‌ی رمز طولانی‌تر'],
     'Permission (privilege) creep is collecting rights over time that no longer match the current role. Regular access reviews and removing old rights at each role change fix it. Copying "the same access as the person they replace" spreads the problem to new hires.',
     'Permission creep یعنی جمع شدن مجوزها در طول زمان که دیگر با نقش فعلی جور نیست. بازبینی منظم دسترسی و حذف مجوزهای قدیمی در هر تغییر نقش آن را درست می‌کند. «همان دسترسی نفر قبلی را بده» مشکل را به کارمند جدید هم منتقل می‌کند.');
 
   M(T4,'An employee has left the company. According to good deprovisioning practice, what should happen to their account?',
     'کارمندی از شرکت رفته. طبق روش درست Deprovisioning، با حسابش چه باید کرد؟',
     'حساب خوابیده هدف مهاجم است.',
-    ['Remove it and its rights promptly, after keeping any data the organization needs','Rename it and give it to the replacement','Keep it enabled in case the employee returns','Change the password and leave it in place'],
-    ['حساب و مجوزهایش را سریع حذف کن، بعد از نگه داشتن داده‌هایی که سازمان لازم دارد','اسمش را عوض کن و به جانشین بده','فعال نگهش دار شاید برگردد','رمزش را عوض کن و همان‌جا بگذار'],
+    ['Remove it promptly, after saving any needed data','Rename it and hand it to the replacement employee','Keep it enabled in case the employee comes back','Change its password and leave the account in place'],
+    ['سریع حذفش کن، بعد از نگه داشتن داده‌های لازم','اسمش را عوض کن و به کارمند جانشین بده','فعال نگهش دار شاید کارمند برگردد','رمزش را عوض کن و حساب را همان‌جا بگذار'],
     'Deprovisioning removes the account, its permissions and related artifacts according to policy. Dormant or merely disabled accounts can be re-enabled or taken over by attackers, so deletion is usually preferred. New staff get their own new accounts.',
     'Deprovisioning طبق سیاست سازمان، حساب، مجوزها و آثار مربوطه را حذف می‌کند. حساب‌های خوابیده یا فقط غیرفعال‌شده ممکن است دوباره فعال یا توسط مهاجم تصاحب شوند، پس معمولاً حذف بهتر است. کارمند جدید حساب جدید خودش را می‌گیرد.');
 

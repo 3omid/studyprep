@@ -48,8 +48,8 @@
   M(T1,'Which statement reflects Kerckhoffs\' principle?',
     'کدام جمله اصل Kerckhoffs را بیان می‌کند؟',
     '«دشمن سیستم را می‌شناسد.»',
-    ['A system should stay secure even if everything except the key is public','Algorithms must always be kept secret','Longer keys are never needed','Only governments may design ciphers'],
-    ['سیستم باید حتی اگر همه‌چیز جز کلید عمومی باشد امن بماند','الگوریتم‌ها باید همیشه مخفی بمانند','کلیدهای طولانی‌تر هیچ‌وقت لازم نیست','فقط دولت‌ها می‌توانند رمز طراحی کنند'],
+    ['A system should stay secure even if all but the key is public','Algorithms must always be kept secret from attackers','Longer keys are never needed if the algorithm is strong','Only governments may design ciphers for public use'],
+    ['سیستم باید حتی اگر همه‌چیز جز کلید عمومی باشد امن بماند','الگوریتم‌ها باید همیشه از مهاجم مخفی بمانند','اگر الگوریتم قوی باشد کلید طولانی‌تر هیچ‌وقت لازم نیست','فقط دولت‌ها می‌توانند رمز برای استفاده‌ی عمومی طراحی کنند'],
     'Modern cryptography relies on secret keys, not secret algorithms. Public algorithms get reviewed and weak ones are found and dropped. "Security through obscurity" is not a reliable approach.',
     'رمزنگاری مدرن به کلید مخفی تکیه دارد، نه الگوریتم مخفی. الگوریتم‌های عمومی بررسی می‌شوند و ضعیف‌ها پیدا و کنار گذاشته می‌شوند. «امنیت با پنهان‌کاری» روش قابل اعتمادی نیست.');
 
@@ -64,8 +64,8 @@
   M(T1,'ROT13 shifts every letter 13 places. Why can the same operation both encrypt and decrypt?',
     'ROT13 هر حرف را ۱۳ جا جابه‌جا می‌کند. چرا همین عمل هم رمز می‌کند هم رمزگشایی؟',
     'الفبای انگلیسی ۲۶ حرف دارد.',
-    ['13 is half of 26, so shifting twice returns to the start','ROT13 uses a public and private key','ROT13 is a hash function','The key changes for every letter'],
-    ['۱۳ نصف ۲۶ است؛ پس دو بار جابه‌جایی به اول برمی‌گردد','ROT13 کلید عمومی و خصوصی دارد','ROT13 یک تابع هش است','کلید برای هر حرف عوض می‌شود'],
+    ['13 is half of 26, so shifting twice returns to the start','ROT13 uses a public key to encrypt and a private one to decrypt','ROT13 is a hash function, so it gives the same result twice','The key changes for every letter, so it cancels itself out'],
+    ['۱۳ نصف ۲۶ است، پس دو بار جابه‌جایی به اول برمی‌گردد','ROT13 با کلید عمومی رمز و با کلید خصوصی باز می‌کند','ROT13 یک تابع هش است، پس دو بار همان نتیجه را می‌دهد','کلید برای هر حرف عوض می‌شود، پس خودش را خنثی می‌کند'],
     'ROT13 and the Caesar cipher (shift 3) are simple substitution ciphers. Vigenère is polyalphabetic (a keyword creates several alphabets). Transposition ciphers, like columnar transposition, rearrange letters instead of replacing them.',
     'ROT13 و رمز سزار (جابه‌جایی ۳) رمزهای جایگزینی ساده‌اند. Vigenère چندالفبایی است (یک کلمه‌ی کلیدی چند الفبا می‌سازد). رمزهای جابه‌جایی مثل Columnar transposition به جای جایگزین کردن، حروف را جابه‌جا می‌کنند.');
 
@@ -113,8 +113,8 @@
   M(T2,'Why do protocols like TLS use asymmetric cryptography only at the start and then switch to symmetric encryption?',
     'چرا پروتکل‌هایی مثل TLS فقط در شروع از رمزنگاری نامتقارن استفاده می‌کنند و بعد به متقارن تغییر می‌دهند؟',
     'یکی کند است، یکی سریع.',
-    ['Asymmetric is slow, so it is used to exchange a fast symmetric session key','Symmetric encryption provides non-repudiation','Asymmetric keys expire after one second','Symmetric keys are public'],
-    ['نامتقارن کند است؛ پس برای تبادل یک کلید نشست متقارن سریع استفاده می‌شود','رمز متقارن عدم انکار می‌دهد','کلیدهای نامتقارن بعد از یک ثانیه منقضی می‌شوند','کلیدهای متقارن عمومی‌اند'],
+    ['Asymmetric is slow, so it only exchanges a symmetric key','Symmetric encryption is what provides non-repudiation','Asymmetric keys expire one second after they are made','Symmetric keys are public, so anyone can share them'],
+    ['نامتقارن کند است، پس فقط برای تبادل کلید متقارن به کار می‌رود','رمز متقارن است که عدم انکار را فراهم می‌کند','کلیدهای نامتقارن یک ثانیه بعد از ساخته شدن منقضی می‌شوند','کلیدهای متقارن عمومی‌اند، پس هر کسی می‌تواند پخششان کند'],
     'Symmetric encryption can be 1,000–10,000 times faster. Asymmetric solves key exchange and scales well. Combining them (hybrid cryptography) gets the strengths of both.',
     'رمز متقارن می‌تواند ۱۰۰۰ تا ۱۰۰۰۰ برابر سریع‌تر باشد. نامتقارن مشکل تبادل کلید را حل می‌کند و مقیاس‌پذیر است. ترکیبشان (رمزنگاری ترکیبی) نقاط قوت هر دو را می‌گیرد.');
 
@@ -137,8 +137,8 @@
   M(T2,'Why can a 256-bit ECC key give security similar to a much longer RSA key?',
     'چرا یک کلید ECC ۲۵۶ بیتی می‌تواند امنیتی مشابه یک کلید RSA خیلی طولانی‌تر بدهد؟',
     'مسئله‌ی ریاضی متفاوت و سخت‌تر.',
-    ['Its elliptic curve discrete logarithm problem is harder to solve than factoring','ECC is a symmetric algorithm','ECC keys are never used for signatures','RSA keys are always public'],
-    ['مسئله‌ی لگاریتم گسسته‌ی منحنی بیضوی سخت‌تر از تجزیه‌ی اعداد است','ECC الگوریتم متقارن است','کلیدهای ECC برای امضا استفاده نمی‌شوند','کلیدهای RSA همیشه عمومی‌اند'],
+    ['The elliptic curve math problem is harder than factoring','ECC is a symmetric algorithm, so its keys can be shorter','ECC keys are never used for signatures, only encryption','RSA keys are always public, so they must be much longer'],
+    ['مسئله‌ی ریاضی منحنی بیضوی از تجزیه‌ی اعداد سخت‌تر است','ECC الگوریتم متقارن است، پس کلیدش می‌تواند کوتاه‌تر باشد','کلیدهای ECC فقط برای رمز به کار می‌روند، نه امضا','کلیدهای RSA همیشه عمومی‌اند، پس باید خیلی طولانی‌تر باشند'],
     'RSA relies on the difficulty of factoring large primes. ECC relies on the elliptic curve discrete logarithm problem, believed to be harder, so shorter keys give equal strength (for example, a 160-bit ECC key ≈ 1,024-bit RSA).',
     'RSA به سختی تجزیه‌ی اعداد اول بزرگ تکیه دارد. ECC به مسئله‌ی لگاریتم گسسته‌ی منحنی بیضوی تکیه دارد که سخت‌تر فرض می‌شود؛ پس کلید کوتاه‌تر همان قدرت را می‌دهد (مثلاً ECC ۱۶۰ بیتی ≈ RSA ۱۰۲۴ بیتی).');
 
@@ -153,8 +153,8 @@
   M(T2,'Which device stores and manages encryption keys in tamper-resistant hardware so people never handle the keys directly?',
     'کدام دستگاه کلیدهای رمزگذاری را در سخت‌افزار مقاوم در برابر دستکاری نگه می‌دارد و مدیریت می‌کند تا انسان‌ها هیچ‌وقت مستقیم با کلید کار نکنند؟',
     'H = Hardware.',
-    ['Hardware security module (HSM)','SIEM','IPS','SOAR'],
-    ['ماژول امنیتی سخت‌افزاری (HSM)','SIEM','IPS','SOAR'],
+    ['Hardware security module (HSM)','SIEM that stores all log data','IPS that inspects network traffic','SOAR that runs response playbooks'],
+    ['ماژول امنیتی سخت‌افزاری (HSM)','SIEM که همه‌ی لاگ‌ها را نگه می‌دارد','IPS که ترافیک شبکه را بازرسی می‌کند','SOAR که Playbookهای پاسخ را اجرا می‌کند'],
     'HSMs range from USB tokens like a YubiKey to enterprise data center appliances and cloud HSM services. They protect keys and perform crypto operations securely.',
     'HSMها از توکن USB مثل YubiKey تا دستگاه‌های سازمانی دیتاسنتر و سرویس‌های HSM ابری فرق می‌کنند. کلیدها را محافظت می‌کنند و عملیات رمزنگاری را امن انجام می‌دهند.');
 
@@ -162,16 +162,16 @@
   M(T3,'A download page lists a SHA-256 value. After downloading, you compute the hash and it is different. What does this tell you?',
     'یک صفحه‌ی دانلود یک مقدار SHA-256 نشان می‌دهد. بعد از دانلود هش را محاسبه می‌کنی و متفاوت است. این چه می‌گوید؟',
     'حتی یک بیت تغییر، هش کاملاً متفاوت.',
-    ['The file was changed or corrupted, so integrity failed','The file is encrypted','The file is smaller than expected but fine','SHA-256 always gives random results'],
-    ['فایل تغییر کرده یا خراب شده؛ پس یکپارچگی رد شد','فایل رمزگذاری شده','فایل کوچک‌تر از انتظار است اما سالم','SHA-256 همیشه نتیجه‌ی تصادفی می‌دهد'],
+    ['The file was changed or corrupted','The file is encrypted and must be unlocked','The file is smaller than expected, but fine','SHA-256 gives a random result each time'],
+    ['فایل تغییر کرده یا خراب شده','فایل رمزگذاری شده و باید باز شود','فایل کوچک‌تر از انتظار است، ولی سالم','SHA-256 هر بار نتیجه‌ی تصادفی می‌دهد'],
     'Hash requirements: any input length, fixed output length, easy to compute, one-way, collision-free. Any change, even one character, gives a completely different digest, but you cannot tell how big the change was.',
     'ویژگی‌های هش: ورودی با هر طول، خروجی با طول ثابت، محاسبه‌ی آسان، یک‌طرفه، بدون تصادم. هر تغییری، حتی یک کاراکتر، خلاصه‌ی کاملاً متفاوتی می‌دهد، اما نمی‌شود فهمید تغییر چقدر بزرگ بوده.');
 
   M(T3,'Why should MD5 no longer be used to verify message integrity?',
     'چرا دیگر نباید از MD5 برای بررسی یکپارچگی پیام استفاده کرد؟',
     'دو ورودی، یک خروجی.',
-    ['Researchers showed it is vulnerable to collisions','It produces outputs that are too long','It can only hash text files','It needs a private key'],
-    ['محققان نشان دادند در برابر تصادم (Collision) آسیب‌پذیر است','خروجی‌هایش خیلی طولانی‌اند','فقط فایل متنی را هش می‌کند','کلید خصوصی لازم دارد'],
+    ['It is vulnerable to collisions','Its output is far too long to store','It can only hash plain text files','It needs a private key to run'],
+    ['در برابر تصادم (Collision) آسیب‌پذیر است','خروجی‌اش برای ذخیره خیلی طولانی است','فقط فایل متنی ساده را هش می‌کند','برای اجرا کلید خصوصی لازم دارد'],
     'A collision is two different inputs giving the same hash, which lets an attacker swap content. MD5 (128-bit) and SHA-1 (160-bit) have known weaknesses. Use SHA-2 (SHA-256, SHA-384, SHA-512) or SHA-3.',
     'تصادم یعنی دو ورودی متفاوت هش یکسان بدهند و مهاجم بتواند محتوا را جابه‌جا کند. MD5 (۱۲۸ بیتی) و SHA-1 (۱۶۰ بیتی) ضعف‌های شناخته‌شده دارند. از SHA-2 (SHA-256، SHA-384، SHA-512) یا SHA-3 استفاده کن.');
 
@@ -194,16 +194,16 @@
   M(T3,'Two servers share a secret key and use it with SHA-256 to check that messages were not changed. Why does this NOT give non-repudiation?',
     'دو سرور یک کلید مخفی مشترک دارند و با SHA-256 بررسی می‌کنند پیام‌ها تغییر نکرده‌اند. چرا این عدم انکار نمی‌دهد؟',
     'HMAC با کلید مشترک.',
-    ['HMAC uses a shared key, so either side could have created the code','SHA-256 is too weak','HMAC encrypts the whole message','HMAC needs a certificate authority'],
-    ['HMAC از کلید مشترک استفاده می‌کند؛ پس هر کدام از دو طرف می‌توانست کد را بسازد','SHA-256 خیلی ضعیف است','HMAC کل پیام را رمز می‌کند','HMAC به CA نیاز دارد'],
+    ['Both sides hold the key, so either could make the code','SHA-256 is too weak to prove who sent the message','HMAC encrypts the whole message, hiding the sender','HMAC needs a certificate authority to prove identity'],
+    ['هر دو طرف کلید را دارند، پس هر کدام می‌توانست کد را بسازد','SHA-256 برای اثبات فرستنده خیلی ضعیف است','HMAC کل پیام را رمز می‌کند و فرستنده پنهان می‌ماند','HMAC برای اثبات هویت به CA نیاز دارد'],
     'HMAC combines a hash with a shared secret key. It proves integrity and that the sender knows the key, and it is faster than digital signatures, but since both sides hold the key it cannot prove which one sent it.',
     'HMAC یک هش را با کلید مخفی مشترک ترکیب می‌کند. یکپارچگی و اینکه فرستنده کلید را می‌داند را ثابت می‌کند و از امضای دیجیتال سریع‌تر است، اما چون هر دو طرف کلید دارند نمی‌تواند ثابت کند کدام فرستاده.');
 
   M(T3,'Attackers stole a password database. Which TWO measures most slow down cracking it?',
     'مهاجمان یک پایگاه داده‌ی رمز را دزدیده‌اند. کدام دو اقدام بیشتر از همه شکستن آن را کند می‌کنند؟',
     'مقدار تصادفی + تکرار هزاران‌باره.',
-    ['Salting each password and key stretching (e.g., PBKDF2)','Shorter passwords and MD5','Encrypting with ROT13 twice','Storing passwords in plain text'],
-    ['Salt برای هر رمز و کشش کلید (مثلاً PBKDF2)','رمزهای کوتاه‌تر و MD5','دو بار رمز کردن با ROT13','ذخیره‌ی رمز به‌صورت متن ساده'],
+    ['Salting and key stretching (PBKDF2)','Shorter passwords hashed with MD5','Encrypting the file twice with ROT13','Storing the passwords in plain text'],
+    ['Salt و کشش کلید (PBKDF2)','رمزهای کوتاه‌تر با هش MD5','دو بار رمز کردن فایل با ROT13','ذخیره‌ی رمزها به‌صورت متن ساده'],
     'Salting adds a random value per password before hashing, which defeats rainbow tables. Key stretching (PBKDF2) runs thousands of salt-and-hash iterations, making each guess expensive.',
     'Salt قبل از هش یک مقدار تصادفی به هر رمز اضافه می‌کند و جدول Rainbow را بی‌اثر می‌کند. کشش کلید (PBKDF2) هزاران دور Salt و هش را اجرا می‌کند تا هر حدس پرهزینه شود.');
 
@@ -211,8 +211,8 @@
   M(T4,'What does a digital certificate mainly do?',
     'گواهی دیجیتال اصلاً چه کار می‌کند؟',
     'کلید عمومی + تأیید یک طرف مطمئن.',
-    ['It binds a public key to an identity, signed by a trusted CA','It stores the owner\'s private key for others','It encrypts all of a website\'s data','It replaces passwords on a website'],
-    ['یک کلید عمومی را به یک هویت وصل می‌کند، با امضای یک CA مطمئن','کلید خصوصی صاحبش را برای دیگران نگه می‌دارد','همه‌ی داده‌ی یک سایت را رمز می‌کند','جایگزین رمزهای یک سایت می‌شود'],
+    ['Binds a public key to an identity, signed by a CA','Stores the owner\'s private key so others can use it','Encrypts all of the data stored on a website','Replaces user passwords when logging in to a site'],
+    ['یک کلید عمومی را به یک هویت وصل می‌کند، با امضای CA','کلید خصوصی صاحبش را نگه می‌دارد تا دیگران استفاده کنند','همه‌ی داده‌ی ذخیره‌شده روی یک سایت را رمز می‌کند','موقع ورود به سایت جای رمز کاربران را می‌گیرد'],
     'A certificate is an endorsed copy of a public key, following X.509. It holds version, serial number, signature algorithm, issuer, validity period, subject (CN), optional SANs and the subject\'s public key.',
     'گواهی یک نسخه‌ی تأییدشده از کلید عمومی است و از استاندارد X.509 پیروی می‌کند. شامل نسخه، شماره‌ی سریال، الگوریتم امضا، صادرکننده، دوره‌ی اعتبار، صاحب (CN)، SANهای اختیاری و کلید عمومی صاحب است.');
 
@@ -227,8 +227,8 @@
   M(T4,'Why is the root CA in a large PKI usually kept offline and powered down?',
     'چرا CA ریشه در یک PKI بزرگ معمولاً آفلاین و خاموش نگه داشته می‌شود؟',
     'اگر ریشه لو برود همه‌چیز از بین می‌رود.',
-    ['To protect the root of trust; online intermediate CAs issue everyday certificates','Because root CAs cannot connect to networks','To save electricity only','Because browsers do not trust root CAs'],
-    ['برای محافظت از ریشه‌ی اعتماد؛ CAهای میانی آنلاین گواهی‌های روزمره را صادر می‌کنند','چون CA ریشه نمی‌تواند به شبکه وصل شود','فقط برای صرفه‌جویی برق','چون مرورگرها به CA ریشه اعتماد ندارند'],
+    ['To protect the root of trust; intermediates do daily issuing','Because root CAs are technically unable to join a network','Only to save electricity, since it is rarely needed','Because browsers do not trust root CAs that stay online'],
+    ['برای محافظت از ریشه‌ی اعتماد؛ CAهای میانی کار روزمره را انجام می‌دهند','چون CA ریشه از نظر فنی نمی‌تواند به شبکه وصل شود','فقط برای صرفه‌جویی برق، چون کم لازم می‌شود','چون مرورگرها به CA ریشه‌ای که آنلاین بماند اعتماد ندارند'],
     'The root certificate is the root of trust. Keeping the root CA offline protects its private key. It signs intermediate CAs, which issue certificates. Browsers validate by following the certificate chain back to a trusted root.',
     'گواهی ریشه، ریشه‌ی اعتماد است. آفلاین نگه داشتن CA ریشه کلید خصوصی‌اش را محافظت می‌کند. CA ریشه CAهای میانی را امضا می‌کند و آن‌ها گواهی صادر می‌کنند. مرورگرها با دنبال کردن زنجیره‌ی گواهی تا یک ریشه‌ی مطمئن بررسی می‌کنند.');
 
@@ -251,8 +251,8 @@
   M(T4,'A company runs its own internal CA for intranet servers. What should it expect?',
     'شرکتی برای سرورهای اینترانت CA داخلی خودش را اجرا می‌کند. چه انتظاری باید داشته باشد؟',
     'داخلی‌ها اعتماد می‌کنند، بیرونی‌ها نه.',
-    ['Outside browsers will not trust these certificates unless configured to','Every public browser will trust them automatically','The certificates cannot use encryption','It must pay a third-party CA for each one'],
-    ['مرورگرهای بیرونی به این گواهی‌ها اعتماد نمی‌کنند مگر تنظیم شوند','همه‌ی مرورگرهای عمومی خودکار اعتماد می‌کنند','این گواهی‌ها نمی‌توانند رمزگذاری کنند','باید برای هر کدام به CA ثالث پول بدهد'],
+    ['Outside browsers will not trust them unless configured','Every public browser will trust them automatically','The certificates cannot be used for encryption at all','It must pay a public CA a fee for each certificate'],
+    ['مرورگرهای بیرونی اعتماد نمی‌کنند مگر تنظیم شوند','همه‌ی مرورگرهای عمومی خودکار به آن‌ها اعتماد می‌کنند','این گواهی‌ها اصلاً برای رمزگذاری قابل استفاده نیستند','باید برای هر گواهی به یک CA عمومی پول بدهد'],
     'Self-signed or internal CA certificates save money and work inside the organization once systems trust the internal root. Third-party CAs are trusted by browsers by default, which matters for public sites.',
     'گواهی‌های خودامضا یا CA داخلی پول را صرفه‌جویی می‌کنند و وقتی سیستم‌ها به ریشه‌ی داخلی اعتماد کنند داخل سازمان کار می‌کنند. CAهای ثالث به‌طور پیش‌فرض مورد اعتماد مرورگرها هستند که برای سایت‌های عمومی مهم است.');
 
@@ -267,8 +267,8 @@
   M(T4,'A server\'s private key was accidentally posted online. What must happen to its certificate?',
     'کلید خصوصی یک سرور اشتباهی آنلاین منتشر شده. با گواهی‌اش چه باید کرد؟',
     'گواهی دیگر قابل اعتماد نیست.',
-    ['The CA must revoke it, so it appears on the CRL and OCSP shows "revoked"','Nothing, certificates cannot be cancelled','Extend its validity period','Make it a wildcard certificate'],
-    ['CA باید آن را باطل کند تا در CRL بیاید و OCSP «revoked» نشان دهد','کاری لازم نیست، گواهی قابل لغو نیست','دوره‌ی اعتبارش را تمدید کن','آن را Wildcard کن'],
+    ['The CA must revoke it (CRL and OCSP)','Nothing, since certificates cannot be cancelled','Extend its validity period by another year','Reissue it as a wildcard certificate'],
+    ['CA باید باطلش کند (CRL و OCSP)','کاری لازم نیست، چون گواهی قابل لغو نیست','دوره‌ی اعتبارش را یک سال دیگر تمدید کن','دوباره به شکل گواهی Wildcard صادرش کن'],
     'Revocation reasons: key compromise, wrongly issued, changed details, changed association (e.g., the subject left the sponsoring organization). The CA\'s certificate practice statement (CPS) defines how fast it revokes.',
     'دلایل ابطال: لو رفتن کلید، صدور اشتباه، تغییر مشخصات، تغییر وابستگی (مثلاً صاحب گواهی از سازمان حامی رفته). بیانیه‌ی رویه‌ی گواهی (CPS) مشخص می‌کند CA با چه سرعتی باطل می‌کند.');
 
@@ -308,8 +308,8 @@
   M(T5,'A Wi-Fi network still uses WEP, which applies the RC4 algorithm in a flawed way. Which kind of cryptographic weakness is this?',
     'یک شبکه‌ی Wi-Fi هنوز از WEP استفاده می‌کند که الگوریتم RC4 را به شکل معیوب به کار می‌برد. این کدام نوع ضعف رمزنگاری است؟',
     'مشکل از پیاده‌سازی و کلیدسازی است.',
-    ['Weak key generation / poor implementation','A birthday collision in SHA-3','Homomorphic encryption','Too much entropy'],
-    ['ساخت کلید ضعیف / پیاده‌سازی بد','تصادم تولد در SHA-3','رمزگذاری همریخت','آنتروپی بیش از حد'],
+    ['Weak key generation / poor implementation','A birthday collision in the SHA-3 hash','Homomorphic encryption of the traffic','Too much entropy in the shared key'],
+    ['ساخت کلید ضعیف / پیاده‌سازی بد','تصادم تولد در هش SHA-3','رمزگذاری همریخت ترافیک','آنتروپی بیش از حد در کلید مشترک'],
     'Even a reasonable algorithm fails when implemented badly or with weak keys. Other common crypto weaknesses: deprecated algorithms (DES, MD5), short keys, low-entropy keys and human errors like sending the same message in the clear.',
     'حتی یک الگوریتم معقول وقتی بد پیاده‌سازی شود یا کلید ضعیف داشته باشد شکست می‌خورد. ضعف‌های رایج دیگر: الگوریتم منسوخ (DES، MD5)، کلید کوتاه، کلید کم‌آنتروپی و خطای انسانی مثل فرستادن همان پیام به‌صورت آشکار.');
 

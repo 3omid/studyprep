@@ -40,8 +40,8 @@
   M(T2,'A lab cannot meet the password standard because of an old instrument. What should a good exception request include?',
     'یک آزمایشگاه به خاطر یک دستگاه قدیمی نمی‌تواند استاندارد رمز را رعایت کند. یک درخواست استثنای خوب باید چه چیزهایی داشته باشد؟',
     'چرا، تا کی، چه ریسکی، و چه جبرانی.',
-    ['The requirement, justification, scope and duration, risks, compensating controls and a plan to comply','Only the manager\'s signature','A promise to fix it someday','The vendor\'s marketing material'],
-    ['الزام، توجیه، دامنه و مدت، ریسک‌ها، کنترل جبرانی و برنامه‌ی رسیدن به انطباق','فقط امضای مدیر','قول اینکه یک روز درستش کنند','بروشور تبلیغاتی فروشنده'],
+    ['The requirement, reason, scope, duration, risks and compensating controls','Only the department manager\'s signature on the request form','A promise from the lab that it will be fixed some day','The instrument vendor\'s marketing brochure and price list'],
+    ['الزام، دلیل، دامنه، مدت، ریسک‌ها و کنترل‌های جبرانی','فقط امضای مدیر بخش روی فرم درخواست','قول آزمایشگاه که یک روز درستش می‌کند','بروشور تبلیغاتی و لیست قیمت فروشنده‌ی دستگاه'],
     'Exception processes document which rule is not met, why, for how long, what risk remains, which compensating controls reduce it, who approved it and how the organization will eventually comply.',
     'روند استثنا ثبت می‌کند کدام قانون رعایت نمی‌شود، چرا، تا کی، چه ریسکی می‌ماند، کدام کنترل جبرانی آن را کم می‌کند، چه کسی تأیید کرده و سازمان چطور بالاخره منطبق می‌شود.');
 
@@ -57,16 +57,16 @@
   M(T3,'What is the primary goal of change management?',
     'هدف اصلی مدیریت تغییر چیست؟',
     'در دسترس ماندن سیستم‌ها.',
-    ['Prevent changes from causing outages or unexpected impact','Speed up deployments by skipping tests','Track software licenses','Replace patch management'],
-    ['جلوگیری از اینکه تغییرها باعث قطعی یا اثر غیرمنتظره شوند','سریع‌تر کردن استقرار با حذف تست','ردیابی مجوز نرم‌افزار','جایگزین مدیریت وصله'],
+    ['Prevent changes from causing outages','Speed up deployments by skipping tests','Track software licenses across the company','Replace the patch management process'],
+    ['جلوگیری از اینکه تغییرها باعث قطعی شوند','سریع‌تر کردن استقرار با حذف تست','ردیابی مجوز نرم‌افزار در کل شرکت','جایگزین کردن فرایند مدیریت وصله'],
     'Change management reviews, approves, tests, schedules (maintenance windows) and documents changes, with impact analysis, a backout plan and version control, so changes do not break availability.',
     'مدیریت تغییر تغییرها را بررسی، تأیید، تست، زمان‌بندی (پنجره‌ی نگهداری) و مستند می‌کند، همراه با تحلیل اثر، برنامه‌ی برگشت و کنترل نسخه، تا تغییرها دسترس‌پذیری را خراب نکنند.');
 
   M(T3,'Before approving a firewall upgrade, the change board asks whether it needs a reboot, which services depend on it, and how to roll it back. What is being assessed?',
     'هیئت تغییر قبل از تأیید ارتقای فایروال می‌پرسد آیا ری‌استارت لازم دارد، کدام سرویس‌ها به آن وابسته‌اند و چطور برگردانده می‌شود. چه چیزی ارزیابی می‌شود؟',
     'اثر فنی تغییر.',
-    ['Technical impact (downtime, restarts, dependencies) and the backout plan','The vendor\'s financial health','Employee training needs','Data classification'],
-    ['اثر فنی (قطعی، ری‌استارت، وابستگی‌ها) و برنامه‌ی برگشت','وضعیت مالی فروشنده','نیاز آموزشی کارمندان','طبقه‌بندی داده'],
+    ['Technical impact and the backout plan','The firewall vendor\'s financial health','Training needs of the network staff','Classification of the data behind it'],
+    ['اثر فنی و برنامه‌ی برگشت','وضعیت مالی فروشنده‌ی فایروال','نیاز آموزشی کارکنان شبکه','طبقه‌بندی داده‌ی پشت آن'],
     'Change review checks downtime for critical systems, needed restarts, dependencies, allow/deny lists, legacy applications and how to back out if something goes wrong.',
     'بررسی تغییر نگاه می‌کند: قطعی سیستم‌های حیاتی، ری‌استارت‌های لازم، وابستگی‌ها، فهرست‌های مجاز/ممنوع، برنامه‌های قدیمی و راه برگشت اگر مشکلی پیش بیاید.');
 
@@ -81,8 +81,8 @@
   M(T3,'Why does a bank require staff in sensitive roles to take two consecutive weeks of vacation each year?',
     'چرا یک بانک از کارکنان در نقش‌های حساس می‌خواهد هر سال دو هفته‌ی پشت سر هم مرخصی بروند؟',
     'وقتی نیستند، کس دیگری کارشان را می‌بیند.',
-    ['So someone else does the work and can spot hidden fraud','To reduce payroll costs','To meet GDPR','To rotate their passwords'],
-    ['تا کس دیگری کارشان را انجام دهد و تقلب پنهان را ببیند','برای کم کردن هزینه‌ی حقوق','برای رعایت GDPR','برای عوض کردن رمزهایشان'],
+    ['So someone else does the work and can spot fraud','To reduce payroll costs during the quiet season','To meet a GDPR rule about employee rest time','So their passwords can be rotated while away'],
+    ['تا کس دیگری کارشان را بکند و تقلب را ببیند','برای کم کردن هزینه‌ی حقوق در فصل کم‌کار','برای رعایت قانون GDPR درباره‌ی استراحت کارمند','تا در نبودشان رمزهایشان عوض شود'],
     'Mandatory vacations (like job rotation) put another person in the role, which tends to expose fraud or errors that the absent person was hiding.',
     'مرخصی اجباری (مثل چرخش شغلی) یک نفر دیگر را در آن نقش می‌گذارد و معمولاً تقلب یا خطایی را که فرد غایب پنهان می‌کرد آشکار می‌کند.');
 
@@ -131,8 +131,8 @@
   M(T5,'Who usually reports compliance status to regulators, and who reviews it inside the company?',
     'معمولاً چه کسی وضعیت انطباق را به نهادهای ناظر گزارش می‌دهد، و چه کسی داخل شرکت آن را بررسی می‌کند؟',
     'گزارش‌دهی داخلی و خارجی.',
-    ['External reporting goes to regulators/auditors; internal reporting goes to management and the board','Only the IT help desk reports both','Vendors report for the company','No reporting is needed after certification'],
-    ['گزارش خارجی به ناظر/حسابرس؛ گزارش داخلی به مدیریت و هیئت‌مدیره','فقط Help desk هر دو را گزارش می‌دهد','فروشنده‌ها به جای شرکت گزارش می‌دهند','بعد از گرفتن گواهی گزارشی لازم نیست'],
+    ['External reports go to regulators; internal ones to management','The IT help desk sends both reports to everyone involved','Vendors report compliance on the company\'s behalf','No reporting is needed once the company is certified'],
+    ['گزارش خارجی به ناظر؛ گزارش داخلی به مدیریت','Help Desk هر دو گزارش را برای همه‌ی افراد درگیر می‌فرستد','فروشنده‌ها از طرف شرکت انطباق را گزارش می‌دهند','بعد از گرفتن گواهی دیگر گزارشی لازم نیست'],
     'Compliance reporting is internal (management, board, audit committee) and external (regulators, auditors, customers). Compliance monitoring uses due diligence, attestation and acknowledgment, internal and external audits, and automation.',
     'گزارش انطباق داخلی (مدیریت، هیئت‌مدیره، کمیته‌ی حسابرسی) و خارجی (ناظر، حسابرس، مشتری) است. پایش انطباق با Due diligence، تأییدیه و اقرار، حسابرسی داخلی و خارجی و اتوماسیون انجام می‌شود.');
 
@@ -148,8 +148,8 @@
   M(T6,'Which item is part of the employee offboarding process?',
     'کدام مورد جزو روند Offboarding (خروج کارمند) است؟',
     'دسترسی‌ها را جمع کن.',
-    ['Disable accounts and collect badges, keys and devices promptly','Give the person extra admin rights to finish work','Keep their account active for a year','Delete the HR record immediately'],
-    ['حساب‌ها را غیرفعال کن و کارت، کلید و دستگاه‌ها را فوراً پس بگیر','برای تمام کردن کار، دسترسی مدیر اضافه بده','حسابش را یک سال فعال نگه دار','پرونده‌ی منابع انسانی را فوراً پاک کن'],
+    ['Disable accounts and collect badges and devices','Give the person extra admin rights to finish work','Keep the account active for a year just in case','Delete the person\'s HR record the same day'],
+    ['غیرفعال کردن حساب‌ها و پس گرفتن کارت و دستگاه‌ها','دادن دسترسی مدیر اضافه تا کارش را تمام کند','فعال نگه داشتن حساب برای یک سال، محض احتیاط','پاک کردن پرونده‌ی منابع انسانی همان روز'],
     'Onboarding gives the right access and signs agreements such as the AUP and NDA. Offboarding removes access quickly, recovers equipment and reminds the person of continuing NDA duties.',
     'Onboarding دسترسی درست می‌دهد و توافق‌هایی مثل AUP و NDA را امضا می‌کند. Offboarding دسترسی را سریع قطع می‌کند، تجهیزات را پس می‌گیرد و تعهدات NDA را که ادامه دارد یادآوری می‌کند.');
 

@@ -420,9 +420,9 @@ body.gskin{--ol:color-mix(in srgb,var(--line) 45%,#0b1020);--hi:inset 0 2px 0 rg
 .gskin .card>.spread:first-child:has(>h2){margin:-16px -16px 10px;padding:9px 14px;border-radius:15px 15px 0 0;background:linear-gradient(180deg,color-mix(in srgb,var(--ac) 88%,#fff),var(--ac));border-bottom:2.5px solid var(--ol)}
 .gskin .card>.spread:first-child:has(>h2)>h2,.gskin .card>.spread:first-child:has(>h2)>.mut{color:var(--acink);text-shadow:0 2px 0 rgba(0,0,0,.25);opacity:1}
 .gskin button:not(.plain):not(.ghost):not(.danger):not(.chip):not(.tile):not(.slot):not(.gnode):not(.thi):not(.thcur):not(.freech):not(.rc):not(.srow):not(.qclaim):not(.seg button):not(.tabbar button){
-  background:linear-gradient(180deg,color-mix(in srgb,var(--ac) 70%,#fff) 0,var(--ac) 48%,color-mix(in srgb,var(--ac) 82%,#000) 100%);color:#fff;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--ac) 70%,#fff) 0,var(--ac) 48%,color-mix(in srgb,var(--ac) 82%,#000) 100%);color:var(--acink);
   border:2.5px solid color-mix(in srgb,var(--ac) 45%,#000);box-shadow:inset 0 2px 0 rgba(255,255,255,.5),inset 0 -4px 0 rgba(0,0,0,.22),0 4px 0 rgba(0,0,0,.3);
-  text-shadow:0 2px 0 rgba(0,0,0,.4);font-family:var(--disp);font-weight:400;letter-spacing:.02em;border-radius:14px}
+  text-shadow:var(--acsh,0 2px 0 rgba(0,0,0,.4));font-family:var(--disp);font-weight:400;letter-spacing:.02em;border-radius:14px}
 .gskin button:active{transform:translateY(3px)}
 .gskin button.plain,.gskin .freech{border:2.5px solid var(--ol);box-shadow:var(--hi),0 4px 0 rgba(0,0,0,.2)}
 .gskin .battle{font-family:var(--disp);font-weight:400;font-size:1.5rem;color:#fff!important;letter-spacing:.03em;background:linear-gradient(180deg,#ffe86b 0,#ffc21a 45%,#f08c00 100%)!important;border:3px solid #8a4b00!important;
@@ -439,7 +439,7 @@ body.gskin{--ol:color-mix(in srgb,var(--line) 45%,#0b1020);--hi:inset 0 2px 0 rg
 .gskin .gnode.gold{background:linear-gradient(180deg,#fff1a8,#ffc21a);border-color:#9a5b00}
 .gskin .tile .ic{border:2px solid var(--ol);box-shadow:var(--hi);background:linear-gradient(180deg,color-mix(in srgb,var(--ac2) 35%,var(--sf)),var(--sf2))}
 .gskin .gdaily{border-color:#b56a00;background:linear-gradient(180deg,color-mix(in srgb,#ffc21a 28%,var(--sf)),var(--sf))}
-.gskin .qbar,.gskin .gxp{border:2px solid var(--ol);height:18px}.gskin .qbar span{font-family:var(--disp);font-weight:400;color:#fff;text-shadow:0 1px 0 rgba(0,0,0,.6)}
+.gskin .qbar,.gskin .gxp{border:2px solid var(--ol);height:18px;background:color-mix(in srgb,var(--ol) 55%,transparent)}.gskin .qbar span{font-family:var(--disp);font-weight:400;color:#fff;text-shadow:0 1px 0 rgba(0,0,0,.6)}
 .gskin .ga.on{border:2px solid #b56a00;background:linear-gradient(180deg,color-mix(in srgb,#ffc21a 20%,var(--sf)),var(--sf2))}
 .gskin .sheet{border-radius:22px 22px 0 0}
 /* menu bar: dark game bar with a raised gold tab */

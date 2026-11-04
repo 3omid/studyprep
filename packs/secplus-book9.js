@@ -32,16 +32,16 @@
   M(T1,'A company keeps its main datacenter on the coast and builds its backup datacenter far inland in another region. What is the main goal?',
     'شرکتی دیتاسنتر اصلی‌اش را در ساحل نگه داشته و دیتاسنتر پشتیبان را خیلی دورتر در داخل خشکی و در منطقه‌ای دیگر ساخته. هدف اصلی چیست؟',
     'یک بلا نباید هر دو را بزند.',
-    ['Geographic dispersion, so one disaster cannot hit both sites','Lower network latency for coastal users','Platform diversity','Cheaper electricity'],
-    ['پراکندگی جغرافیایی، تا یک بلا هر دو سایت را نزند','تأخیر شبکه‌ی کمتر برای کاربران ساحلی','تنوع پلتفرم','برق ارزان‌تر'],
+    ['Geographic dispersion against regional disasters','Lower network latency for users on the coast','Platform diversity between the two datacenters','Cheaper electricity in the inland region'],
+    ['پراکندگی جغرافیایی در برابر بلای منطقه‌ای','تأخیر شبکه‌ی کمتر برای کاربران ساحلی','تنوع پلتفرم بین دو دیتاسنتر','برق ارزان‌تر در منطقه‌ی داخلی'],
     'Geographic dispersion keeps sites far enough apart (a common rule of thumb is at least 90 miles, about 145 km) that a hurricane, flood, power grid failure or regional network outage is unlikely to affect both. Hurricane regions often push backup sites inland.',
     'پراکندگی جغرافیایی سایت‌ها را آن‌قدر دور نگه می‌دارد (قاعده‌ی رایج: حداقل ۹۰ مایل، حدود ۱۴۵ کیلومتر) که توفان، سیل، خرابی شبکه‌ی برق یا قطعی منطقه‌ای شبکه بعید باشد هر دو را بزند. در مناطق توفان‌خیز، سایت پشتیبان را به داخل خشکی می‌برند.');
 
   M(T1,'A company uses firewalls from two different vendors in layers, so that one vendor\'s flaw cannot open the whole network. What is this, and what is its downside?',
     'شرکتی از فایروال‌های دو فروشنده‌ی مختلف به صورت لایه‌ای استفاده می‌کند تا ضعف یک فروشنده کل شبکه را باز نکند. این چیست و عیبش چیست؟',
     'تنوع، اما با هزینه.',
-    ['Platform (vendor) diversity; more training, integration work and chance of human error','Clustering; it cannot scale','Geographic dispersion; higher latency','Risk transference; higher insurance cost'],
-    ['تنوع پلتفرم/فروشنده؛ آموزش بیشتر، کار یکپارچه‌سازی و احتمال خطای انسانی بیشتر','Clustering؛ مقیاس‌پذیر نیست','پراکندگی جغرافیایی؛ تأخیر بیشتر','انتقال ریسک؛ بیمه‌ی گران‌تر'],
+    ['Vendor diversity; more training and integration work','Clustering; it cannot scale beyond two firewalls','Geographic dispersion; higher network latency','Risk transference; a higher insurance premium'],
+    ['تنوع فروشنده؛ آموزش و کار یکپارچه‌سازی بیشتر','Clustering؛ بیشتر از دو فایروال مقیاس نمی‌گیرد','پراکندگی جغرافیایی؛ تأخیر شبکه‌ی بیشتر','انتقال ریسک؛ حق بیمه‌ی بیشتر'],
     'Platform diversity (different vendors, platforms, crypto and controls) keeps one vulnerability, misconfiguration or vendor failure from affecting everything. The cost is extra training, harder integration and more complexity, which raises the chance of mistakes.',
     'تنوع پلتفرم (فروشنده، پلتفرم، رمزنگاری و کنترل‌های مختلف) نمی‌گذارد یک آسیب‌پذیری، پیکربندی اشتباه یا ورشکستگی یک فروشنده همه چیز را بزند. هزینه‌اش آموزش بیشتر، یکپارچه‌سازی سخت‌تر و پیچیدگی بیشتر است که احتمال خطا را بالا می‌برد.');
 
@@ -64,8 +64,8 @@
   M(T1,'A factory controller must run 24/7, and its vendor no longer releases updates for it. Which architecture consideration is the biggest concern?',
     'یک کنترلر کارخانه باید ۲۴ ساعته کار کند و فروشنده‌اش دیگر به‌روزرسانی برایش منتشر نمی‌کند. کدام ملاحظه‌ی معماری بزرگ‌ترین نگرانی است؟',
     'وصله وجود ندارد و قطع هم نمی‌شود کرد.',
-    ['Inability to patch (and no patch availability)','Ease of deployment','Risk transference','Compute cost'],
-    ['ناتوانی در وصله کردن (و نبود وصله)','آسانی استقرار','انتقال ریسک','هزینه‌ی پردازش'],
+    ['Inability to patch the controller','Ease of deployment on the factory floor','Risk transference to the vendor','Compute cost of running it all day'],
+    ['ناتوانی در وصله کردن کنترلر','آسانی استقرار در کارخانه','انتقال ریسک به فروشنده','هزینه‌ی پردازش اجرای تمام‌روزه'],
     'Patch availability asks whether the vendor still supports the product. Inability to patch covers systems that cannot be patched without downtime or at all. Such systems need compensating controls such as isolation and close monitoring.',
     'Patch availability یعنی آیا فروشنده هنوز محصول را پشتیبانی می‌کند. Inability to patch یعنی سیستمی که بدون توقف یا اصلاً قابل وصله نیست. چنین سیستم‌هایی کنترل جبرانی مثل جداسازی و پایش دقیق لازم دارند.');
 
@@ -105,8 +105,8 @@
   M(T2,'A full backup runs on Sunday and incremental backups run Monday to Friday. The server fails on Saturday. What is needed to restore it?',
     'یکشنبه پشتیبان کامل و دوشنبه تا جمعه پشتیبان افزایشی گرفته می‌شود. شنبه سرور خراب می‌شود. برای بازیابی چه لازم است؟',
     'هر Incremental فقط تغییرات یک روز را دارد.',
-    ['The full backup plus all five incrementals, applied in order','Only Friday\'s incremental','The full backup plus only Friday\'s incremental','Only the full backup'],
-    ['پشتیبان کامل به اضافه‌ی هر پنج Incremental، به ترتیب','فقط Incremental جمعه','پشتیبان کامل به اضافه‌ی فقط Incremental جمعه','فقط پشتیبان کامل'],
+    ['The full backup plus all five incrementals, in order','Only Friday\'s incremental, since it is the newest','The full backup plus only Friday\'s incremental','Only Sunday\'s full backup, with nothing added'],
+    ['پشتیبان کامل به اضافه‌ی هر پنج Incremental، به ترتیب','فقط Incremental جمعه، چون جدیدترین است','پشتیبان کامل به اضافه‌ی فقط Incremental جمعه','فقط پشتیبان کامل یکشنبه، بدون هیچ چیز دیگر'],
     'Each incremental holds only the changes since the previous backup, so all of them must be layered on top of the full backup. That is why incrementals are faster to make but slower to restore than differentials.',
     'هر Incremental فقط تغییرات از پشتیبان قبلی را دارد، پس همه باید به ترتیب روی پشتیبان کامل اعمال شوند. به همین دلیل Incremental ساختنش سریع‌تر اما بازیابی‌اش کندتر از Differential است.');
 
@@ -121,8 +121,8 @@
   M(T2,'A database must be restorable to any moment, for example 10:42 a.m., not just to last night\'s backup. Which technique supports this?',
     'یک پایگاه داده باید به هر لحظه‌ای قابل بازیابی باشد، مثلاً ساعت ۱۰:۴۲ صبح، نه فقط به پشتیبان دیشب. کدام روش این را ممکن می‌کند؟',
     'یک لاگ از تغییرات که دوباره پخش می‌شود.',
-    ['Journaling (with the journal also backed up offsite)','RAID 0','A weekly full backup','A cold site'],
-    ['Journaling (با پشتیبان گرفتن از خود Journal در جای دیگر)','RAID 0','پشتیبان کامل هفتگی','سایت سرد'],
+    ['Journaling, with the journal backed up','RAID 0 striping across several disks','A weekly full backup kept offsite','A cold site in another region'],
+    ['Journaling، با پشتیبان گرفتن از Journal','RAID 0 با پخش داده روی چند دیسک','پشتیبان کامل هفتگی در جای دیگر','سایت سرد در منطقه‌ای دیگر'],
     'Journaling keeps a log of changes that can be replayed for point-in-time recovery. The journal must itself be copied elsewhere (offsite if you need disaster protection), or one failure loses it too. Replaying a long journal can slow recovery.',
     'Journaling لاگی از تغییرات نگه می‌دارد که برای بازیابی به یک لحظه‌ی خاص دوباره اجرا می‌شود. خود Journal باید جای دیگری (برای محافظت در برابر بلا، خارج از سایت) کپی شود، وگرنه با یک خرابی آن هم از دست می‌رود. اجرای یک Journal طولانی می‌تواند بازیابی را کند کند.');
 
@@ -137,8 +137,8 @@
   M(T2,'Backup tapes are stored at a third-party vault 200 km away. What must the company do so the vault staff cannot read the data?',
     'نوارهای پشتیبان در یک انبار شخص ثالث ۲۰۰ کیلومتر دورتر نگه داشته می‌شوند. شرکت چه کند تا کارکنان انبار نتوانند داده را بخوانند؟',
     'محرمانگی در حالت ذخیره و انتقال.',
-    ['Encrypt the backups and keep the keys safe and available for recovery','Hash the backups','Store the tapes onsite instead','Use RAID 5 on the tapes'],
-    ['پشتیبان را رمزگذاری کند و کلیدها را امن و برای بازیابی در دسترس نگه دارد','از پشتیبان هش بگیرد','نوارها را در خود سایت نگه دارد','روی نوارها RAID 5 بزند'],
+    ['Encrypt the backups and keep the keys safe','Hash the backups before sending them out','Keep all the tapes onsite at headquarters','Use RAID 5 across the backup tapes'],
+    ['پشتیبان را رمزگذاری کند و کلیدها را امن نگه دارد','قبل از فرستادن از پشتیبان هش بگیرد','همه‌ی نوارها را در دفتر مرکزی نگه دارد','روی نوارهای پشتیبان RAID 5 بزند'],
     'Encrypt backups at rest and in transit. Hashing only proves integrity; it does not hide data. Key management is critical: if the keys are lost, the backups are effectively lost too. Offsite storage itself is good practice because one disaster cannot destroy both copies.',
     'پشتیبان را در حالت ذخیره و انتقال رمز کن. هش فقط یکپارچگی را ثابت می‌کند و داده را پنهان نمی‌کند. مدیریت کلید حیاتی است: اگر کلید گم شود، عملاً پشتیبان هم از دست رفته. خود ذخیره‌ی خارج از سایت کار درستی است چون یک بلا هر دو نسخه را نابود نمی‌کند.');
 
@@ -178,8 +178,8 @@
   M(T3,'After a disaster, an admin is bringing systems back at the recovery site. Which should normally come first?',
     'بعد از یک بلا، مدیری سیستم‌ها را در سایت بازیابی برمی‌گرداند. معمولاً کدام اول می‌آید؟',
     'بدون شبکه هیچ‌چیز کار نمی‌کند.',
-    ['Network connectivity and a secure admin (bastion) host','The company intranet blog','Logging and monitoring dashboards','User file shares'],
-    ['اتصال شبکه و یک میزبان مدیریتی امن (Bastion)','وبلاگ اینترانت شرکت','داشبوردهای لاگ و پایش','پوشه‌های اشتراکی کاربران'],
+    ['Network connectivity and a secure bastion host','The company intranet blog and news pages','Logging and monitoring dashboards for managers','User file shares and home directories'],
+    ['اتصال شبکه و یک میزبان Bastion امن','وبلاگ اینترانت و صفحه‌های خبری شرکت','داشبوردهای لاگ و پایش برای مدیران','پوشه‌های اشتراکی و پوشه‌ی شخصی کاربران'],
     'A restoration order follows dependencies and criticality: network and a bastion host, then security devices (firewalls, IPS), then storage and databases, then critical servers, then logging and monitoring, then everything else. Each organization writes its own order in advance.',
     'ترتیب بازیابی بر اساس وابستگی و اهمیت است: شبکه و Bastion host، بعد دستگاه‌های امنیتی (فایروال، IPS)، بعد ذخیره‌ساز و پایگاه داده، بعد سرورهای حیاتی، بعد لاگ و پایش، بعد بقیه. هر سازمان ترتیب خودش را از قبل می‌نویسد.');
 
@@ -259,8 +259,8 @@
   M(T4,'A camera records only when something moves, but the saved clip still includes a few seconds from before the movement started. Which feature is this?',
     'یک دوربین فقط وقتی چیزی حرکت کند ضبط می‌کند، اما کلیپ ذخیره‌شده چند ثانیه‌ی قبل از شروع حرکت را هم دارد. این کدام قابلیت است؟',
     'بافر + حرکت.',
-    ['Motion recognition with a pre-event buffer','Object detection','Pan/tilt/zoom (PTZ)','Infrared night vision'],
-    ['تشخیص حرکت با بافر پیش از رویداد','تشخیص شیء (Object detection)','Pan/Tilt/Zoom (PTZ)','دید در شب مادون قرمز'],
+    ['Motion recognition with a pre-event buffer','Object detection that labels people and cars','Pan/tilt/zoom (PTZ) that follows the motion','Infrared night vision for low light'],
+    ['تشخیص حرکت با بافر پیش از رویداد','تشخیص شیء که آدم و ماشین را برچسب می‌زند','Pan/Tilt/Zoom (PTZ) که حرکت را دنبال می‌کند','دید در شب مادون قرمز برای نور کم'],
     'Motion recognition cameras save storage by recording on movement and keep a short buffer so you see what happened just before. Object detection watches for specific objects (a gun, a laptop) or for an item being moved.',
     'دوربین تشخیص حرکت با ضبط فقط هنگام حرکت فضا را صرفه‌جویی می‌کند و یک بافر کوتاه دارد تا ببینی درست قبلش چه شد. Object detection دنبال شیء خاص (اسلحه، لپ‌تاپ) یا جابه‌جا شدن یک شیء است.');
 

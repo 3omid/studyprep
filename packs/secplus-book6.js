@@ -32,8 +32,8 @@
   M(T1,'Every commit is automatically built and tested, and if it passes it goes straight to production with no manual step. What is this?',
     'هر Commit خودکار ساخته و آزمایش می‌شود و اگر قبول شود بدون هیچ قدم دستی مستقیم به محیط اصلی می‌رود. این چیست؟',
     'CI + انتشار خودکار.',
-    ['Continuous integration with continuous deployment (CI/CD)','Waterfall development','Code escrow','Manual change management only'],
-    ['یکپارچه‌سازی مداوم با استقرار مداوم (CI/CD)','توسعه‌ی آبشاری','امانت کد','فقط مدیریت تغییر دستی'],
+    ['Continuous integration and continuous deployment (CI/CD)','Waterfall development with one release at the end','Code escrow held by a third party for the customer','Manual change management with a weekly approval board'],
+    ['یکپارچه‌سازی و استقرار مداوم (CI/CD)','توسعه‌ی آبشاری با یک انتشار در پایان','امانت کد نزد یک شخص ثالث برای مشتری','مدیریت تغییر دستی با هیئت تأیید هفتگی'],
     'CI checks code into a shared repository often with automated builds and tests; CD pushes tested changes to production automatically. It needs automated security testing, logging and monitoring built into the pipeline.',
     'CI کد را مرتب با ساخت و آزمون خودکار در مخزن مشترک ثبت می‌کند؛ CD تغییرات آزمایش‌شده را خودکار به محیط اصلی می‌فرستد. باید آزمون امنیتی خودکار، لاگ و پایش داخل خط لوله ساخته شود.');
 
@@ -57,8 +57,8 @@
   M(T2,'A tool sends millions of random and malformed inputs to an app and watches for crashes. What is this, and what is its main limit?',
     'ابزاری میلیون‌ها ورودی تصادفی و خراب به یک برنامه می‌فرستد و مراقب از کار افتادنش است. این چیست و محدودیت اصلی‌اش چیست؟',
     'ورودی بی‌معنی؛ مسائل ساده را پیدا می‌کند.',
-    ['Fuzzing; it finds simple input problems but misses complex business-logic flaws','Static analysis; it cannot read code','Code signing; it slows downloads','Sandboxing; it uses too much disk'],
-    ['Fuzzing؛ مشکلات ساده‌ی ورودی را پیدا می‌کند اما نقص‌های پیچیده‌ی منطق کسب‌وکار را نه','تحلیل ایستا؛ نمی‌تواند کد را بخواند','امضای کد؛ دانلود را کند می‌کند','Sandbox؛ دیسک زیادی مصرف می‌کند'],
+    ['Fuzzing; it finds input bugs but misses business-logic flaws','Static analysis; it cannot read the program\'s source code','Code signing; it slows down every download of the app','Sandboxing; it uses too much disk space during testing'],
+    ['Fuzzing؛ باگ‌های ورودی را پیدا می‌کند ولی نقص منطق کسب‌وکار را نه','تحلیل ایستا؛ نمی‌تواند کد منبع برنامه را بخواند','امضای کد؛ همه‌ی دانلودهای برنامه را کند می‌کند','Sandbox؛ موقع آزمون فضای دیسک زیادی مصرف می‌کند'],
     'Fuzzing is automated dynamic testing with invalid or random data. It is good at input validation, error handling and memory leak issues, but not complex logic, and it may not cover all code paths.',
     'Fuzzing آزمون پویای خودکار با داده‌ی نامعتبر یا تصادفی است. برای مشکلات اعتبارسنجی ورودی، مدیریت خطا و نشت حافظه خوب است، اما نه منطق پیچیده، و ممکن است همه‌ی مسیرهای کد را پوشش ندهد.');
 
@@ -82,8 +82,8 @@
   M(T3,'A tester adds "; WAITFOR DELAY \'00:00:10\';--" to a field and the page takes exactly 10 seconds longer to load. What does this show?',
     'آزمایش‌کننده‌ای «; WAITFOR DELAY \'00:00:10\';--» را به یک فیلد اضافه می‌کند و صفحه دقیقاً ۱۰ ثانیه دیرتر بارگذاری می‌شود. این چه چیزی را نشان می‌دهد؟',
     'نتیجه دیده نمی‌شود، ولی زمان پاسخ را می‌شود دید.',
-    ['The app is vulnerable to timing-based blind SQL injection','The server is just slow','The app is vulnerable to stored XSS','The firewall blocked the request'],
-    ['برنامه در برابر تزریق SQL کور مبتنی بر زمان آسیب‌پذیر است','سرور فقط کند است','برنامه در برابر XSS ذخیره‌شده آسیب‌پذیر است','فایروال درخواست را مسدود کرد'],
+    ['The app has a time-based blind SQL injection flaw','The server is simply slow under a normal load','The app is vulnerable to stored cross-site scripting','The firewall blocked the request and held it back'],
+    ['برنامه ضعف تزریق SQL کور مبتنی بر زمان دارد','سرور فقط زیر بار معمولی کند است','برنامه در برابر XSS ذخیره‌شده آسیب‌پذیر است','فایروال درخواست را مسدود کرد و نگهش داشت'],
     'Blind SQL injection works even when results are not shown. Timing-based uses delays (WAITFOR) to answer yes/no questions; content-based compares pages for true (1=1) and false (1=2) conditions. Tools like SQLmap automate it.',
     'تزریق SQL کور حتی وقتی نتیجه نمایش داده نمی‌شود کار می‌کند. نوع مبتنی بر زمان با تأخیر (WAITFOR) به سؤال‌های بله/نه جواب می‌گیرد؛ نوع مبتنی بر محتوا صفحه‌ها را برای شرط درست (1=1) و نادرست (1=2) مقایسه می‌کند. ابزارهایی مثل SQLmap خودکارش می‌کنند.');
 
@@ -138,32 +138,32 @@
   M(T3,'Changing invoice?id=5001 to id=5002 shows another customer\'s invoice because the app never checks ownership. What vulnerability is this?',
     'تغییر invoice?id=5001 به id=5002 فاکتور مشتری دیگری را نشان می‌دهد، چون برنامه هیچ‌وقت مالکیت را بررسی نمی‌کند. این کدام آسیب‌پذیری است؟',
     'ارجاع مستقیم به شیء بدون بررسی مجوز.',
-    ['Insecure direct object reference (IDOR)','Unvalidated redirect','Parameter pollution','Buffer overflow'],
-    ['ارجاع مستقیم ناامن به شیء (IDOR)','تغییر مسیر بدون اعتبارسنجی','آلودگی پارامتر','سرریز بافر'],
+    ['Insecure direct object reference (IDOR)','An unvalidated redirect to another site','HTTP parameter pollution in the URL','A buffer overflow in the invoice page'],
+    ['ارجاع مستقیم ناامن به شیء (IDOR)','تغییر مسیر بدون اعتبارسنجی به سایت دیگر','آلودگی پارامتر HTTP در URL','سرریز بافر در صفحه‌ی فاکتور'],
     'IDOR is an authorization flaw: the app uses a user-supplied ID but does not check that the user may see that object. Every request must pass an access control check.',
     'IDOR یک نقص مجوزدهی است: برنامه از شناسه‌ای که کاربر داده استفاده می‌کند اما بررسی نمی‌کند کاربر اجازه‌ی دیدن آن شیء را دارد. هر درخواست باید از بررسی کنترل دسترسی بگذرد.');
 
   M(T3,'A request contains account=100&account=100\' OR 1=1;-- . What is the attacker trying?',
     'یک درخواست شامل account=100&account=100\' OR 1=1;-- است. مهاجم چه می‌کند؟',
     'یک پارامتر دو بار.',
-    ['Parameter pollution to slip SQL injection past input filters','Directory traversal','A replay attack','Pass-the-hash'],
-    ['آلودگی پارامتر (Parameter pollution) برای رد کردن تزریق SQL از فیلترها','پیمایش مسیر','حمله‌ی بازپخش','Pass-the-hash'],
+    ['Parameter pollution to sneak SQL injection past filters','Directory traversal to read files outside the web root','A replay attack using a captured account request','Pass-the-hash using a stolen password hash'],
+    ['آلودگی پارامتر برای رد کردن تزریق SQL از فیلترها','پیمایش مسیر برای خواندن فایل‌های بیرون از ریشه‌ی وب','حمله‌ی بازپخش با یک درخواست حساب ضبط‌شده','Pass-the-Hash با هش رمز دزدیده‌شده'],
     'Parameter pollution sends the same parameter twice. A flawed platform may validate the first value but use the second, letting the attack through. Patched platforms and careful custom code defend against it.',
     'آلودگی پارامتر یک پارامتر را دو بار می‌فرستد. یک پلتفرم معیوب ممکن است مقدار اول را اعتبارسنجی کند اما از دومی استفاده کند و حمله رد شود. پلتفرم وصله‌شده و کد سفارشی دقیق جلویش را می‌گیرند.');
 
   M(T3,'An attacker copies a victim\'s session cookie over open Wi-Fi and sends it to the website to act as the victim. What is this, and which cookie setting helps prevent it?',
     'مهاجمی کوکی نشست قربانی را روی Wi-Fi باز کپی می‌کند و برای سایت می‌فرستد تا به جای قربانی عمل کند. این چیست و کدام تنظیم کوکی به جلوگیری کمک می‌کند؟',
     'کوکی مثل کارت ورود است؛ فقط روی HTTPS بفرستش.',
-    ['Session replay (hijacking); the Secure attribute so cookies only travel over encryption','SQL injection; the HttpOnly attribute','Directory traversal; a longer cookie name','CSRF; deleting all cookies daily'],
-    ['بازپخش/ربودن نشست؛ ویژگی Secure تا کوکی فقط روی اتصال رمزگذاری‌شده برود','تزریق SQL؛ ویژگی HttpOnly','پیمایش مسیر؛ نام کوکی طولانی‌تر','CSRF؛ پاک کردن روزانه‌ی همه‌ی کوکی‌ها'],
+    ['Session hijacking; the Secure cookie attribute','SQL injection; the HttpOnly cookie attribute','Directory traversal; a longer, random cookie name','CSRF; deleting all of the site\'s cookies every day'],
+    ['ربودن نشست؛ ویژگی Secure کوکی','تزریق SQL؛ ویژگی HttpOnly کوکی','پیمایش مسیر؛ نام کوکی طولانی‌تر و تصادفی','CSRF؛ پاک کردن همه‌ی کوکی‌های سایت هر روز'],
     'Session cookies act like a conference badge: whoever holds one is treated as logged in. Cookies can be stolen by eavesdropping, malware or on-path attacks. Secure cookies are never sent over unencrypted HTTP. Pass-the-hash is a similar replay at the OS level using NTLM hashes.',
     'کوکی نشست مثل کارت ورود کنفرانس است: هر کس داشته باشد واردشده حساب می‌شود. کوکی با شنود، بدافزار یا حمله‌ی On-path دزدیده می‌شود. کوکی Secure هیچ‌وقت روی HTTP رمزنشده فرستاده نمی‌شود. Pass-the-hash بازپخشی مشابه در سطح سیستم‌عامل با هش‌های NTLM است.');
 
   M(T3,'A shopping site uses ?redirect=<any URL> after checkout, so an attacker sends links that land victims on a fake login page. How should developers fix it?',
     'یک سایت خرید بعد از پرداخت از ?redirect=<هر URL> استفاده می‌کند؛ پس مهاجم لینک‌هایی می‌فرستد که قربانی‌ها را به صفحه‌ی ورود جعلی می‌برد. برنامه‌نویسان چطور درستش کنند؟',
     'فقط مقصدهای مجاز.',
-    ['Check redirect URLs against an approved list or same domain','Remove the checkout page','Encrypt the redirect parameter with ROT13','Add more ads'],
-    ['URLهای تغییر مسیر را با فهرست مجاز یا همان دامنه بررسی کن','صفحه‌ی پرداخت را حذف کن','پارامتر redirect را با ROT13 رمز کن','تبلیغات بیشتر اضافه کن'],
+    ['Allow only redirect URLs on an approved list','Remove the checkout page from the shopping site','Encode the redirect parameter with ROT13','Show more warning ads on the checkout page'],
+    ['فقط URLهای تغییر مسیر داخل فهرست مجاز را بپذیر','صفحه‌ی پرداخت را از سایت حذف کن','پارامتر redirect را با ROT13 کدگذاری کن','تبلیغات هشدار بیشتری در صفحه‌ی پرداخت نشان بده'],
     'An unvalidated redirect sends users to any URL an attacker supplies, after a real transaction on a trusted site. Validated redirects allow only approved URLs or the site\'s own domain.',
     'تغییر مسیر بدون اعتبارسنجی کاربر را بعد از یک تراکنش واقعی در سایت مورد اعتماد به هر URLی که مهاجم بدهد می‌فرستد. تغییر مسیر اعتبارسنجی‌شده فقط URLهای مجاز یا دامنه‌ی خود سایت را می‌پذیرد.');
 
@@ -179,16 +179,16 @@
   M(T4,'A system builds a user\'s permission list at login and uses it all session. An admin revokes access, but the user keeps it until logging out days later. What flaw is this?',
     'سیستمی فهرست مجوزهای کاربر را موقع ورود می‌سازد و در کل نشست از آن استفاده می‌کند. مدیری دسترسی را لغو می‌کند، اما کاربر تا روزها بعد که خارج شود آن را نگه می‌دارد. این کدام نقص است؟',
     'بررسی خیلی زودتر از استفاده انجام شده.',
-    ['A time-of-check to time-of-use (TOCTOU) race condition','A buffer overflow','A memory leak','Directory traversal'],
-    ['شرایط رقابتی زمان بررسی تا زمان استفاده (TOCTOU)','سرریز بافر','نشت حافظه','پیمایش مسیر'],
+    ['A TOCTOU (time-of-check to time-of-use) flaw','A buffer overflow in the login service','A memory leak in the session manager','Directory traversal in the permission file'],
+    ['ضعف TOCTOU (زمان بررسی تا زمان استفاده)','سرریز بافر در سرویس ورود','نشت حافظه در مدیر نشست','پیمایش مسیر در فایل مجوزها'],
     'Race conditions depend on the order of events. TOC is when access is checked, TOU is when the resource is used, and the TOE is the component being evaluated. Fix: check permissions at each request, not once at login.',
     'شرایط رقابتی به ترتیب رویدادها بستگی دارد. TOC زمانی است که دسترسی بررسی می‌شود، TOU زمانی که منبع استفاده می‌شود و TOE جزئی است که ارزیابی می‌شود. اصلاح: در هر درخواست مجوز را بررسی کن، نه یک بار موقع ورود.');
 
   M(T4,'A server\'s memory use climbs steadily for weeks until it crashes; a reboot fixes it, but the cycle repeats. What is the likely cause?',
     'مصرف حافظه‌ی یک سرور چند هفته مدام بالا می‌رود تا از کار بیفتد؛ ری‌استارت درستش می‌کند اما چرخه تکرار می‌شود. علت احتمالی چیست؟',
     'حافظه گرفته می‌شود ولی پس داده نمی‌شود.',
-    ['A memory leak causing resource exhaustion','A typosquatting domain','A wildcard certificate','A missing UAT phase'],
-    ['نشت حافظه که منابع را تمام می‌کند','دامنه‌ی Typosquatting','گواهی Wildcard','مرحله‌ی UAT جاافتاده'],
+    ['A memory leak causing resource exhaustion','A typosquatting domain sending fake traffic','An expired wildcard certificate on the server','A missing user acceptance testing (UAT) phase'],
+    ['نشت حافظه که منابع را تمام می‌کند','دامنه‌ی Typosquatting که ترافیک جعلی می‌فرستد','گواهی Wildcard منقضی‌شده روی سرور','مرحله‌ی آزمون پذیرش کاربر (UAT) جاافتاده'],
     'A memory leak happens when an app does not return memory it no longer needs. Over time it exhausts resources and crashes the system. Rebooting only resets the cycle; the code must be fixed.',
     'نشت حافظه وقتی رخ می‌دهد که برنامه حافظه‌ای که دیگر لازم ندارد را پس ندهد. به‌مرور منابع را تمام می‌کند و سیستم را از کار می‌اندازد. ری‌استارت فقط چرخه را از نو شروع می‌کند؛ کد باید اصلاح شود.');
 
@@ -196,8 +196,8 @@
   M(T5,'A form field asks for age. Which validation approach is strongest?',
     'یک فیلد فرم سن را می‌پرسد. کدام روش اعتبارسنجی قوی‌تر است؟',
     'دقیقاً بگو چه چیزی مجاز است؛ سمت سرور.',
-    ['Server-side allow listing: accept only an integer from 0 to 125','Client-side JavaScript check only','Deny listing the word SCRIPT only','No validation; rely on the database'],
-    ['Allow list سمت سرور: فقط عدد صحیح بین ۰ تا ۱۲۵ را بپذیر','فقط بررسی JavaScript سمت کلاینت','فقط Deny list کردن کلمه‌ی SCRIPT','بدون اعتبارسنجی؛ تکیه به پایگاه داده'],
+    ['Server-side allow list: only whole numbers 0–125','A client-side JavaScript check in the browser only','A deny list that blocks the word SCRIPT in the field','No validation, leaving the database to reject bad data'],
+    ['Allow list سمت سرور: فقط عدد صحیح ۰ تا ۱۲۵','فقط یک بررسی JavaScript سمت مرورگر','Deny list که کلمه‌ی SCRIPT را در فیلد رد می‌کند','بدون اعتبارسنجی، تا پایگاه داده داده‌ی بد را رد کند'],
     'Allow listing defines exactly what is valid and rejects everything else. Validation must happen on the server, because client-side checks are easy to bypass. Deny listing is a fallback for free-text fields.',
     'Allow list دقیقاً تعریف می‌کند چه چیزی معتبر است و بقیه را رد می‌کند. اعتبارسنجی باید سمت سرور باشد، چون بررسی سمت کلاینت به‌راحتی دور زده می‌شود. Deny list راه جایگزین برای فیلدهای متن آزاد است.');
 
@@ -220,8 +220,8 @@
   M(T5,'A software vendor wants customers to be sure that an update really came from it and was not changed. What should it do?',
     'یک فروشنده‌ی نرم‌افزار می‌خواهد مشتری‌ها مطمئن باشند یک آپدیت واقعاً از طرف خودش آمده و تغییر نکرده. چه کار کند؟',
     'امضا با کلید خصوصی.',
-    ['Digitally sign the code (code signing)','Obfuscate the code','Compress the code','Email the code'],
-    ['کد را امضای دیجیتال کند (Code signing)','کد را مبهم‌سازی کند','کد را فشرده کند','کد را ایمیل کند'],
+    ['Digitally sign the code (code signing)','Obfuscate the code so it is hard to read','Compress the code into a smaller package','Email the code directly to each customer'],
+    ['کد را امضای دیجیتال کند (Code signing)','کد را مبهم کند تا خواندنش سخت شود','کد را در یک بسته‌ی کوچک‌تر فشرده کند','کد را مستقیم برای هر مشتری ایمیل کند'],
     'Code signing uses the developer\'s private key; systems verify with the public key. If systems accept only signed updates, a malicious update (a fake patch) fails the check and is rejected.',
     'امضای کد از کلید خصوصی برنامه‌نویس استفاده می‌کند؛ سیستم‌ها با کلید عمومی بررسی می‌کنند. اگر سیستم‌ها فقط آپدیت امضاشده بپذیرند، آپدیت مخرب (وصله‌ی جعلی) از بررسی رد می‌شود و پذیرفته نمی‌شود.');
 
@@ -244,8 +244,8 @@
   M(T5,'An error page shows the full SQL query and table names when a search fails. What should the tester report?',
     'وقتی جستجو شکست می‌خورد، صفحه‌ی خطا کل کوئری SQL و اسم جدول‌ها را نشان می‌دهد. آزمایش‌کننده چه گزارش دهد؟',
     'خطا بیش از حد حرف می‌زند.',
-    ['Improper error handling that leaks sensitive details','A successful buffer overflow','A wildcard certificate issue','Good debugging practice'],
-    ['مدیریت نادرست خطا که جزئیات حساس را لو می‌دهد','یک سرریز بافر موفق','مشکل گواهی Wildcard','روش خوب اشکال‌زدایی'],
+    ['Improper error handling that leaks sensitive details','A successful buffer overflow in the search feature','A wildcard certificate configured on the wrong host','Good debugging practice that helps users report bugs'],
+    ['مدیریت نادرست خطا که جزئیات حساس را لو می‌دهد','یک سرریز بافر موفق در قابلیت جستجو','گواهی Wildcard که روی میزبان اشتباه تنظیم شده','روش خوب اشکال‌زدایی که به گزارش باگ کاربران کمک می‌کند'],
     'Error handling should catch unexpected situations securely but reveal little. Verbose errors give attackers a roadmap for injection. Also remove source code comments from code that users can see.',
     'مدیریت خطا باید موقعیت‌های غیرمنتظره را امن بگیرد اما چیز کمی لو بدهد. خطاهای پرجزئیات نقشه‌ی راه تزریق را به مهاجم می‌دهند. کامنت‌های کد منبع را هم از کدی که کاربر می‌بیند حذف کن.');
 
@@ -268,8 +268,8 @@
   M(T5,'A partner API has no authentication, so anyone who knows its URL can change customer records. What should be added first?',
     'یک API شریک هیچ احراز هویتی ندارد؛ پس هر کس آدرسش را بداند می‌تواند رکوردهای مشتری را تغییر دهد. اول چه چیزی باید اضافه شود؟',
     'API غیرعمومی باید قفل شود.',
-    ['Authentication (such as API keys) over encrypted connections','More API endpoints','A longer URL','Public documentation'],
-    ['احراز هویت (مثل کلید API) روی اتصال رمزگذاری‌شده','نقاط پایانی API بیشتر','URL طولانی‌تر','مستندات عمومی'],
+    ['Authentication, such as API keys, over TLS','More API endpoints to spread out the load','A longer, harder-to-guess URL for the API','Public documentation so partners use it right'],
+    ['احراز هویت، مثل کلید API، روی TLS','نقاط پایانی API بیشتر برای پخش بار','URL طولانی‌تر و سخت‌تر برای حدس زدن','مستندات عمومی تا شریک‌ها درست استفاده کنند'],
     'Unprotected APIs allow unauthorized use. API security relies on authentication, authorization, data scoping, rate limiting, input filtering, logging and encryption in transit.',
     'APIهای محافظت‌نشده استفاده‌ی غیرمجاز را ممکن می‌کنند. امنیت API به احراز هویت، مجوزدهی، محدود کردن داده، محدودیت نرخ درخواست، فیلتر ورودی، لاگ و رمزگذاری در انتقال وابسته است.');
 
@@ -285,16 +285,16 @@
   M(T6,'When HR marks an employee as terminated, a script disables all of their accounts within minutes. Which use case is this?',
     'وقتی منابع انسانی کارمندی را اخراج‌شده علامت می‌زند، اسکریپتی ظرف چند دقیقه همه‌ی حساب‌هایش را غیرفعال می‌کند. این کدام کاربرد است؟',
     'افزودن، تغییر یا حذف دسترسی کاربر.',
-    ['User provisioning (deprovisioning access)','Resource provisioning','Continuous integration','Guard rails for code'],
-    ['User provisioning (برداشتن دسترسی)','Resource provisioning','یکپارچه‌سازی مداوم','Guard rails برای کد'],
+    ['User provisioning (removing access)','Resource provisioning for new servers','Continuous integration of HR code','Guard rails that block unsafe code'],
+    ['User Provisioning (برداشتن دسترسی)','Resource Provisioning برای سرورهای جدید','یکپارچه‌سازی مداوم کد منابع انسانی','Guard Rails که جلوی کد ناامن را می‌گیرد'],
     'User provisioning automation adds, changes and removes user access, reducing manual effort and human error. Fast deprovisioning also shortens the window for insider misuse.',
     'اتوماسیون User provisioning دسترسی کاربر را اضافه، تغییر و حذف می‌کند و کار دستی و خطای انسانی را کم می‌کند. برداشتن سریع دسترسی پنجره‌ی سوءاستفاده‌ی خودی را هم کوتاه می‌کند.');
 
   M(T6,'Which of these is a drawback, not a benefit, of security automation?',
     'کدام یک از این‌ها عیب است، نه مزیت اتوماسیون امنیتی؟',
     'چیزی که بعداً باید تاوانش را داد.',
-    ['Technical debt from scripts that become outdated','Enforcing baselines','Faster reaction time','Acting as a workforce multiplier'],
-    ['بدهی فنی از اسکریپت‌هایی که قدیمی می‌شوند','اجرای خط پایه','زمان واکنش سریع‌تر','افزایش‌دهنده‌ی نیروی کار'],
+    ['Technical debt from outdated scripts','Enforcing secure baselines everywhere','Faster reaction time to incidents','Acting as a workforce multiplier'],
+    ['بدهی فنی از اسکریپت‌های قدیمی','اجرای خط پایه‌ی امن در همه جا','زمان واکنش سریع‌تر به حادثه‌ها','افزایش‌دهنده‌ی نیروی کار'],
     'Benefits: efficiency, enforcing baselines, standard configurations, secure scaling, employee retention, reaction time, workforce multiplier. Considerations: complexity, cost, single point of failure, technical debt, ongoing supportability.',
     'مزیت‌ها: کارایی، اجرای خط پایه، پیکربندی استاندارد، مقیاس‌پذیری امن، ماندگاری کارکنان، زمان واکنش، افزایش نیروی کار. ملاحظات: پیچیدگی، هزینه، نقطه‌ی شکست واحد، بدهی فنی، پشتیبانی مداوم.');
 
