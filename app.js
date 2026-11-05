@@ -192,7 +192,7 @@ function normPack(p,user){
   /* built-in ids that already name a pack ("secplus:b3_1" in the book pack) are kept, so moving questions keeps progress */
   const fixId=i=>String(i).startsWith(pre)||(!user&&String(i).includes(':'))?String(i):pre+i;
   const secs={};Object.keys(p.sections||{}).forEach(k=>{const s=p.sections[k];secs[k]=typeof s==='string'?{en:s,fa:''}:{en:s.en||k,fa:s.fa||''}});
-  return{id,name:p.name||id,short:p.short||p.name||id,lab:p.lab||'',cover:p.cover||'',defOff:!!p.defOff,user:!!user,sections:secs,study:p.study||{},
+  return{id,name:p.name||id,short:p.short||p.name||id,lab:p.lab||'',cover:p.cover||'',defOff:!!p.defOff,orig:p.orig||null,user:!!user,sections:secs,study:p.study||{},
     mcq:(p.mcq||[]).map(q=>({...q,id:fixId(q.id),sec:String(q.sec),o:q.o,of:q.of||[],en:q.en||'',fa:q.fa||'',qf:q.qf||'',hf:q.hf||'',t:q.t||''})),
     pbq:(p.pbq||[]).map(q=>({...q,id:fixId(q.id),sec:String(q.sec),tf:q.tf||'',zf:q.zf||[],zd:q.zd||[],en:q.en||'',fa:q.fa||'',t:q.t||''}))};
 }
@@ -220,8 +220,9 @@ const secNo=(p,s,short)=>p.lab?p.lab+' '+s:/^\d+$/.test(s)?(short?'S':'Section '
 const secTitle=(p,s)=>{const n=secNo(p,s),e=(p.sections[s]||{en:s}).en;return n?n+' · '+e:e};
 const secName=(q)=>q.pack.short+' · '+secTitle(q.pack,q.sec);
 /* everything for the CompTIA Security+ mock exam: course modules and book chapters, whatever is switched on */
-const MOCK=['secplus','secbook'];
-const mockKeys=()=>{const k=[];PACKS.filter(p=>MOCK.includes(p.id)).forEach(p=>Object.keys(p.sections).forEach(s=>k.push(secKey(p,s))));return k};
+/* the Final Quiz questions join it only while they are switched on (Courses or the Final Quiz page) */
+const MOCK=['secplus','secbook','secfinal'];
+const mockKeys=()=>{const k=[];PACKS.filter(p=>MOCK.includes(p.id)).forEach(p=>Object.keys(p.sections).forEach(s=>{if(p.id!=='secfinal'||secOn(p,s))k.push(secKey(p,s))}));return k};
 
 /* ================= progress ================= */
 const dkey=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
@@ -270,13 +271,13 @@ function build(c){
   if(!chosen.length)return null;
   const items=chosen.map(mkItem);
   const total=c.timer==='off'?null:c.timer==='auto'?secsFor(items):(+c.timer)*60;
-  return{mode:c.ids?'review':c.mode,items,i:0,total,left:total,used:0,start:now(),done:false};
+  return{mode:c.ids&&!c.fixed?'review':c.mode,items,i:0,total,left:total,used:0,start:now(),done:false};
 }
 function startSession(c){
   const s=build(c);
   if(!s){toast('No questions in the selected sections. Turn a course or section on in Courses.');return}
   const sn=c.what||((c.secs&&c.secs.length===1)?(()=>{const[pid,sec]=c.secs[0].split(':');const p=PACKS.find(x=>x.id===pid);return p&&p.sections[sec]?' · '+p.short+' · '+secTitle(p,sec):''})():'');
-  s.id=now();s.what=(sn||'').replace(/^ · /,'')||(c.ids?'':((c.secs||activeKeys()).length+' sections'));
+  s.id=now();if(c.tag)s.tag=c.tag;s.what=(sn||'').replace(/^ · /,'')||(c.ids?'':((c.secs||activeKeys()).length+' sections'));
   park();S=s;st.set('sess',S);runTimer();renderQuiz();
   lastAct({mode:{practice:'Practice',exam:'Exam',review:'Smart review'}[S.mode]||S.mode,what:sn});
 }
@@ -343,6 +344,7 @@ function finish(){
   S.result={score,pass:score>=750,pct:p,right,total:real.length,answered:answered.length,by,used:S.used,at:now(),best:S.best||0};
   const h=st.get('hist',[]);h.push({t:S.result.at,mode:S.mode,score,pct:Math.round(p*100),right,total:real.length,used:S.used});
   st.set('hist',h.slice(-30));st.set('last',S);st.del('sess');
+  if(S.tag==='final'){const f=st.get('fhist',[]);f.push({t:S.result.at,mode:S.mode,pct:Math.round(p*1000)/10,right,total:real.length,used:S.used,what:S.what||''});st.set('fhist',f.slice(-30))}
   renderResult();FX.done(S.result.pass);cue(S.result.pass?'pass':'fail');if(S.result.pass||p>=.6)confetti();
 }
 
@@ -379,13 +381,13 @@ window.addEventListener('resize',()=>{tabH();qhH()});
 function renderTabs(){
   const T=[['home','🏠','Home'],['learn','📖','Learn'],['game','🎮','Play'],['exam','⏱️','Exam'],['stats','📈','Stats'],['settings','⚙️','Settings']];
   const dot=claimable();
-  $('#tabs').innerHTML=T.map(t=>`<button data-act="tab" data-v="${t[0]}" class="${tab===t[0]||(t[0]==='game'&&tab==='base')||(t[0]==='settings'&&tab==='courses')?'on':''}"><span class="i">${t[1]}${t[0]==='game'&&dot?'<em class="dot"></em>':''}</span>${t[2]}</button>`).join('');
+  $('#tabs').innerHTML=T.map(t=>`<button data-act="tab" data-v="${t[0]}" class="${tab===t[0]||(t[0]==='game'&&tab==='base')||(t[0]==='settings'&&tab==='courses')||(t[0]==='exam'&&(tab==='final'||tab==='fsheet'))?'on':''}"><span class="i">${t[1]}${t[0]==='game'&&dot?'<em class="dot"></em>':''}</span>${t[2]}</button>`).join('');
   tabH();
 }
 /* the menu bar is on every page; bars at the bottom of a page sit just above it */
 function tabH(){const t=$('#tabs');if(t)document.documentElement.style.setProperty('--tabh',t.offsetHeight+'px')}
 window.addEventListener('resize',tabH);
-function go(t){ACT=null;RV.on=false;RV.tok++;vStop();tab=t;renderTabs();({home:renderHome,learn:renderLearn,exam:renderExams,courses:renderCourses,stats:renderStats,settings:renderSettings,setup:renderSetup,game:renderGame,base:renderBase})[t]()}
+function go(t){ACT=null;RV.on=false;RV.tok++;vStop();tab=t;renderTabs();({home:renderHome,learn:renderLearn,exam:renderExams,courses:renderCourses,stats:renderStats,settings:renderSettings,setup:renderSetup,game:renderGame,base:renderBase,final:renderFinal,fsheet:renderFSheet})[t]()}
 /* ---- colour themes (themes.js, copied from Shift Priority) ---- */
 const hexN=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
 const mixC=(a,b,t)=>'#'+hexN(a).map((v,i)=>Math.round(v*(1-t)+hexN(b)[i]*t).toString(16).padStart(2,'0')).join('');
@@ -440,6 +442,7 @@ function renderHome(keep){
    <button class="tile plain" data-act="tab" data-v="learn"><span class="ic">📖</span><span><b>Learn</b><span class="d">Read the key points of a section first</span></span></button>
    <button class="tile plain" data-act="setup" data-v="practice"><span class="ic">🎓</span><span><b>Practice</b><span class="d">Answer, see why, retry what you miss</span></span></button>
    <button class="tile plain" data-act="tab" data-v="exam"><span class="ic">⏱️</span><span><b>Exam</b><span class="d">Mock exam, timed tests, saved sessions</span></span></button>
+   ${FP()?`<button class="tile plain" data-act="final"><span class="ic">📝</span><span><b>Mock Final Quiz</b><span class="d">Retake the 150 questions or learn them · ماک نهایی</span></span></button>`:''}
    <button class="tile plain" data-act="setup" data-v="review"><span class="ic">🎯</span><span><b>Smart review</b><span class="d">Weak and due questions first</span></span>${weak+due?`<span class="badge">${weak+due}</span>`:''}</button>
    <button class="tile plain" data-act="tab" data-v="game"><span class="ic">🎮</span><span><b>Game</b><span class="d">Hearts, combos, levels and stars · یادگیری با بازی</span></span></button>
   </div>
@@ -759,11 +762,75 @@ function renderExams(){
   <div class="card"><h2>Continue</h2>${open.length?open.map(sessCard).join(''):'<p class="mut" style="margin:0">No unfinished sessions.</p>'}</div>
   <div class="card"><h2>Start</h2><div class="tiles" style="margin:0">
    ${mk?`<button class="tile plain" data-act="mock"><span class="ic">🏁</span><span><b>Security+ mock exam</b><span class="d">90 questions · 90 min · course + book</span></span></button>`:''}
+   ${FP()?`<button class="tile plain" data-act="final"><span class="ic">📝</span><span><b>Mock Final Quiz</b><span class="d">The 150 questions of Nov 5 · retake or learn them · ماک نهایی</span></span></button>`:''}
    <button class="tile plain" data-act="setup" data-v="exam"><span class="ic">⏱️</span><span><b>Custom exam</b><span class="d">Pick sections, size and timer</span></span></button>
    <button class="tile plain" data-act="setup" data-v="practice"><span class="ic">🎓</span><span><b>Practice</b><span class="d">Feedback after every question</span></span></button>
    <button class="tile plain" data-act="setup" data-v="review"><span class="ic">🎯</span><span><b>Smart review</b><span class="d">Weak and due questions first</span></span></button></div></div>
   <div class="card"><div class="spread"><h2 style="margin:0">Past results</h2>${L&&L.result?'<button class="plain sm" data-act="lastres">Open last result</button>':''}</div>
    ${hist.length?hist.slice(0,10).map(h=>`<div class="spread hrow"><div><b>${({practice:'Practice',exam:'Exam',review:'Review'})[h.mode]||h.mode}</b><div class="mut">${new Date(h.t).toLocaleDateString()} · ${h.right}/${h.total} correct · ${fmt(h.used||0)}</div></div><span class="badge ${h.score>=750?'ok':''}" style="margin:0">${h.score}</span></div>`).join(''):'<p class="mut">No finished sessions yet.</p>'}</div>`);
+}
+
+/* ================= Final Quiz (the mock exam taken on Nov 5, 2026) ================= */
+/* one page for the 150 questions: take the exam again, study them, and switch them in or out of the general pool */
+const FP=()=>PACKS.find(p=>p.id==='secfinal');
+const fQs=()=>{const p=FP();return p?p.mcq.slice().sort((a,b)=>a.n-b.n).map(q=>Q[q.id]).filter(Boolean):[]};
+const fMin=m=>m>=60?Math.floor(m/60)+'h '+(m%60)+'m':m+' min';
+function renderFinal(keep){
+  const p=FP();if(!p){go('exam');return}
+  const qs=fQs(),ids=qs.map(q=>q.id),o=p.orig||{},fh=st.get('fhist',[]).slice().reverse(),best=fh.length?Math.max(...fh.map(h=>h.pct)):null;
+  const seen=ids.filter(i=>P[i]).length,mas=ids.filter(mastered).length,weak=ids.filter(isWeak).length,miss=qs.filter(q=>q.miss).length;
+  const on=packOn(p),nt=!!st.get('fnotimer'),rd=readSt();
+  const partRow=s=>{const sid=qs.filter(q=>q.sec===s).map(q=>q.id),m=sid.filter(mastered).length,sk=secKey(p,s);
+    return `<div class="fpart"><div class="spread"><div><b>${esc(secNo(p,s))} · ${esc(p.sections[s].en)}</b><div class="mut">${sid.length} questions · ${m} mastered</div><div class="mut fa">${FA(p.sections[s].fa)}</div></div></div>
+     <div class="row" style="margin-top:8px"><button class="plain sm" data-act="read" data-v="${esc(sk)}">${rd[sk]?'✅':'📘'} Notes · جزوه</button><button class="sm" data-act="fprac" data-v="sec:${esc(s)}">🎓 Study · آموزش</button><button class="plain sm" data-act="fsheet" data-v="${esc(s)}">📋 Answers</button></div></div>`};
+  page(`<div class="spread"><button class="plain sm" data-act="tab" data-v="exam">← Exam</button><span class="mut">${qs.length} questions</span></div>
+  <h1 style="margin-top:10px">🏁 Mock Final Quiz</h1><p class="sub fa" dir="rtl" style="margin-top:-4px">${FA('ماک امتحان نهایی Security+، همان ۱۵۰ سؤال')}</p>
+  <div class="card"><div class="stats">
+   <div class="stat"><b>${o.pct!=null?o.pct+'%':'–'}</b><span>1st attempt${o.date?' · '+new Date(o.date+'T12:00').toLocaleDateString():''}</span></div>
+   <div class="stat"><b>${best!=null?best+'%':'–'}</b><span>best retake</span></div>
+   <div class="stat"><b>${mas}<small class="mut">/${qs.length}</small></b><span>mastered</span></div></div>
+   <p class="mut" style="margin:10px 0 0">First attempt: ${o.right||'–'} of ${o.total||qs.length} correct${o.mins?' in '+fMin(o.mins):''} · ${miss} missed · ${pct(seen,qs.length)}% practised since${weak?' · '+weak+' need work':''}</p></div>
+
+  <div class="card"><h2>⏱️ Take the exam again <span class="fa mut" style="font-size:.9rem">· امتحان دوباره</span></h2>
+   <p class="mut" style="margin-top:0">Same 150 questions, exam rules: no feedback until the end, then a score and a full review.</p>
+   <div class="tiles" style="margin:0">
+    <button class="tile plain" data-act="fexam" data-v="order"><span class="ic">▶️</span><span><b>Full exam · original order</b><span class="d">150 questions${nt?'':' · 150 min'} · ترتیب اصلی</span></span></button>
+    <button class="tile plain" data-act="fexam" data-v="shuf"><span class="ic">🔀</span><span><b>Full exam · shuffled</b><span class="d">150 questions in a new order${nt?'':' · 150 min'}</span></span></button>
+    <button class="tile plain" data-act="fexam" data-v="half"><span class="ic">⚡</span><span><b>Half exam</b><span class="d">75 random questions${nt?'':' · 75 min'}</span></span></button></div>
+   <div class="sw" style="margin-top:6px"><div><div>Timer</div><div class="mut">${nt?'Off: take as long as you need':'On: one minute per question, like the real test'}</div></div><input type="checkbox" data-act="ftimer" ${nt?'':'checked'} aria-label="Timer"></div>
+   ${fh.length?`<h3 style="margin:12px 0 4px">My retakes</h3>${fh.slice(0,6).map(h=>`<div class="spread hrow"><div><b>${esc(h.what||'Final Quiz')}</b><div class="mut">${new Date(h.t).toLocaleDateString()} · ${h.right}/${h.total} correct · ${fmt(h.used||0)}</div></div><span class="badge ${h.pct>=(o.pct||0)?'ok':''}" style="margin:0">${h.pct}%</span></div>`).join('')}`:''}</div>
+
+  <div class="card"><h2>🎓 Learn these questions <span class="fa mut" style="font-size:.9rem">· آموزش همین سؤال‌ها</span></h2>
+   <p class="mut" style="margin-top:0">Answer one at a time and see why right away, in English and Persian. Missed questions come back a few questions later.</p>
+   <div class="tiles" style="margin:0">
+    <button class="tile plain" data-act="fprac" data-v="all"><span class="ic">📚</span><span><b>Study all 150</b><span class="d">In the original order, with explanations · همه به ترتیب</span></span></button>
+    <button class="tile plain" data-act="fprac" data-v="miss"><span class="ic">❌</span><span><b>My ${miss} original mistakes</b><span class="d">The ones I got wrong on Nov 5 · اشتباه‌های بار اول</span></span></button>
+    <button class="tile plain" data-act="fprac" data-v="smart"><span class="ic">🎯</span><span><b>Smart review</b><span class="d">Weak, due and new questions first</span></span>${weak?`<span class="badge">${weak}</span>`:''}</button>
+    <button class="tile plain" data-act="fsheet" data-v="all"><span class="ic">📋</span><span><b>Answer sheet</b><span class="d">Every question with its answer and why · پاسخ‌نامه</span></span></button></div></div>
+
+  <div class="card"><h2>📖 The 7 parts <span class="fa mut" style="font-size:.9rem">· بخش‌ها</span></h2>
+   <p class="mut" style="margin-top:0">Each part has study notes (key terms, my mistakes, every question with its answer), its own study session and its answers.</p>
+   ${Object.keys(p.sections).map(partRow).join('')}</div>
+
+  <div class="card" style="${on?'border-color:var(--ac)':''}"><div class="sw"><div><b>Add to the general question pool</b><div class="mut">${on?'On: these 150 questions also appear in Practice, Smart review, Play, custom exams and the Security+ mock exam.':'Off: these questions stay only on this page.'}</div><div class="mut fa">${on?'روشن: این ۱۵۰ سؤال به سؤال‌های عمومی اضافه شده‌اند.':'خاموش: این سؤال‌ها فقط در همین صفحه هستند.'}</div></div>
+   <input type="checkbox" data-act="packtog" data-v="secfinal" ${on?'checked':''} aria-label="Add to the general question pool"></div>
+   <p class="mut" style="margin:6px 0 0">Single parts can be switched on and off in <button class="plain sm" data-act="tab" data-v="courses">Courses</button></p></div>`,false,keep===true);
+}
+/* every question with its answer, the option chosen on the first attempt and the explanation */
+function renderFSheet(keep){
+  const p=FP();if(!p){go('exam');return}
+  TX=[];let f=window._fsf||'all';
+  const all=fQs(),qs=all.filter(q=>f==='all'||(f==='miss'?q.miss:q.sec===f)),fa=SET.fa!=='off';
+  const ch=[['all','All '+all.length],['miss','❌ My mistakes'],...Object.keys(p.sections).map(s=>[s,secNo(p,s)])];
+  page(`<div class="spread"><button class="plain sm" data-act="final">← Final Quiz</button><span class="mut">${qs.length} questions</span></div>
+  <h1 style="margin-top:10px">📋 Answer sheet</h1><p class="sub">${f==='all'||f==='miss'?'Mock Final Quiz':esc(secNo(p,f)+' · '+p.sections[f].en)}. Tap a question to open it. Tap any English word for its meaning.</p>
+  <div class="chips">${ch.map(c=>`<button class="chip ${f===c[0]?'on':''}" data-act="fsheet" data-v="${esc(c[0])}">${esc(c[1])}</button>`).join('')}</div>
+  ${qs.map(q=>{const pr=P[q.id];const tag=q.miss?'<span class="badge" title="Missed on the first attempt">✘ 1st</span>':'';
+    return `<details class="fq"${f==='miss'?' open':''}><summary><b>Q${q.n}.</b> ${esc(q.q)} ${tag}${mastered(q.id)?' <span class="badge ok">★</span>':''}</summary>
+     <div class="fqb">${fa&&q.qf?`<p class="fa">${FA(q.qf)}</p>`:''}
+     <ul class="fo">${q.o.map((x,i)=>`<li class="${i===0?'ok':q.miss&&i===q.x?'no':''}">${i===0?'✔':q.miss&&i===q.x?'✘':'•'} ${esc(x)}${q.miss&&i===q.x?' <span class="mut">(my 1st answer)</span>':''}${fa&&q.of[i]?`<div class="fa mut">${FA(q.of[i])}</div>`:''}</li>`).join('')}</ul>
+     <p>${W(q.en)}</p>${fa&&q.fa?`<p class="fa" style="color:var(--ink)">${FA(q.fa)}</p>`:''}
+     <div class="row"><span class="mut">${esc(secNo(p,q.sec)+' · '+p.sections[q.sec].en)}${pr?' · practised '+(pr.c+pr.w)+'×, '+pr.c+' right':''}</span><button class="plain sm" data-act="speak" data-v="${esc(q.q)}">🔊</button></div></div></details>`}).join('')}`,false,keep===true);
 }
 
 /* ================= Results ================= */
@@ -773,9 +840,10 @@ function renderResult(){
   const weakSec=Object.entries(r.by).map(([k,v])=>[k,v,pct(v.c,v.t)]).sort((a,b)=>a[2]-b[2]);
   page(`${r.pass?`<div class="win"><svg viewBox="0 0 100 100" width="110" height="110" class="trophy"><path d="M30 18h40v20c0 14-8 24-20 26-12-2-20-12-20-26z" fill="#fbbf24"/><path d="M30 24H16c0 14 6 22 16 24M70 24h14c0 14-6 22-16 24" fill="none" stroke="#fbbf24" stroke-width="5"/><rect x="44" y="62" width="12" height="14" fill="#f59e0b"/><rect x="32" y="76" width="36" height="9" rx="3" fill="#fbbf24"/><path d="M42 28l5 5 10-11" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/></svg><div class="wt1">تبریک! قبول شدی 🎉</div><div class="mut">You passed — great work!</div></div>`:''}<h1>Results</h1><div class="card"><div class="mut">Estimated score</div><div class="big">${r.score}<span class="mut" style="font-size:1rem"> / 900</span></div>
    <p class="${r.pass?'ok':'no'}" style="margin:6px 0 0">${r.pass?'Above':'Below'} the 750 pass mark · ${r.right} of ${r.total} fully correct · ${Math.round(r.pct*100)}% weighted</p>
+   ${S.tag==='final'&&FP()&&FP().orig?`<p style="margin:6px 0 0"><b>Mock Final Quiz:</b> ${Math.round(r.pct*1000)/10}% this time · first attempt ${FP().orig.pct}%</p>`:''}
    <p class="mut">Time used ${fmt(r.used)}. Scenarios count 3 points with partial credit. This is a practice estimate, not an official score.</p></div>
   <div class="card"><h2>By section</h2>${weakSec.map(([k,v,p])=>`<div class="bar2"><span>${esc(k)}</span><div class="t"><i class="${cls(p)}" style="width:${p}%"></i></div><span>${v.c}/${v.t}</span></div>`).join('')}</div>
-  <div class="row">${wrong.length?`<button data-act="drillwrong">Drill my ${wrong.length} mistake${wrong.length>1?'s':''}</button>`:''}<button class="plain" data-act="answers">Review answers</button><button class="plain" data-act="tab" data-v="home">Home</button></div>`);
+  <div class="row">${wrong.length?`<button data-act="drillwrong">Drill my ${wrong.length} mistake${wrong.length>1?'s':''}</button>`:''}<button class="plain" data-act="answers">Review answers</button>${S.tag==='final'?'<button class="plain" data-act="final">Final Quiz</button>':''}<button class="plain" data-act="tab" data-v="home">Home</button></div>`);
   S._wrong=wrong;
 }
 function renderAnswers(){
@@ -795,16 +863,17 @@ const readSt=()=>st.get('read',{});
 function renderLearn(){
   const rd=readSt();
   /* one course (or the textbook) at a time, so the page stays short; the choice is remembered */
-  const ps=PACKS.filter(p=>packOn(p)&&Object.keys(p.sections).some(k=>p.study&&p.study[k]));
+  const ps=PACKS.filter(p=>(packOn(p)||p.id==='secfinal')&&Object.keys(p.sections).some(k=>p.study&&p.study[k]));
   let sel=st.get('lpack');if(!ps.some(p=>p.id===sel))sel=ps.length?ps[0].id:null;
-  const sw=ps.length>1?`<div class="chips" style="margin:0 0 12px">${ps.map(p=>`<button class="chip ${p.id===sel?'on':''}" data-act="lpack" data-v="${esc(p.id)}">${p.id==='secbook'?'📕':'📚'} ${esc(p.short)}</button>`).join('')}</div>`:'';
+  const sw=ps.length>1?`<div class="chips" style="margin:0 0 12px">${ps.map(p=>`<button class="chip ${p.id===sel?'on':''}" data-act="lpack" data-v="${esc(p.id)}">${p.id==='secbook'?'📕':p.id==='secfinal'?'📝':'📚'} ${esc(p.short)}</button>`).join('')}</div>`:'';
   const cards=ps.filter(p=>p.id===sel).map(p=>{
     const ks=Object.keys(p.sections).filter(k=>p.study&&p.study[k]);const nr=ks.filter(k=>rd[secKey(p,k)]).length;
     return `<div class="card"><div class="spread"><div style="display:flex;align-items:center;gap:12px">${p.cover?`<img src="${esc(p.cover)}" alt="" style="width:56px;height:70px;object-fit:cover;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.25);flex:none">`:''}<h2 style="margin:0">${esc(p.name)}</h2></div><span class="mut">${nr} / ${ks.length} read</span></div><div class="lgrid" style="margin-top:10px">${ks.map(k=>{const sk=secKey(p,k);const t=p.study[k].t||[p.sections[k].en,p.sections[k].fa];
       return `<button class="tile plain ltile" data-act="read" data-v="${esc(sk)}"><span class="ic">${rd[sk]?'✅':'📘'}</span><span><b>${esc(secNo(p,k)?secNo(p,k)+' · ':'')}${esc(t[0])}</b><span class="d">${esc(t[1]||'')}</span></span></button>`}).join('')}</div></div>`}).join('');
   const rl=st.get('rlast'),rlp=rl&&PACKS.find(x=>x.id===rl.split(':')[0]),rls=rl&&rl.split(':')[1],rlt=rlp&&rlp.study&&rlp.study[rls];
   const cont=rlt?`<div class="card" style="border-color:var(--ac)"><div class="spread"><div><b>Continue reading</b><div class="mut">${esc(rlp.short+' · '+(secNo(rlp,rls)?secNo(rlp,rls)+' · ':'')+(rlt.t||[''])[0])}</div></div><button class="sm" data-act="rdresume">Continue</button></div></div>`:'';
-  page(`<h1>Learn</h1>${cont}<p class="sub">Read the key points first, then practice the questions. Notes are in English and Persian.</p>${sw}${cards||'<div class="card empty">No study notes for the courses that are on.</div>'}`);
+  const fq=FP()?`<div class="card"><div class="spread"><div><b>📝 Mock Final Quiz</b><div class="mut">Learn the 150 questions of the Nov 5 mock exam · آموزش سؤال‌های ماک نهایی</div></div><button class="sm" data-act="final">Open</button></div></div>`:'';
+  page(`<h1>Learn</h1>${cont}${fq}<p class="sub">Read the key points first, then practice the questions. Notes are in English and Persian.</p>${sw}${cards||'<div class="card empty">No study notes for the courses that are on.</div>'}`);
 }
 /* the lines "Listen" reads in a section, in order; audio/n1.txt has a recording of each */
 const nclean=x=>String(x||'').replace(/\s+/g,' ').trim();
@@ -1466,6 +1535,13 @@ document.addEventListener('click',e=>{
     case 'updnow':if(S&&!S.done)st.set('sess',S);location.reload();break;
     case 'updlater':{const u=$('#upd');if(u)u.remove();break}
     case 'mock':{startSession({mode:'exam',n:90,timer:'90',secs:mockKeys(),what:' · Security+ mock exam'});break}
+    case 'final':closeModal();clearInterval(timerId);if(S&&S.done)S=null;if(S)st.set('sess',S);go('final');break;
+    case 'fexam':{let ids=fQs().map(q=>q.id);if(v!=='order')ids=shuffle(ids);if(v==='half')ids=ids.slice(0,75);const nt=!!st.get('fnotimer');
+      startSession({mode:'exam',ids,fixed:true,n:ids.length,timer:nt?'off':String(ids.length),tag:'final',what:' · Final Quiz · '+({order:'full exam',shuf:'full exam, shuffled',half:'half exam'})[v]});break}
+    case 'fprac':{const qs=fQs(),p=FP();if(v==='smart'){startSession({mode:'review',secs:Object.keys(p.sections).map(s=>secKey(p,s)),n:20,timer:'off',tag:'final',what:' · Final Quiz · smart review'});break}
+      const sec=v.startsWith('sec:')?v.slice(4):null,ids=qs.filter(q=>v==='all'||(v==='miss'?q.miss:q.sec===sec)).map(q=>q.id);
+      startSession({mode:'practice',ids,fixed:true,n:ids.length,timer:'off',tag:'final',what:' · Final Quiz · '+(v==='all'?'study all':v==='miss'?'my original mistakes':secNo(p,sec)+' · '+p.sections[sec].en)});break}
+    case 'fsheet':closeModal();window._fsf=v||'all';go('fsheet');break;
     case 'drillwrong':{const ids=S._wrong;S=null;startSession({mode:'review',ids,timer:'off',n:ids.length});break}
     case 'answers':renderAnswers();break;
     case 'packtog':break;
@@ -1486,7 +1562,9 @@ document.addEventListener('click',e=>{
 document.addEventListener('change',e=>{
   const t=e.target,a=t.dataset&&t.dataset.act;if(!a)return;
   if(a==='ans'){const it=cur();if(it.ck)return;t.value===''?delete it.ans[t.dataset.v]:it.ans[t.dataset.v]=+t.value;st.set('sess',S);if(S.mode!=='exam'){const b=$('.bot button');if(b)b.disabled=!Object.keys(it.ans).length}}
-  else if(a==='packtog'){const id=t.dataset.v;SET.off.packs=SET.off.packs.filter(x=>x!==id);if(!t.checked)SET.off.packs.push(id);st.set('set',SET);cfg.secs=null;renderCourses()}
+  else if(a==='packtog'){const id=t.dataset.v;SET.off.packs=SET.off.packs.filter(x=>x!==id);if(!t.checked)SET.off.packs.push(id);st.set('set',SET);cfg.secs=null;
+    if(tab==='final'){renderFinal(true);toast(t.checked?'Added to the general question pool':'Removed from the general question pool')}else renderCourses()}
+  else if(a==='ftimer'){st.set('fnotimer',!t.checked);renderFinal(true)}
   else if(a==='sectog'){const k=t.dataset.v;SET.off.secs=SET.off.secs.filter(x=>x!==k);if(!t.checked)SET.off.secs.push(k);st.set('set',SET);cfg.secs=null;renderCourses()}
   else if(a==='set'){const k=t.dataset.k;SET[k]=(k==='size'||k==='vol'||k==='goal'||k==='vspeed'||k==='vboost')?+t.value:t.value;st.set('set',SET);applyLook();if(k==='vol'){FX.set({vol:SET.vol});FX.ok()}}
   else if(a==='tog'){const k=t.dataset.k;SET[k]=t.checked;st.set('set',SET);FX.set({[k]:SET[k]});if(k==='mus')FX.music(SET.mus);if((k==='auto'||k==='cues')&&!t.checked)vStop();if(k==='snd'&&t.checked)FX.ok()}

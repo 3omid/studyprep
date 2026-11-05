@@ -47,3 +47,10 @@ Both open the live site (https://3omid.github.io/studyprep/), so content updates
 - Settings → Look → **Colour theme** is one button that opens a theme sheet with three tabs (Game, Cars, Colours) and a preview of each theme. Tapping a theme applies it at once and keeps the page where it was.
 - **Game themes** (`g-*` rows in `themes.js`): Arena, Royal Night, Jungle, Lava, Frost and Desert. Each has a picture background drawn in code as SVG (`window.SCENES`), so no image files are needed and it works offline.
 - The game look (picture background, outlined panels, glossy 3D buttons, the Lilita One display font, dark menu bar, player bar on Home and Play) is on every page (`body.gskin`). Game themes add their own picture background; other themes use the Arena picture.
+
+## Mock Final Quiz (150 questions)
+- `packs/secfinal.js`, `secfinal2.js`, `secfinal3.js` = pack `secfinal`: the 150 questions of the Mock CompTIA Security+ Exam (Final Quiz) taken Nov 5, 2026 (first attempt 92.67%, 139/150), with Persian translation, hints and explanations, grouped into 7 parts with study notes. Each question keeps its original number (`n`); `x` marks the option chosen on the first attempt when it was wrong.
+- Exam tab (and Home) → **Mock Final Quiz** opens its page:
+  - **Take the exam again**: full exam in the original order, shuffled, or a 75-question half exam; timer on or off. Retake scores are kept (`sp1_fhist`) and compared with the first attempt.
+  - **Learn these questions**: study all 150 one by one with explanations, drill the 11 original mistakes, smart review, the answer sheet, and notes + study session per part.
+  - **Add to the general question pool**: the switch (same as the course switch in Courses) puts the 150 questions into Practice, Smart review, Play, custom exams and the Security+ mock exam, or keeps them only on this page. Parts can be switched one by one in Courses.

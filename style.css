@@ -481,3 +481,12 @@ body.gskin{--ol:color-mix(in srgb,var(--line) 45%,#0b1020);--hi:inset 0 2px 0 rg
 .dot2{width:44px;height:44px;min-height:0;padding:0;border-radius:50%;justify-self:center;font:700 .9rem var(--mono);background:var(--sf2);color:var(--mut);border:2px solid var(--line);box-shadow:none}
 .dot2.on{background:var(--grad);color:var(--acink);border-color:transparent;box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 25%,transparent),0 0 12px color-mix(in srgb,var(--ac) 45%,transparent)}
 .gskin .sgrp{text-shadow:none;font-family:var(--sans)}.gskin .dot2{font-family:var(--mono)}
+/* Mock Final Quiz page and answer sheet */
+.fpart{padding:10px 0;border-bottom:1px solid var(--line)}.fpart:last-child{border:0}
+details.fq summary{font-weight:500;line-height:1.45}details.fq summary .badge{margin-left:6px;vertical-align:1px}
+details.fq[open] summary{margin-bottom:6px}
+.fqb p{margin:8px 0}
+ul.fo{list-style:none;padding:0;margin:8px 0}
+ul.fo li{padding:8px 10px;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;background:var(--sf2)}
+ul.fo li.ok{border-color:var(--good);background:var(--gbg)}
+ul.fo li.no{border-color:var(--bad);background:var(--bbg)}
