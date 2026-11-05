@@ -461,3 +461,12 @@ body.gskin{--ol:color-mix(in srgb,var(--line) 45%,#0b1020);--hi:inset 0 2px 0 rg
 /* in-game header: the same dark game bar as the menu */
 .gskin .qhead{background:linear-gradient(180deg,#24385e,#142340);color:#fff;border-bottom:3px solid #0a1428;box-shadow:0 4px 12px rgba(0,0,0,.25)}
 .gskin .qhead .mut,.gskin .qhead span{color:#dbe5f7}.gskin .qhead .gch{background:rgba(0,0,0,.35);border-color:rgba(255,255,255,.18);color:#fff}
+/* Mock Final Quiz page and answer sheet */
+.fpart{padding:10px 0;border-bottom:1px solid var(--line)}.fpart:last-child{border:0}
+details.fq summary{font-weight:500;line-height:1.45}details.fq summary .badge{margin-left:6px;vertical-align:1px}
+details.fq[open] summary{margin-bottom:6px}
+.fqb p{margin:8px 0}
+ul.fo{list-style:none;padding:0;margin:8px 0}
+ul.fo li{padding:8px 10px;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;background:var(--sf2)}
+ul.fo li.ok{border-color:var(--good);background:var(--gbg)}
+ul.fo li.no{border-color:var(--bad);background:var(--bbg)}
