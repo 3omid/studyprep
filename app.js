@@ -942,22 +942,6 @@ function aloudStart(){
 function aloudStop(){RV.on=false;RV.tok++;vStop();aloudBtn()}
 
 /* ================= Courses ================= */
-function renderCourses(){
-  page(`<h1>Courses</h1><p class="sub">Turn whole courses or single sections on and off. Practice, exams and review only use what is on.</p>
-  <div class="cols">${PACKS.map(p=>{
-    const ids=Object.keys(Q).filter(i=>Q[i].pack===p);const seen=ids.filter(i=>P[i]).length;
-    return `<div class="card"><div class="sw"><div style="display:flex;align-items:center;gap:12px">${p.cover?`<img src="${esc(p.cover)}" alt="" style="width:44px;height:55px;object-fit:cover;border-radius:5px;flex:none">`:''}<div><b>${esc(p.name)}</b><div class="mut">${ids.length} questions · ${pct(seen,ids.length)}% seen${p.user?' · imported':''}</div></div></div>
-      <input type="checkbox" data-act="packtog" data-v="${esc(p.id)}" ${packOn(p)?'checked':''} aria-label="Enable ${esc(p.name)}"></div>
-      <div class="sec" style="${packOn(p)?'':'opacity:.45'}">${Object.keys(p.sections).map(s=>{
-        const sid=ids.filter(i=>Q[i].sec===s),m=sid.filter(mastered).length;
-        return `<div class="sw"><div><div>${esc(secTitle(p,s))}</div><div class="mut">${sid.length} q · ${m} mastered${p.sections[s].fa?' · '+esc(p.sections[s].fa):''}</div></div>
-        <input type="checkbox" data-act="sectog" data-v="${esc(secKey(p,s))}" ${secOn(p,s)?'checked':''} ${packOn(p)?'':'disabled'}></div>`}).join('')}</div>
-      ${p.user?`<button class="danger sm" data-act="delpack" data-v="${esc(p.id)}" style="margin-top:8px">Remove this course</button>`:''}</div>`}).join('')}
-  <div class="card"><h2>Add a course</h2><p class="mut">Paste a course pack (JSON), or pick a .json file. Ask Claude to turn your class slides into a pack in this format.</p>
-   <textarea id="packtxt" placeholder='{"id":"netplus","name":"CompTIA Network+","short":"Network+","sections":{"1":"Networking concepts"},"mcq":[{"id":"1","sec":"1","q":"Question?","o":["Correct answer","Wrong","Wrong","Wrong"],"en":"Why it is correct"}]}'></textarea>
-   <div class="row" style="margin-top:8px"><button data-act="addpack">Add pack</button><button class="plain" data-act="pickfile">Choose file…</button><input type="file" id="pf" accept=".json,application/json" hidden></div></div></div>`);
-  const pf=$('#pf');if(pf)pf.onchange=()=>{const f=pf.files[0];if(!f)return;f.text().then(t=>{$('#packtxt').value=t;addPack()})};
-}
 function addPack(){
   const t=($('#packtxt')||{}).value||'';
   try{
@@ -1059,41 +1043,104 @@ function aiSettings(){
    <div class="row" style="margin-top:10px"><button class="plain sm" data-act="aitest">Test AI</button></div>
    <p class="mut" id="aist" style="margin:8px 0 0">The key stays on this device only and is not put in backups. Free plans have a daily limit.</p></div>`;
 }
-function renderSettings(keep){
-  const sel=(k,opts)=>`<select data-act="set" data-k="${k}">${opts.map(o=>`<option value="${o[0]}" ${String(SET[k])===String(o[0])?'selected':''}>${o[1]}</option>`).join('')}</select>`;
-  page(`<h1>Settings</h1><button class="tile plain" style="margin-bottom:12px" data-act="tab" data-v="courses"><span class="ic">📚</span><span><b>Courses</b><span class="d">Turn courses and sections on or off, add a course</span></span></button><div class="cols">
-  <div class="card"><h3>Persian help (practice and review)</h3>${sel('fa',[['off','Off — English only'],['tap','Tap to show per question'],['always','Always show']])}
-   <div class="sw" style="margin-top:6px"><span>Allow Persian help in Exam mode<div class="mut">Off = like the real English exam</div></span><input type="checkbox" data-act="examfa" ${SET.examFa?'checked':''}></div></div>
-  <div class="card"><h3>Persian explanation after answering</h3>${sel('faExp',[['tap','Tap a button to show it'],['auto','Show automatically']])}</div>
-  <div class="card"><h3>Sound and feel</h3>
-   <div class="sw"><span>Sound effects<div class="mut">Soft chimes for right and wrong</div></span><input type="checkbox" data-act="tog" data-k="snd" ${SET.snd?'checked':''}></div>
-   <div class="sw"><span>Calm background music<div class="mut">Quiet generated ambience while you study</div></span><input type="checkbox" data-act="tog" data-k="mus" ${SET.mus?'checked':''}></div>
-   <div class="sw"><span>Vibration<div class="mut">Android phones only</div></span><input type="checkbox" data-act="tog" data-k="vib" ${SET.vib?'checked':''}></div>
-   <div class="lbl">Volume</div>${sel('vol',[[0.25,'Very soft'],[0.45,'Soft'],[0.6,'Medium'],[0.85,'Loud']])}</div>
-  <div class="card"><h3>Human voice (American English)</h3>
-   <div class="sw"><span>Read each new question aloud<div class="mut">Also plays when you tap Next</div></span><input type="checkbox" data-act="tog" data-k="auto" ${SET.auto?'checked':''}></div>
-   <div class="sw"><span>Spoken feedback<div class="mut">“Correct!”, “Well done!”, “Congratulations!”</div></span><input type="checkbox" data-act="tog" data-k="cues" ${SET.cues?'checked':''}></div>
-   <div class="lbl">Voice speed · سرعت صدا</div>${sel('vspeed',[[0.85,'Slower · آهسته‌تر'],[1,'Normal · عادی'],[1.15,'Faster · تندتر']])}
-   <div class="lbl">Voice loudness · بلندی صدا</div>${sel('vboost',[[0,'Normal · عادی'],[0.5,'Louder · بلندتر'],[1,'Loudest · خیلی بلند']])}
-   <div class="row" style="margin-top:10px"><button class="plain sm" data-act="speak" data-v="Hello! This is the study voice. Let us get started.">▶ Test voice</button><button class="plain sm" data-act="dlaudio">⬇ Download voice for offline</button></div>
-   <p class="mut" id="dlst" style="margin:8px 0 0">Tap any word and press 🔊 to hear it. About 18 MB, downloaded once.</p></div>
-  ${aiSettings()}
-  <div class="card"><h3>Exam</h3><div class="lbl" style="margin-top:0">Exam date</div><input type="date" class="inp" data-act="examdate" value="${esc(SET.examDate||'')}">
-   <div class="lbl">Daily goal (answers)</div>${sel('goal',[[10,'10'],[20,'20'],[30,'30'],[50,'50'],[80,'80'],[120,'120']])}</div>
-  <div class="card"><h3>Look</h3><div class="lbl" style="margin-top:0">Background</div>
-   <div class="chips">${[['auto','Match device'],['dark','🌙 Dark'],['light','☀️ Light']].map(o=>`<button class="chip ${SET.theme===o[0]?'on':''}" data-act="mode" data-v="${o[0]}">${o[1]}</button>`).join('')}</div>
-   <div class="lbl">Text size</div>${sel('size',[[0.9,'Small'],[1,'Normal'],[1.12,'Large'],[1.25,'Extra large'],[1.4,'Huge']])}
-   <div class="lbl">Colour theme</div>${palGrid()}</div>
-  <div class="card"><h3>Install on this device</h3>
-   ${deferred?`<button data-act="install">Install app</button>`:''}
-   <div class="row" style="margin:6px 0 10px"><a class="btn" href="https://github.com/3omid/studyprep/releases/latest/download/StudyPrep.apk">⬇ Android app (.apk)</a><a class="btn" href="https://github.com/3omid/studyprep/releases/latest/download/StudyPrep-Setup.exe">⬇ Windows app (.exe)</a></div>
-   <p class="mut"><b>iPhone / iPad (Safari):</b> Share → Add to Home Screen.<br><b>Android (Chrome):</b> menu → Install app.<br><b>Windows / Linux (Chrome, Edge):</b> install icon in the address bar.<br><b>Mac:</b> Chrome install icon, or Safari File → Add to Dock.<br>It works offline once opened one time. Progress is stored on each device separately; use backup to move it.</p></div>
-  <div class="card"><h3>Backup</h3><p class="mut" style="margin-top:0">Saves everything: progress, weak questions, reading position, stats, settings and added courses. ${st.get('bkat')?'Last backup: '+ago(st.get('bkat'))+'.':'No backup yet.'}</p>
-   <div class="row"><button data-act="export">💾 Save backup file</button><button class="plain" data-act="importfile">📂 Restore from file</button><input type="file" id="bkf" accept=".json,application/json" hidden></div>
-   <div class="row" style="margin-top:8px"><button class="plain sm" data-act="exporttxt">Copy as text</button><button class="plain sm" data-act="importui">Paste text</button></div></div>
-  <div class="card"><h3>Reset</h3><button class="danger" data-act="reset">Erase all progress</button></div>
-  </div><p class="mut">StudyPrep v5 · scores are practice estimates.</p>`,false,keep===true);
+/* ================= Settings =================
+   Like phone settings: a search box and a short list of groups; each group opens its own page.
+   Choices are buttons you tap (no long dropdowns), and things you set once (the AI key) fold away. */
+let SETP=null,SETQ='',AIEDIT=false;
+/* buttons for a setting with a few values; numbers stay numbers */
+const optA=(cur,opts,act)=>`<div class="seg opt" style="--n:${opts.length}">${opts.map(o=>`<button class="${String(cur)===String(o[0])?'on':''}" ${act} data-v="${o[0]}">${o[1]}</button>`).join('')}</div>`;
+const opt=(k,opts)=>optA(SET[k],opts,`data-act="setv" data-k="${k}"`);
+const swr=(sid,label,sub,input)=>`<div class="sw" data-sid="${sid}"><span>${label}${sub?`<div class="mut">${sub}</div>`:''}</span>${input}</div>`;
+const tg=(k)=>`<input type="checkbox" data-act="tog" data-k="${k}" ${SET[k]?'checked':''}>`;
+const row=(sid,label,body)=>`<div class="srowx" data-sid="${sid}"><div class="lbl">${label}</div>${body}</div>`;
+const SG=[
+  ['courses','📚','Courses','دوره‌ها','#16a34a',()=>{const on=PACKS.filter(packOn);return on.length+' of '+PACKS.length+' on · '+activeKeys().length+' sections'}],
+  ['persian','🇮🇷','Persian help','کمک فارسی','#0ea5e9',()=>({off:'Off',tap:'Tap to show',always:'Always'}[SET.fa]||'')+(SET.examFa?' · also in exams':'')],
+  ['sound','🔔','Sound & music','صدا و موسیقی','#f59e0b',()=>(SET.snd?'Sounds on':'Sounds off')+(SET.mus?' · music on':'')],
+  ['voice','🗣️','Voice','صدای خواندن','#8b5cf6',()=>(SET.auto?'Reads questions aloud':'Off')+' · '+({0.85:'slower',1:'normal speed',1.15:'faster'}[SET.vspeed]||'')],
+  ['ai','🤖','AI tutor','معلم هوش مصنوعی','#ec4899',()=>{const c=aiCfg(),k=aiKeys()[c.p];return k?'✅ '+AIP[c.p].n:'Not set up'}],
+  ['exam','🎯','Exam & daily goal','امتحان و هدف روزانه','#ef4444',()=>(SET.examDate?'Exam '+SET.examDate:'No exam date')+' · '+(SET.goal||30)+' a day'],
+  ['look','🎨','Look & theme','ظاهر و تم','#14b8a6',()=>thName(SET.pal)+' · '+({auto:'match device',dark:'dark',light:'light'}[SET.theme])],
+  ['install','📲','Install the app','نصب برنامه','#6366f1',()=>'iPhone, Android, Windows, Mac'],
+  ['backup','💾','Backup & reset','پشتیبان و پاک کردن','#64748b',()=>st.get('bkat')?'Last backup '+ago(st.get('bkat')):'No backup yet']
+];
+/* every setting, for search: [group, id, English words, Persian words] */
+const SIDX=[
+  ['courses','courses','Courses: turn courses and sections on or off','دوره فصل بخش روشن خاموش'],['courses','addpack','Add a course (JSON pack)','اضافه کردن دوره'],
+  ['persian','fa','Persian help in practice and review','فارسی ترجمه کمک'],['persian','examfa','Persian help in Exam mode','فارسی امتحان'],['persian','faExp','Persian explanation after answering','توضیح فارسی'],
+  ['sound','snd','Sound effects','صدا افکت'],['sound','mus','Background music','موسیقی آهنگ'],['sound','vib','Vibration','لرزش ویبره'],['sound','vol','Volume','بلندی صدا'],
+  ['voice','auto','Read questions aloud','خواندن سؤال با صدا'],['voice','cues','Spoken feedback (Correct! Well done!)','بازخورد صوتی'],['voice','vspeed','Voice speed','سرعت صدا'],['voice','vboost','Voice loudness','بلندی صدا'],['voice','dlaudio','Download voice for offline','دانلود صدا آفلاین'],
+  ['ai','aip','AI provider (Gemini, Groq…)','هوش مصنوعی'],['ai','aikey','AI API key','کلید هوش مصنوعی'],['ai','aimodel','AI model','مدل'],['ai','ailang','AI answer language','زبان جواب'],
+  ['exam','examdate','Exam date','تاریخ امتحان'],['exam','goal','Daily goal (answers a day)','هدف روزانه'],
+  ['look','theme','Dark / light background','تاریک روشن شب'],['look','size','Text size','اندازه متن فونت'],['look','pal','Colour theme','تم رنگ'],
+  ['install','install','Install the app (Android, Windows, iPhone)','نصب برنامه'],
+  ['backup','export','Save a backup file','پشتیبان ذخیره'],['backup','importfile','Restore from a backup','بازیابی'],['backup','reset','Erase all progress','پاک کردن همه']
+];
+function sGroup(id){
+  const c=aiCfg(),k=aiKeys()[c.p]||'',P0=AIP[c.p];
+  switch(id){
+  case 'persian':return `<div class="card">${row('fa','Persian help in practice and review',opt('fa',[['off','Off'],['tap','Tap to show'],['always','Always']]))}
+    ${swr('examfa','Persian help in Exam mode','Off = like the real English exam',`<input type="checkbox" data-act="examfa" ${SET.examFa?'checked':''}>`)}
+    ${row('faExp','Persian explanation after answering',opt('faExp',[['tap','Tap a button'],['auto','Show by itself']]))}</div>`;
+  case 'sound':return `<div class="card">${swr('snd','Sound effects','Soft chimes for right and wrong',tg('snd'))}${swr('mus','Calm background music','',tg('mus'))}${swr('vib','Vibration','Android phones only',tg('vib'))}
+    ${row('vol','Volume',opt('vol',[[0.25,'Very soft'],[0.45,'Soft'],[0.6,'Medium'],[0.85,'Loud']]))}</div>`;
+  case 'voice':return `<div class="card">${swr('auto','Read each new question aloud','',tg('auto'))}${swr('cues','Spoken feedback','“Correct!”, “Well done!”',tg('cues'))}
+    ${row('vspeed','Speed · سرعت',opt('vspeed',[[0.85,'Slower'],[1,'Normal'],[1.15,'Faster']]))}${row('vboost','Loudness · بلندی',opt('vboost',[[0,'Normal'],[0.5,'Louder'],[1,'Loudest']]))}
+    <div class="row" style="margin-top:12px" data-sid="dlaudio"><button class="plain sm" data-act="speak" data-v="Hello! This is the study voice. Let us get started.">▶ Test</button><button class="plain sm" data-act="dlaudio">⬇ Download for offline · 18 MB</button></div><p class="mut" id="dlst" style="margin:6px 0 0"></p></div>`;
+  case 'ai':return `<div class="card"><p class="mut" style="margin-top:0">After you answer, tap “Ask AI” to get the question explained. Needs the internet and a free key. · بعد از جواب، «از هوش مصنوعی بپرس» را بزن.</p>
+    ${row('aip','Provider',`<div class="chips" style="margin:0">${Object.keys(AIP).map(p=>`<button class="chip ${p===c.p?'on':''}" data-act="aipick" data-v="${p}">${esc(AIP[p].n)}${aiKeys()[p]?' ✓':''}</button>`).join('')}</div>`)}
+    <div class="srowx" data-sid="aikey"><div class="lbl">API key</div>${k&&!AIEDIT?`<div class="keyok"><span>✅ Saved on this device <b>…${esc(k.slice(-4))}</b></span><button class="plain sm" data-act="aikedit">Change</button></div>`:
+      `<div class="aik"><input class="inp" id="aikin" type="password" autocomplete="off" data-act="aikey" value="${esc(k)}" placeholder="Paste your key here"><button data-act="aisave">Save</button></div><div class="mut" style="margin-top:6px"><a href="${P0.key}" target="_blank" rel="noopener" style="color:var(--ac)">Get a free key ↗</a> · it stays on this device and is not put in backups</div><div class="mut" id="aiks"></div>`}</div>
+    ${row('ailang','AI answers in',optA(c.lang,[['fa','Persian + English terms'],['en','English']],'data-act="ailangv"'))}
+    <details class="adv" data-sid="aimodel"><summary>Advanced: model name</summary><input class="inp" data-act="aimodel" value="${esc(c.m[c.p]||'')}" placeholder="${esc(P0.m)} (default)"></details>
+    <div class="row" style="margin-top:10px"><button class="plain sm" data-act="aitest">Test AI</button></div><p class="mut" id="aist" style="margin:8px 0 0">Free plans have a daily limit.</p></div>`;
+  case 'exam':return `<div class="card">${row('examdate','Exam date · تاریخ امتحان',`<input type="date" class="inp" data-act="examdate" value="${esc(SET.examDate||'')}">`)}
+    ${row('goal','Daily goal · answers a day',opt('goal',[[10,'10'],[20,'20'],[30,'30'],[50,'50'],[80,'80'],[120,'120']]))}</div>`;
+  case 'look':return `<div class="card">${row('theme','Background',optA(SET.theme,[['auto','Auto'],['dark','🌙 Dark'],['light','☀️ Light']],'data-act="mode"'))}
+    ${row('size','Text size',opt('size',[[0.9,'A'],[1,'A+'],[1.12,'A++'],[1.25,'XL'],[1.4,'XXL']]))}${row('pal','Theme',palGrid())}</div>`;
+  case 'install':return `<div class="card" data-sid="install">${deferred?`<button data-act="install" style="width:100%;margin-bottom:10px">Install app</button>`:''}
+    <div class="row" style="margin-bottom:10px"><a class="btn" href="https://github.com/3omid/studyprep/releases/latest/download/StudyPrep.apk">⬇ Android (.apk)</a><a class="btn" href="https://github.com/3omid/studyprep/releases/latest/download/StudyPrep-Setup.exe">⬇ Windows (.exe)</a></div>
+    <details class="adv"><summary>iPhone, Mac and browsers</summary><p class="mut"><b>iPhone / iPad (Safari):</b> Share → Add to Home Screen.<br><b>Android (Chrome):</b> menu → Install app.<br><b>Windows / Linux:</b> install icon in the address bar.<br><b>Mac:</b> Chrome install icon, or Safari File → Add to Dock.<br>Works offline after the first time. Progress stays on each device; use a backup to move it.</p></details></div>`;
+  case 'backup':return `<div class="card"><p class="mut" style="margin-top:0">A backup saves everything: progress, stats, game, settings and added courses. ${st.get('bkat')?'Last backup: '+ago(st.get('bkat'))+'.':'No backup yet.'}</p>
+    <div class="row" data-sid="export"><button data-act="export">💾 Save backup</button><button class="plain" data-act="importfile" data-sid="importfile">📂 Restore</button><input type="file" id="bkf" accept=".json,application/json" hidden></div>
+    <details class="adv"><summary>Copy or paste as text</summary><div class="row" style="margin-top:8px"><button class="plain sm" data-act="exporttxt">Copy as text</button><button class="plain sm" data-act="importui">Paste text</button></div></details></div>
+    <div class="card" data-sid="reset"><b>Danger zone</b><p class="mut" style="margin:4px 0 8px">Erases progress and history on this device.</p><button class="danger sm" data-act="reset">Erase all progress</button></div>`;
+  }return '';
 }
+function searchHits(q){q=q.trim().toLowerCase();if(!q)return [];return SIDX.filter(x=>(x[2]+' '+x[3]+' '+x[0]).toLowerCase().includes(q))}
+function hitsHTML(){const h=searchHits(SETQ);if(!SETQ.trim())return '';
+  return h.length?`<div class="card slist2">${h.map(x=>{const g=SG.find(y=>y[0]===x[0]);return `<button class="sgrp" data-act="sgo" data-v="${x[0]}:${x[1]}"><span class="sgi" style="--c:${g[4]}">${g[1]}</span><span><b>${esc(x[2])}</b><small>${esc(g[2])}</small></span><span class="chev">›</span></button>`}).join('')}</div>`:'<p class="mut" style="text-align:center">Nothing found · چیزی پیدا نشد</p>'}
+function renderSettings(keep){
+  if(SETP){const g=SG.find(x=>x[0]===SETP);
+    page(`<div class="spread"><button class="plain sm" data-act="sback">‹ Settings</button><span class="mut fa" style="margin:0">${esc(g[3])}</span></div><h1 style="margin:10px 0 12px">${g[1]} ${esc(g[2])}</h1>${sGroup(SETP)}`,false,keep===true);return}
+  page(`<h1>Settings</h1><div class="ssearch"><span>🔍</span><input id="sq" class="inp" type="search" placeholder="Search settings · جستجو" value="${esc(SETQ)}" autocomplete="off"></div>
+   <div id="shits">${hitsHTML()}</div>
+   <div class="card slist2" id="sgroups" ${SETQ.trim()?'hidden':''}>${SG.map(g=>`<button class="sgrp" data-act="${g[0]==='courses'?'tab':'sgo'}" data-v="${g[0]==='courses'?'courses':g[0]}"><span class="sgi" style="--c:${g[4]}">${g[1]}</span><span><b>${esc(g[2])}</b><small>${esc(g[5]())}</small></span><span class="chev">›</span></button>`).join('')}</div>
+   <p class="mut" style="text-align:center">StudyPrep v5 · scores are practice estimates</p>`,false,keep===true);
+  const q=$('#sq');if(q)q.oninput=()=>{SETQ=q.value;$('#shits').innerHTML=hitsHTML();$('#sgroups').hidden=!!SETQ.trim()};
+}
+function sOpen(v){const[g,sid]=v.split(':');if(g==='courses'){go('courses');return}SETP=g;renderSettings();
+  if(sid)setTimeout(()=>{const e=document.querySelector(`[data-sid="${sid}"]`);if(e){e.scrollIntoView({block:'center',behavior:'smooth'});e.classList.add('flash');setTimeout(()=>e.classList.remove('flash'),1800)}},80)}
+
+/* ---- Courses: a switch per course, and round numbered buttons for its sections ---- */
+let ADDP=false;
+function renderCourses(){
+  page(`<div class="spread"><button class="plain sm" data-act="tab" data-v="settings">‹ Settings</button></div><h1 style="margin:10px 0 2px">📚 Courses</h1><p class="sub">Tap a number to turn that section on or off. Practice, exams and games only use what is on. · روی شماره بزن تا روشن یا خاموش شود</p>
+  ${PACKS.map(p=>{
+    const ids=Object.keys(Q).filter(i=>Q[i].pack===p),seen=ids.filter(i=>P[i]).length,on=packOn(p),ks=Object.keys(p.sections),non=ks.filter(s=>secOn(p,s)).length;
+    return `<div class="card ccard ${on?'':'off'}"><div class="sw" style="padding-top:0"><div style="display:flex;align-items:center;gap:12px;min-width:0">${p.cover?`<img src="${esc(p.cover)}" alt="" class="ccov">`:'<span class="ccov ce">📚</span>'}<div style="min-width:0"><b>${esc(p.short==='Book'?'Textbook':p.name)}</b><div class="mut">${on?non+' of '+ks.length+' on · ':''}${ids.length} questions · ${pct(seen,ids.length)}% seen</div></div></div>
+      <input type="checkbox" data-act="packtog" data-v="${esc(p.id)}" ${on?'checked':''} aria-label="Turn ${esc(p.name)} on or off"></div>
+      ${on?`<div class="dots">${ks.map(s=>{const k=secKey(p,s),o=secOn(p,s),n=ids.filter(i=>Q[i].sec===s).length;
+        return `<button class="dot2 ${o?'on':''}" data-act="secdot" data-v="${esc(k)}" title="${esc(secTitle(p,s))} · ${n} q" aria-pressed="${o}" aria-label="${esc(secTitle(p,s))}"><span style="${s.length>2?'font-size:.72rem':''}">${esc(s)}</span></button>`}).join('')}</div>
+      <div class="row" style="margin-top:8px;gap:6px"><button class="plain sm" data-act="secall" data-v="${esc(p.id)}">All on</button><button class="plain sm" data-act="secnone" data-v="${esc(p.id)}">All off</button><button class="plain sm" data-act="secnames" data-v="${esc(p.id)}">Names</button>${p.user?`<button class="danger sm" data-act="delpack" data-v="${esc(p.id)}">Remove</button>`:''}</div>`:''}</div>`}).join('')}
+  <div class="card" data-sid="addpack">${ADDP?`<h2>Add a course</h2><p class="mut">Paste a course pack (JSON) or pick a .json file.</p>
+   <textarea id="packtxt" placeholder='{"id":"netplus","name":"CompTIA Network+","sections":{"1":"Networking concepts"},"mcq":[{"id":"1","sec":"1","q":"Question?","o":["Correct","Wrong","Wrong","Wrong"],"en":"Why"}]}'></textarea>
+   <div class="row" style="margin-top:8px"><button data-act="addpack">Add</button><button class="plain" data-act="pickfile">Choose file…</button><button class="plain" data-act="addp">Cancel</button><input type="file" id="pf" accept=".json,application/json" hidden></div>`:`<button class="plain" style="width:100%" data-act="addp">＋ Add a course</button>`}</div>`);
+  const pf=$('#pf');if(pf)pf.onchange=()=>{const f=pf.files[0];if(!f)return;f.text().then(t=>{$('#packtxt').value=t;addPack()})};
+}
+function secNames(id){const p=PACKS.find(x=>x.id===id);if(!p)return;
+  modal(`<h3>${esc(p.short==='Book'?'Textbook':p.name)}</h3><div class="slist" style="grid-template-columns:1fr">${Object.keys(p.sections).map(s=>{const k=secKey(p,s),o=secOn(p,s);
+    return `<button class="srow ${o?'on':''}" data-act="secdot" data-v="${esc(k)}"><span class="ck">${o?'✓':''}</span><span class="no">${esc(s)}</span><span class="tt">${esc(p.sections[s].en)}</span><span class="nq">${qsIn([k]).length}</span></button>`}).join('')}</div><button class="plain" data-act="close">Done</button>`)}
 
 /* ================= Game mode ================= */
 /* Learning as a game: hearts, combo multiplier, points, XP and levels, coins, power-ups, a daily challenge,
@@ -1390,7 +1437,17 @@ document.addEventListener('click',e=>{
   const b=e.target.closest('[data-act]');if(!b||b.tagName==='SELECT'||b.tagName==='INPUT')return;
   const a=b.dataset.act,v=b.dataset.v;
   switch(a){
-    case 'tab':closeModal();clearInterval(timerId);if(S&&S.done)S=null;if(S)st.set('sess',S);go(v);break;
+    case 'tab':if(v==='settings')SETP=null;closeModal();clearInterval(timerId);if(S&&S.done)S=null;if(S)st.set('sess',S);go(v);break;
+    case 'sgo':sOpen(v);break;
+    case 'sback':SETP=null;renderSettings();break;
+    case 'setv':{const k=b.dataset.k,num=typeof SET[k]==='number';SET[k]=num?+v:v;st.set('set',SET);applyLook();if(k==='vol'){FX.set({vol:SET.vol});FX.ok()}renderSettings(true);break}
+    case 'aipick':{const c=aiCfg();c.p=v;SET.ai=c;st.set('set',SET);AIEDIT=false;renderSettings(true);break}
+    case 'ailangv':{const c=aiCfg();c.lang=v;SET.ai=c;st.set('set',SET);renderSettings(true);break}
+    case 'aikedit':AIEDIT=true;renderSettings(true);setTimeout(()=>{const i=$('#aikin');if(i){i.value='';i.focus()}},50);break;
+    case 'secdot':{SET.off.secs=SET.off.secs.includes(v)?SET.off.secs.filter(x=>x!==v):[...SET.off.secs,v];st.set('set',SET);cfg.secs=null;FX.tap();const inM=!!$('#ov .slist');renderCourses();if(inM)secNames(v.split(':')[0]);break}
+    case 'secall':case 'secnone':{const p=PACKS.find(x=>x.id===v);const ks=Object.keys(p.sections).map(s=>secKey(p,s));SET.off.secs=SET.off.secs.filter(x=>!ks.includes(x));if(a==='secnone')SET.off.secs.push(...ks);st.set('set',SET);cfg.secs=null;renderCourses();break}
+    case 'secnames':secNames(v);break;
+    case 'addp':ADDP=!ADDP;renderCourses();break;
     case 'mode':SET.theme=v;st.set('set',SET);applyLook();renderSettings(true);break;
     case 'pal':SET.pal=v;st.set('set',SET);applyLook();if(tab==='settings')renderSettings(true);if($('#ov .thsheet'))thModal();break;
     case 'thopen':thTab=null;thModal();break;
@@ -1454,7 +1511,7 @@ document.addEventListener('click',e=>{
     case 'aisend':{const i=$('#aiin'),h=AIH[cur().id];if(i&&h){aiSend(h,i.value);i.value=''}break}
     case 'aiask':{const h=AIH[cur().id];if(h)aiSend(h,AIQ[v]);break}
     case 'aitest':aiTest();break;
-    case 'aisave':{const i=$('#aikin');if(i&&aiSaveKey(i.value))aiTest();break}
+    case 'aisave':{const i=$('#aikin');if(i&&aiSaveKey(i.value)){AIEDIT=false;renderSettings(true);aiTest()}break}
     case 'aiset':closeModal();clearInterval(timerId);if(S)st.set('sess',S);go('settings');break;
     case 'rdresume':readSess();break;
     case 'read':renderReader(v);break;
